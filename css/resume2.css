@@ -3,9 +3,6 @@
  * copyright 2022 @codewithsadee
  */
 
-/*-----------------------------------*\
-  #CUSTOM PROPERTY
-\*-----------------------------------*/
 .everything{
   padding: 200px 10%;
 }
@@ -105,10 +102,6 @@
 
 }
 
-
-
-
-
 /*-----------------------------------*\
   #RESET
 \*-----------------------------------*/
@@ -194,8 +187,9 @@ article {
   content: "";
   position: absolute;
   inset: 1px;
-  background: var(--eerie-black-1);
+  background: linear-gradient(90deg, rgba(7, 11, 12, 0.589),rgba(28, 36, 151, 0.527));
   border-radius: inherit;
+  box-shadow: 0 0 8px rgb(0, 186, 243);
   z-index: -1;
 }
 
@@ -215,8 +209,8 @@ article.active {
 
 .h2,
 .h3,
-.h4,
-.h5 {
+.h4
+ {
   color: var(--white-2);
   text-transform: capitalize;
 }
@@ -231,7 +225,9 @@ article.active {
   font-size: var(--fs-7);
   font-weight: var(--fw-500);
 }
-
+.h5{
+  color: turquoise;
+}
 .article-title {
   position: relative;
   padding-bottom: 7px;
@@ -242,9 +238,9 @@ article.active {
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 30px;
+  width: 120px;
   height: 3px;
-  background: var(--text-gradient-yellow);
+  background: turquoise;
   border-radius: 3px;
 }
 
@@ -252,11 +248,11 @@ article.active {
 
 .content-card {
   position: relative;
-  background: var(--border-gradient-onyx);
+  background: rgba(255, 255, 255, 0.021);
   padding: 15px;
   padding-top: 45px;
   border-radius: 14px;
-  box-shadow: var(--shadow-2);
+  box-shadow: 0 0 10px rgb(0, 186, 243);
   cursor: pointer;
   z-index: 1;
 }
@@ -265,7 +261,7 @@ article.active {
   content: "";
   position: absolute;
   inset: 1px;
-  background: var(--bg-gradient-jet);
+  background: rgba(210, 180, 140, 0.089);
   border-radius: inherit;
   z-index: -1;
 }
@@ -317,7 +313,7 @@ main {
 .avater-box img{
   width:40px;
   border: 1px solid turquoise;
-  box-shadow: 0 0 10px rgb(0, 85, 243)
+  box-shadow: 0 0 10px rgb(0, 85, 243);
 }
 
 .info-content .name {
@@ -330,7 +326,7 @@ main {
 
 .info-content .title {
   color: var(--white-1);
-  background: var(--onyx);
+  background: linear-gradient(90deg, #00b6f371, #0185c749);
   font-size: var(--fs-8);
   font-weight: var(--fw-300);
   width: max-content;
@@ -517,6 +513,7 @@ padding: 20px;
 border-radius: 14px;
 box-shadow: var(--shadow-2);
 z-index: 1;
+box-shadow: 0 0 10px rgb(0, 186, 243);
 }
 
 .certification-item::before {
@@ -638,25 +635,90 @@ line-height: 1.6;
 }
 
 .skill .title-wrapper data {
-  color: var(--light-gray);
+  color: turquoise;
   font-size: var(--fs-7);
   font-weight: var(--fw-300);
 }
 
 .skill-progress-bg {
-  background: var(--jet);
+  background: rgba(12, 1, 1, 0.555);
   width: 100%;
   height: 8px;
   border-radius: 10px;
 }
 
-.skill-progress-fill {
+.python, .illustrator, .photoshop{
   background: linear-gradient(to right, #c9f505, #02fcfc);
   height: 100%;
   border-radius: inherit;
+  animation: style1 5s linear forwards;
+  transition: all 0.5s ease;
 }
-
-
+@keyframes style1{
+  100%{
+      width: 80%;
+  }
+}
+.r{
+  background: linear-gradient(to right, #c9f505, #02fcfc);
+  height: 100%;
+  border-radius: inherit;
+  animation: r 5s linear forwards;
+  transition: all 0.5s ease;
+}
+@keyframes r{
+  100%{
+      width: 70%;
+  }
+}
+.spss{
+  background: linear-gradient(to right, #c9f505, #02fcfc);
+  height: 100%;
+  border-radius: inherit;
+  animation: spss 5s linear forwards;
+  transition: all 0.5s ease;
+}
+@keyframes spss{
+  100%{
+      width: 60%;
+  }
+}
+.power{
+  background: linear-gradient(to right, #c9f505, #02fcfc);
+  height: 100%;
+  border-radius: inherit;
+  animation: power 5s linear forwards;
+  transition: all 0.5s ease;
+}
+@keyframes power{
+  100%{
+      width: 50%;
+  }
+}
+.html, .css{
+  background: linear-gradient(to right, #c9f505, #02fcfc);
+  height: 100%;
+  border-radius: inherit;
+  animation: style2 5s linear forwards;
+  transition: all 0.5s ease;
+}
+@keyframes style2{
+  100%{
+      width: 65%;
+  }
+}
+.excel{
+  background: linear-gradient(to right, #c9f505, #02fcfc);
+  height: 100%;
+  border-radius: inherit;
+  animation: excel 5s linear forwards;
+  transition: all 0.5s ease;
+}
+@keyframes excel{
+  100%{
+      width: 85%;
+  }
+}
 
 .avatar-box img { width: 80px; 
   border: 1px solid turquoise;
@@ -727,7 +789,7 @@ line-height: 1.6;
   }
 
   .article-title::after {
-    width: 40px;
+    width: 160px;
     height: 5px;
   }
 
