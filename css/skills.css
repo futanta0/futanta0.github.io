@@ -295,16 +295,30 @@ section{
 .skill-icon{
     width: 50px;
 }
+p{
+    color: antiquewhite;
+    text-align: center;
+}
 
 @media screen and (max-width: 990px){
     .container{
         grid-template-columns: repeat(2,1fr);
         padding:2rem 50px;
     }
+    .skill-title h3{
+        font-size: 0.5rem;
+    }
 }
 @media screen and (max-width: 668px){
     .container{
         grid-template-columns: repeat(1,1fr);
         padding:2rem 20px;
+    }
+    .skill-title h3{
+        font-size: 1rem;
+    }
+    p{
+        font-size: 1rem;
+        color: antiquewhite;
     }
 }
