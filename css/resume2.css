@@ -720,6 +720,20 @@ line-height: 1.6;
   }
 }
 
+.point{
+  background: linear-gradient(to right, #c9f505, #02fcfc);
+  height: 100%;
+  border-radius: inherit;
+  animation: point 5s linear forwards;
+  transition: all 0.5s ease;
+}
+@keyframes point{
+  100%{
+      width: 90%;
+  }
+}
+
+
 .avatar-box img { width: 80px; 
   border: 1px solid turquoise;
   box-shadow: 0 0 10px rgb(0, 85, 243)
