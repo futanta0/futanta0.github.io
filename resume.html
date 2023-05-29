@@ -16,63 +16,537 @@
     <meta property="og:site_name" content="Futanta Chakma || Portfolio" />
     <meta property="og:type" content="website" />
     <link rel="stylesheet" href="css/main.css">
-    <link rel="stylesheet" href="css/resume.css">
+    <link rel="stylesheet" href="css/resume2.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 </head>
-<body>
 
+<body>
 <!-- header section -->
 <header>
-    <div class="logo"><a href="index.html"><img src="assests/images/logo_h.png" alt="" width="60px" height="48px"></a></div>
-    <ul class="navlist">
-        <li><a href="index.html" >Home</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="skills.html">Skills</a></li>
-        <li><a href="resume.html" class="active">Resume</a></li>
-        <li><a href="contact.html" >Contact</a></li>
-    </ul>
-    <div id="menu-icon" class="bx bx-menu"></div>
+  <div class="logo"><a href="index.html"><img src="assests/images/logo_h.png" alt="" width="60px" height="48px"></a></div>
+  <ul class="navlist">
+      <li><a href="index.html" >Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="skills.html">Skills</a></li>
+      <li><a href="resume.html" class="active">Resume</a></li>
+      <li><a href="contact.html" >Contact</a></li>
+  </ul>
+  <div id="menu-icon" class="bx bx-menu"></div>
 </header>
 
-<!-- Under Construction -->
-<section>
-    <div class="container">
-        <div class="box">
-            <span></span>
-            <div class="content">
-                <h2>Alert</h2>
-                <p>This page is in under construction.</p>
-            </div>
+<section class="everything">
+  <main>
+
+    <!--
+      - #SIDEBAR
+    -->
+
+    <aside class="sidebar" data-sidebar>
+
+      <div class="sidebar-info">
+
+        <figure class="avatar-box">
+          <img src="/assests/images/self2.jpg" alt="Futanta" width="" height="100px">
+        </figure>
+
+        <div class="info-content">
+          <h1 class="name" title="Futanta Chakma">Futanta Chakma</h1>
+
+          <p class="title">Student</p>
         </div>
+
+        <button class="info_more-btn" data-sidebar-btn>
+          <span>Show Contacts</span>
+
+          <ion-icon name="chevron-down"></ion-icon>
+        </button>
+
+      </div>
+
+      <div class="sidebar-info_more">
+
+        <div class="separator"></div>
+
+        <ul class="contacts-list">
+
+          <li class="contact-item">
+
+            <div class="icon-box">
+              <ion-icon name="mail-outline"></ion-icon>
+            </div>
+
+            <div class="contact-info">
+              <p class="contact-title">Email</p>
+
+              <a href="mailto:thisisfutan@gmail.com" class="contact-link">thisisfutan@gmail.com</a>
+            </div>
+
+          </li>
+
+          <!-- <li class="contact-item">
+
+            <div class="icon-box">
+              <ion-icon name="phone-portrait-outline"></ion-icon>
+            </div>
+
+            <div class="contact-info">
+              <p class="contact-title">Phone</p>
+
+              <a href="tel:+12133522795" class="contact-link">+1 (213) 352-2795</a>
+            </div>
+
+          </li> -->
+          </li>
+
+          <li class="contact-item">
+
+            <div class="icon-box">
+              <ion-icon name="location-outline"></ion-icon>
+            </div>
+
+            <div class="contact-info">
+              <p class="contact-title">Location</p>
+
+              <address>Dhaka, Bangladesh</address>
+            </div>
+
+          </li>
+
+        </ul>
+
+        <div class="separator"></div>
+
+        <!-- <ul class="social-list">
+
+          <li class="social-item">
+            <a href="" class="social-link">
+              <ion-icon name="logo-facebook"></ion-icon>
+            </a>
+          </li>
+
+          <li class="social-item">
+            <a href="#" class="social-link">
+              <ion-icon name="logo-twitter"></ion-icon>
+            </a>
+          </li>
+
+          <li class="social-item">
+            <a href="#" class="social-link">
+              <ion-icon name="logo-instagram"></ion-icon>
+            </a>
+          </li>
+
+        </ul> -->
+
+      </div>
+
+    </aside>
+
+
+
+
+
+    <!--
+      - #main-content
+    -->
+
+    <div class="main-content">
+
+      <!--
+        - #NAVBAR
+      -->
+
+      <nav class="navbar">
+
+        <ul class="navbar-list">
+
+          <li class="navbar-item">
+            <button class="navbar-link  active" data-nav-link>About</button>
+          </li>
+
+          <li class="navbar-item">
+            <button class="navbar-link" data-nav-link>Experiences</button>
+          </li>
+
+        </ul>
+
+      </nav>
+
+
+
+      <!--
+        - #ABOUT
+      -->
+
+      <article class="about  active" data-page="about" scroll-scale>
+
+        <section class="about-text">
+          <h2 class="h2 article-title">About me</h2>
+          <p>
+            I'm currently pursuing an undergraduate degree in Statistics from Jagannath Universit, Dhaka, Bangladesh.
+            Also developing myself as a data analyst. I have a passion in research and data analysis. 
+          </p>
+
+          <p>
+            I am a
+            self-motivated, hardworking, and a fast learner. As an enthusiats, I am always keen to learn new things. As a good team
+            player, I can work well under pressure with positivity. I am a good communicator and have excellent interpersonal skills.
+            I am a good listener and can work well with others. I am a good problem solver and can work well with
+            others. I am a good listener and can work well with others.
+          </p>
+        </section>
+        <section class="timeline">
+
+          <div class="title-wrapper">
+            <div class="icon-box">
+              <ion-icon name="school-outline"></ion-icon>
+            </div>
+
+            <h3 class="h3">Education</h3>
+          </div>
+
+          <ol class="timeline-list">
+
+            <li class="timeline-item">
+
+              <h4 class="h4 timeline-item-title">Jagannth University, Dhaka</h4>
+
+              <span>2018 — Running</span>
+
+              <p class="timeline-text">
+                B.Sc. (Hon's) in Statistics
+              <br>
+                Department of Statistics
+              </p>
+
+            </li>
+
+            <li class="timeline-item">
+
+              <h4 class="h4 timeline-item-title">Ideal College, Dhanmondi, Dhaka</h4>
+
+              <span>2015 — 2017</span>
+
+              <p class="timeline-text">
+                Higher Secondary Certificate (HSC) in Science Background
+                <br>Obtained 1st Division
+              </p>
+
+            </li>
+
+            <li class="timeline-item">
+
+              <h4 class="h4 timeline-item-title">Mahalchari Govt. High School </h4>
+
+              <span>2010 — 2015</span>
+
+              <p class="timeline-text">
+                Secondary School Certificate (SSC) in Science Background
+                <br>Obtained 1st Division
+              </p>
+
+            </li>
+
+          </ol>
+
+        </section>
+        <section class="skill">
+
+          <h3 class="h3 skills-title">Skills</h3>
+
+          <ul class="skills-list content-card">
+
+            <li class="skills-item">
+
+              <div class="title-wrapper">
+                <h5 class="h5">Python</h5>
+                <data value="80">80%</data>
+              </div>
+
+              <div class="skill-progress-bg">
+                <div class="skill-progress-fill" style="width: 80%;"></div>
+              </div>
+
+            </li>
+
+            <li class="skills-item">
+
+              <div class="title-wrapper">
+                <h5 class="h5">R Language</h5>
+                <data value="70">70%</data>
+              </div>
+
+              <div class="skill-progress-bg">
+                <div class="skill-progress-fill" style="width: 70%;"></div>
+              </div>
+
+            </li>
+
+            <li class="skills-item">
+
+              <div class="title-wrapper">
+                <h5 class="h5">SPSS</h5>
+                <data value="60">60%</data>
+              </div>
+
+              <div class="skill-progress-bg">
+                <div class="skill-progress-fill" style="width: 60%;"></div>
+              </div>
+
+            </li>
+
+            <li class="skills-item">
+
+              <div class="title-wrapper">
+                <h5 class="h5">Power BI</h5>
+                <data value="50">50%</data>
+              </div>
+
+              <div class="skill-progress-bg">
+                <div class="skill-progress-fill" style="width: 50%;"></div>
+              </div>
+
+            </li>
+            <li class="skills-item">
+
+              <div class="title-wrapper">
+                <h5 class="h5">Excel</h5>
+                <data value="80">80%</data>
+              </div>
+
+              <div class="skill-progress-bg">
+                <div class="skill-progress-fill" style="width: 80%;"></div>
+              </div>
+
+            </li>
+
+          </ul>
+
+        </section>
+
+
+
+        <!--
+          - certification
+        -->
+
+        <section class="certification">
+
+          <h3 class="h3 certification-title">Certifications</h3>
+
+          <ul class="certification-list">
+
+            <li class="certification-item">
+
+              <div class="certification-icon-box">
+                <img src="assests/images/certification.png" alt="Certificate icon" width="80px">
+              </div>
+
+              <div class="certification-content-box">
+                <h4 class="h4 certification-item-title">Code Yourself! An Introduction to Programming</h4>
+
+                <p class="certification-item-text">
+                  Coursera
+                </p>
+              </div>
+
+            </li>
+
+            <li class="certification-item">
+
+              <div class="certification-icon-box">
+                <img src="assests/images/certification.png" alt="" width="80px">
+              </div>
+
+              <div class="certification-content-box">
+                <h4 class="h4 certification-item-title">Adobe Illustrator-Mastering the Fundamentals</h4>
+
+                <p class="certification-item-text">
+                  Bohubrihi
+                </p>
+              </div>
+
+            </li>
+
+            <li class="certification-item">
+
+              <div class="certification-icon-box">
+                <img src="assests/images/certification.png" alt="" width="80px">
+              </div>
+
+              <div class="certification-content-box">
+                <h4 class="h4 certification-item-title">Foundations: Data, Data, Everywhere</h4>
+
+                <p class="certification-item-text">
+                  Google with Coursera
+                </p>
+              </div>
+
+            </li>
+
+          </ul>
+
+        </section>
+
+
+        <div class="modal-container" data-modal-container>
+
+          <div class="overlay" data-overlay></div>
+
+          <section class="testimonials-modal">
+
+            <button class="modal-close-btn" data-modal-close-btn>
+              <ion-icon name="close-outline"></ion-icon>
+            </button>
+
+          </section>
+
+        </div>
+
+      </article>
+
+      <!--
+        - #RESUME
+      -->
+
+      <article class="experiences" data-page="experiences">
+        
+        <section class="timeline">
+
+          <div class="title-wrapper">
+            <div class="icon-box">
+              <ion-icon name="book-outline"></ion-icon>
+            </div>
+
+            <h3 class="h3">Experiences</h3>
+          </div>
+
+          <ol class="timeline-list">
+
+            <li class="timeline-item">
+
+              <h4 class="h4 timeline-item-title">Loading</h4>
+
+              <span>1945 — Present</span>
+
+              <p class="timeline-text">
+                Nemo enim ipsam voluptatem blanditiis praesentium voluptum delenit atque corrupti, quos dolores et qvuas
+                molestias
+                exceptur.
+              </p>
+
+            </li>
+
+            <li class="timeline-item">
+
+              <h4 class="h4 timeline-item-title">Loading</h4>
+
+              <span>2099 — 3100</span>
+
+              <p class="timeline-text">
+                Nemo enims ipsam voluptatem, blanditiis praesentium voluptum delenit atque corrupti, quos dolores et
+                quas molestias
+                exceptur.
+              </p>
+
+            </li>
+
+            <li class="timeline-item">
+
+              <h4 class="h4 timeline-item-title">Loading</h4>
+
+              <span>2099 — 3100</span>
+
+              <p class="timeline-text">
+                Nemo enims ipsam voluptatem, blanditiis praesentium voluptum delenit atque corrupti, quos dolores et
+                quas molestias
+                exceptur.
+              </p>
+
+            </li>
+
+          </ol>
+
+        </section>
+
+        
+      </article>
+
+
+
+
+
+      <article class="portfolio" data-page="portfolio">
+
+        <header>
+          <h2 class="h2 article-title">Portfolio</h2>
+        </header>
+
+        <section class="projects">
+
+          
+
+          <div class="filter-select-box">
+
+            <button class="filter-select" data-select>
+
+              <div class="select-value" data-selecct-value>Select category</div>
+
+              <div class="select-icon">
+                <ion-icon name="chevron-down"></ion-icon>
+              </div>
+
+            </button>
+
+           
+
+          </div>
+
+        </section>
+
+      </article>
+
     </div>
+
+  </main>
 </section>
 
-
-<!-- footer section -->
+  <!--
+    - custom js link
+  -->
+  <!-- footer section -->
 <footer>
-    <p>Copyright &copy; 2023 by <a href="https://facebook.com/this.is.futan">Futanta</a> || All rights reserved. </p>
-    <a href="#" class="btn"><i class='bx bx-up-arrow-alt'></i></a>
+  <p>Copyright &copy; 2023 by <a href="https://facebook.com/this.is.futan">Futanta</a> || All rights reserved. </p>
+  <a href="#" class="btn"><i class='bx bx-up-arrow-alt'></i></a>
 </footer>
 
 <!-- js for toggle menu -->
 <script>
 //sticky navbar//
-    const header = document.querySelector("header");
-    window.addEventListener("scroll",function(){
-        header.classList.toggle("sticky", window.scrollY > 50);
-    });
-    let menuIcon = document.querySelector("#menu-icon");
-    let navlist = document.querySelector(".navlist");
+  const header = document.querySelector("header");
+  window.addEventListener("scroll",function(){
+      header.classList.toggle("sticky", window.scrollY > 50);
+  });
+  let menuIcon = document.querySelector("#menu-icon");
+  let navlist = document.querySelector(".navlist");
 
-    menuIcon.onclick = ()=>{
-        menuIcon.classList.toggle("bx-x");
-        navlist.classList.toggle("open");
-    }
+  menuIcon.onclick = ()=>{
+      menuIcon.classList.toggle("bx-x");
+      navlist.classList.toggle("open");
+  }
 
-    window.onscroll = ()=>{
-        menuIcon.classList.remove("bx-x");
-        navlist.classList.remove("open");
-    }
+  window.onscroll = ()=>{
+      menuIcon.classList.remove("bx-x");
+      navlist.classList.remove("open");
+  }
 </script>
+  <script src="js/resume.js"></script>
+
+  <!--
+    - ionicon link
+  -->
+  <script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
 </body>
 </html>
