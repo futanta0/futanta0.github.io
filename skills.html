@@ -150,7 +150,7 @@
 
 <section>
     <div class="inner">
-        <div class="top">
+        <div class="top scroll-scale">
             <h1>Technical Skills</h1>
             <p>-Skills i'm developing-</p>
         </div>
@@ -211,7 +211,7 @@
             </div>
         </div>
 
-        <div class="top">
+        <div class="top scroll-scale">
             <h1>Soft Skills</h1>
             <p>-Skills i'm developing-</p>
         </div>
@@ -290,6 +290,26 @@
         menuIcon.classList.remove("bx-x");
         navlist.classList.remove("open");
     }
+</script>
+<script>
+    const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('show-items');
+        }else{
+            entry.target.classList.remove('show-items');
+        }
+        });
+    });
+
+    const scrollScale = document.querySelectorAll('.scroll-scale');
+    scrollScale.forEach((el)=>observer.observe(el));
+
+    const scrollBottom = document.querySelector('.scroll-bottom');
+    scrollBottom.forEach((el)=>observer.observe(el));
+
+    const scrollTop = document.querySelector('.scroll-top');
+    scrollTop.forEach((el)=>observer.observe(el));
 </script>
 </body>
 </html>
