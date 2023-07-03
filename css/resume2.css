@@ -1,19 +1,8 @@
 
-/**
- * copyright 2022 @codewithsadee
- */
-
 .everything{
   padding: 200px 10%;
 }
 :root {
-
-  /**
-   * colors
-   */
-
-  /* gradient */
-
   --bg-gradient-onyx: linear-gradient(
     to bottom right, 
     hsl(240, 1%, 25%) 3%, 
