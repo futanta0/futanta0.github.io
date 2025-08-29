@@ -1,0 +1,1861 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Guide to IELTS Writing Task 2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutral Harmony -->
+    <!-- Application Structure Plan: The application is structured as a single-page dashboard to provide a seamless, non-linear user experience. The core architecture consists of a sticky top navigation bar for direct access to key IELTS topics (Education, Technology, Health, etc.) and a dynamic main content area. The default view presents an overview and topic selection cards. Clicking a topic card or a nav link reveals a detailed section for that topic. This structure was chosen to transform the dense, linear report into an explorable resource. Users can either browse topics sequentially or jump directly to a specific area of interest. Within each topic, content is further organized into interactive modules: a filterable question bank, tabbed vocabulary lists, and an interactive chart for exploring arguments. This layered, task-oriented design prioritizes user control and makes the vast amount of information manageable and easy to synthesize. -->
+    <!-- Visualization & Content Choices: Report Info: Positive/Negative arguments for each topic. -> Goal: Compare the two sides and allow users to explore the details. Viz/Presentation Method: A horizontal bar chart (Chart.js/Canvas) visually anchors the section, showing the number of positive vs. negative ideas. This is paired with a dynamic text area. -> Interaction: Clicking on a bar in the chart (e.g., "Positive Ideas") populates the text area with the detailed arguments for that category. -> Justification: This interactive pairing is more engaging than a static table. It encourages active exploration and breaks down complex information into digestible chunks, supporting the app's goal of user-driven learning. -> Library/Method: Chart.js on a Canvas element, with a custom `onClick` event handler to update the DOM. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #FDFBF8; /* Warm neutral background */
+            color: #44403c; /* stone-700 */
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 200px;
+            max-height: 250px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 250px;
+            }
+        }
+        .nav-link {
+            transition: color 0.3s, border-color 0.3s;
+        }
+        .nav-link.active {
+            color: #c2410c; /* orange-600 */
+            border-bottom-color: #c2410c;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        .modal-overlay {
+            transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            transition: transform 0.3s ease;
+        }
+        .prose-custom ul {
+            list-style-type: disc;
+            padding-left: 1.5rem;
+        }
+        .prose-custom li {
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <header class="bg-white/80 backdrop-blur-lg sticky top-0 z-30 shadow-sm">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16 overflow-x-auto whitespace-nowrap md:overflow-hidden md:whitespace-normal">
+                <h1 class="text-xl md:text-2xl font-bold text-stone-800 flex-shrink-0">IELTS Task 2 Guide</h1>
+                <nav class="hidden md:flex items-center space-x-4 lg:space-x-6 flex-grow justify-end" id="desktop-nav">
+                    <a href="#home" class="nav-link text-sm font-medium text-stone-600 hover:text-orange-600 border-b-2 border-transparent pb-1">Home</a>
+                    <a href="#general" class="nav-link text-sm font-medium text-stone-600 hover:text-orange-600 border-b-2 border-transparent pb-1">General</a>
+                    <a href="#education" class="nav-link text-sm font-medium text-stone-600 hover:text-orange-600 border-b-2 border-transparent pb-1">Education</a>
+                    <a href="#technology" class="nav-link text-sm font-medium text-stone-600 hover:text-orange-600 border-b-2 border-transparent pb-1">Technology</a>
+                    <a href="#environment" class="nav-link text-sm font-medium text-stone-600 hover:text-orange-600 border-b-2 border-transparent pb-1">Environment</a>
+                    <a href="#government" class="nav-link text-sm font-medium text-stone-600 hover:text-orange-600 border-b-2 border-transparent pb-1">Government & Society</a>
+                    <a href="#health" class="nav-link text-sm font-medium text-stone-600 hover:text-orange-600 border-b-2 border-transparent pb-1">Health</a>
+                    <a href="#work" class="nav-link text-sm font-medium text-stone-600 hover:text-orange-600 border-b-2 border-transparent pb-1">Work & Employment</a>
+                    <a href="#culture" class="nav-link text-sm font-medium text-stone-600 hover:text-orange-600 border-b-2 border-transparent pb-1">Culture & Globalization</a>
+                    <a href="#media" class="nav-link text-sm font-medium text-stone-600 hover:text-orange-600 border-b-2 border-transparent pb-1">Media & Communication</a>
+                    <a href="#family" class="nav-link text-sm font-medium text-stone-600 hover:text-orange-600 border-b-2 border-transparent pb-1">Family & Children</a>
+                    <a href="#urbanization" class="nav-link text-sm font-medium text-stone-600 hover:text-orange-600 border-b-2 border-transparent pb-1">Urbanization & Housing</a>
+                    <a href="#sports" class="nav-link text-sm font-medium text-stone-600 hover:text-orange-600 border-b-2 border-transparent pb-1">Sports & Leisure</a>
+                    <a href="#arts" class="nav-link text-sm font-medium text-stone-600 hover:text-orange-600 border-b-2 border-transparent pb-1">Arts & Literature</a>
+                    <a href="#crime" class="nav-link text-sm font-medium text-stone-600 hover:text-orange-600 border-b-2 border-transparent pb-1">Crime & Law</a>
+                    <a href="#food" class="nav-link text-sm font-medium text-stone-600 hover:text-orange-600 border-b-2 border-transparent pb-1">Food & Diet</a>
+                    <a href="#travel" class="nav-link text-sm font-medium text-stone-600 hover:text-orange-600 border-b-2 border-transparent pb-1">Travel & Tourism</a>
+                    <a href="#science" class="nav-link text-sm font-medium text-stone-600 hover:text-orange-600 border-b-2 border-transparent pb-1">Science & Research</a>
+                    <a href="#gemini-feedback" class="nav-link text-sm font-medium text-stone-600 hover:text-orange-600 border-b-2 border-transparent pb-1">AI Feedback ✨</a>
+                </nav>
+                <div class="md:hidden">
+                    <button id="mobile-menu-button" class="text-stone-600 hover:text-orange-600 focus:outline-none">
+                        <span class="w-6 h-6">☰</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-stone-200">
+            <a href="#home" class="block py-2 px-4 text-sm text-stone-600 hover:bg-stone-100">Home</a>
+            <a href="#general" class="block py-2 px-4 text-sm text-stone-600 hover:bg-stone-100">General</a>
+            <a href="#education" class="block py-2 px-4 text-sm text-stone-600 hover:bg-stone-100">Education</a>
+            <a href="#technology" class="block py-2 px-4 text-sm text-stone-600 hover:bg-stone-100">Technology</a>
+            <a href="#environment" class="block py-2 px-4 text-sm text-stone-600 hover:bg-stone-100">Environment</a>
+            <a href="#government" class="block py-2 px-4 text-sm text-stone-600 hover:bg-stone-100">Government & Society</a>
+            <a href="#health" class="block py-2 px-4 text-sm text-stone-600 hover:bg-stone-100">Health</a>
+            <a href="#work" class="block py-2 px-4 text-sm text-stone-600 hover:bg-stone-100">Work & Employment</a>
+            <a href="#culture" class="block py-2 px-4 text-sm text-stone-600 hover:bg-stone-100">Culture & Globalization</a>
+            <a href="#media" class="block py-2 px-4 text-sm text-stone-600 hover:bg-stone-100">Media & Communication</a>
+            <a href="#family" class="block py-2 px-4 text-sm text-stone-600 hover:bg-stone-100">Family & Children</a>
+            <a href="#urbanization" class="block py-2 px-4 text-sm text-stone-600 hover:bg-stone-100">Urbanization & Housing</a>
+            <a href="#sports" class="block py-2 px-4 text-sm text-stone-600 hover:bg-stone-100">Sports & Leisure</a>
+            <a href="#arts" class="block py-2 px-4 text-sm text-stone-600 hover:bg-stone-100">Arts & Literature</a>
+            <a href="#crime" class="block py-2 px-4 text-sm text-stone-600 hover:bg-stone-100">Crime & Law</a>
+            <a href="#food" class="block py-2 px-4 text-sm text-stone-600 hover:bg-stone-100">Food & Diet</a>
+            <a href="#travel" class="block py-2 px-4 text-sm text-stone-600 hover:bg-stone-100">Travel & Tourism</a>
+            <a href="#science" class="block py-2 px-4 text-sm text-stone-600 hover:bg-stone-100">Science & Research</a>
+            <a href="#gemini-feedback" class="block py-2 px-4 text-sm text-stone-600 hover:bg-stone-100">AI Feedback ✨</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+
+        <section id="home" class="content-section active">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-stone-800 mb-4">Unlock Band 9 in IELTS Writing</h2>
+                <p class="max-w-3xl mx-auto text-stone-600">This interactive guide deconstructs IELTS Writing Task 2. Explore key topics, master high-level vocabulary, analyze arguments, and study sample essays to elevate your writing. Select a topic below to begin your preparation.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-8">
+                 <a href="#general" class="topic-card block p-6 bg-white rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <h3 class="text-xl font-semibold text-stone-800 mb-2">💡 General</h3>
+                    <p class="text-stone-600 text-sm">Universal vocabulary and phrases for any essay, helping to improve coherence and cohesion.</p>
+                </a>
+                <a href="#education" class="topic-card block p-6 bg-white rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <h3 class="text-xl font-semibold text-stone-800 mb-2">🎓 Education</h3>
+                    <p class="text-stone-600 text-sm">Explore questions on financial literacy, online learning, and the role of schools in society.</p>
+                </a>
+                <a href="#technology" class="topic-card block p-6 bg-white rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <h3 class="text-xl font-semibold text-stone-800 mb-2">💻 Technology</h3>
+                    <p class="text-stone-600 text-sm">Analyze the impact of automation, telecommuting, and the digital divide on modern life.</p>
+                </a>
+                <a href="#environment" class="topic-card block p-6 bg-white rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <h3 class="text-xl font-semibold text-stone-800 mb-2">🌍 Environment</h3>
+                    <p class="text-stone-600 text-sm">Analyze climate change, pollution, and the debate over individual vs. collective responsibility.</p>
+                </a>
+                <a href="#government" class="topic-card block p-6 bg-white rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <h3 class="text-xl font-semibold text-stone-800 mb-2">🏛️ Government & Society</h3>
+                    <p class="text-stone-600 text-sm">Topics on public spending, law, crime, and the role of government.</p>
+                </a>
+                <a href="#health" class="topic-card block p-6 bg-white rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <h3 class="text-xl font-semibold text-stone-800 mb-2">❤️ Health</h3>
+                    <p class="text-stone-600 text-sm">Discuss public health policy, sedentary lifestyles, and individual vs. government responsibility.</p>
+                </a>
+                 <a href="#work" class="topic-card block p-6 bg-white rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <h3 class="text-xl font-semibold text-stone-800 mb-2">💼 Work & Employment</h3>
+                    <p class="text-stone-600 text-sm">Explore issues like automation, remote work, and career changes.</p>
+                </a>
+                 <a href="#culture" class="topic-card block p-6 bg-white rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <h3 class="text-xl font-semibold text-stone-800 mb-2">🌐 Culture & Globalization</h3>
+                    <p class="text-stone-600 text-sm">Discuss the effects of globalization on local cultures and traditions.</p>
+                </a>
+                 <a href="#media" class="topic-card block p-6 bg-white rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <h3 class="text-xl font-semibold text-stone-800 mb-2">📡 Media & Communication</h3>
+                    <p class="text-stone-600 text-sm">Analyze the impact of social media, news, and digital communication.</p>
+                </a>
+                 <a href="#family" class="topic-card block p-6 bg-white rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <h3 class="text-xl font-semibold text-stone-800 mb-2">👨‍👩‍👧‍👦 Family & Children</h3>
+                    <p class="text-stone-600 text-sm">Explore parenting styles, family structures, and early childhood development.</p>
+                </a>
+                 <a href="#urbanization" class="topic-card block p-6 bg-white rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <h3 class="text-xl font-semibold text-stone-800 mb-2">🏙️ Urbanization & Housing</h3>
+                    <p class="text-stone-600 text-sm">Debates on modern city design, urban sprawl, and community living.</p>
+                </a>
+                 <a href="#sports" class="topic-card block p-6 bg-white rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <h3 class="text-xl font-semibold text-stone-800 mb-2">🏅 Sports & Leisure</h3>
+                    <p class="text-stone-600 text-sm">Topics on professional sports, lifestyle, and leisure activities.</p>
+                </a>
+                 <a href="#arts" class="topic-card block p-6 bg-white rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <h3 class="text-xl font-semibold text-stone-800 mb-2">🎨 Arts & Literature</h3>
+                    <p class="text-stone-600 text-sm">Discussions on the value of art, government funding, and censorship.</p>
+                </a>
+                 <a href="#crime" class="topic-card block p-6 bg-white rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <h3 class="text-xl font-semibold text-stone-800 mb-2">⚖️ Crime & Law</h3>
+                    <p class="text-stone-600 text-sm">Analyze crime prevention, punishment, and the role of law enforcement.</p>
+                </a>
+                 <a href="#food" class="topic-card block p-6 bg-white rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <h3 class="text-xl font-semibold text-stone-800 mb-2">🍎 Food & Diet</h3>
+                    <p class="text-stone-600 text-sm">Questions on healthy eating, food production, and food waste.</p>
+                </a>
+                 <a href="#travel" class="topic-card block p-6 bg-white rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <h3 class="text-xl font-semibold text-stone-800 mb-2">✈️ Travel & Tourism</h3>
+                    <p class="text-stone-600 text-sm">Discuss the impact of tourism on local cultures and economies.</p>
+                </a>
+                 <a href="#science" class="topic-card block p-6 bg-white rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <h3 class="text-xl font-semibold text-stone-800 mb-2">🔬 Science & Research</h3>
+                    <p class="text-stone-600 text-sm">Debates on scientific ethics, funding, and the future of research.</p>
+                </a>
+                <a href="#gemini-feedback" class="topic-card block p-6 bg-white rounded-xl shadow-md hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <h3 class="text-xl font-semibold text-stone-800 mb-2">AI Essay Feedback ✨</h3>
+                    <p class="text-stone-600 text-sm">Paste your essay and get an instant, detailed analysis on your writing from a virtual tutor.</p>
+                </a>
+            </div>
+
+            <div class="mt-16 bg-white p-8 rounded-xl shadow-md">
+                <h3 class="text-2xl font-bold text-center text-stone-800 mb-6">Understanding the Assessment Criteria</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="text-center p-4">
+                        <div class="text-3xl mb-2">🎯</div>
+                        <h4 class="font-semibold text-stone-700">Task Response</h4>
+                        <p class="text-sm text-stone-600">Fully address all parts of the question with well-supported and extended ideas.</p>
+                    </div>
+                    <div class="text-center p-4">
+                        <div class="text-3xl mb-2">🔗</div>
+                        <h4 class="font-semibold text-stone-700">Coherence & Cohesion</h4>
+                        <p class="text-sm text-stone-600">Logically organize your ideas with effective use of linking words and phrases.</p>
+                    </div>
+                    <div class="text-center p-4">
+                        <div class="text-3xl mb-2">📚</div>
+                        <h4 class="font-semibold text-stone-700">Lexical Resource</h4>
+                        <p class="text-sm text-stone-600">Use a wide, accurate, and natural range of vocabulary, including less common items.</p>
+                    </div>
+                    <div class="text-center p-4">
+                        <div class="text-3xl mb-2">✍️</div>
+                        <h4 class="font-semibold text-stone-700">Grammatical Range</h4>
+                        <p class="text-sm text-stone-600">Demonstrate a command of various simple and complex sentence structures with minimal errors.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="general" class="content-section">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl md:text-4xl font-bold text-stone-800 mb-4">💡 General Vocabulary</h2>
+                <p class="max-w-3xl mx-auto text-stone-600">These words and phrases are essential for any essay, regardless of the topic. They will help you to structure your argument, express your opinion, and connect your ideas effectively.</p>
+            </div>
+            <div class="bg-white p-6 md:p-8 rounded-xl shadow-md">
+                <h3 class="text-2xl font-bold text-stone-800 mb-4">Linking Words & Phrases</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div>
+                        <h4 class="font-semibold text-stone-700 mb-2">To Introduce an Idea</h4>
+                        <ul class="list-disc list-inside text-sm text-stone-600 space-y-1">
+                            <li>First and foremost, ...</li>
+                            <li>To begin with, ...</li>
+                            <li>It is widely believed that ...</li>
+                            <li>A primary concern is ...</li>
+                            <li>The advent of ...</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-stone-700 mb-2">To Add More Information</h4>
+                        <ul class="list-disc list-inside text-sm text-stone-600 space-y-1">
+                            <li>Furthermore, ...</li>
+                            <li>In addition, ...</li>
+                            <li>Moreover, ...</li>
+                            <li>Additionally, ...</li>
+                            <li>Not only ... but also ...</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-stone-700 mb-2">To Show Contrast</h4>
+                        <ul class="list-disc list-inside text-sm text-stone-600 space-y-1">
+                            <li>However, ...</li>
+                            <li>In contrast, ...</li>
+                            <li>On the other hand, ...</li>
+                            <li>Nevertheless, ...</li>
+                            <li>Conversely, ...</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-stone-700 mb-2">To Show Cause & Effect</h4>
+                        <ul class="list-disc list-inside text-sm text-stone-600 space-y-1">
+                            <li>Consequently, ...</li>
+                            <li>As a result, ...</li>
+                            <li>Therefore, ...</li>
+                            <li>Thus, ...</li>
+                            <li>This can lead to ...</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-stone-700 mb-2">To Give Examples</h4>
+                        <ul class="list-disc list-inside text-sm text-stone-600 space-y-1">
+                            <li>For instance, ...</li>
+                            <li>For example, ...</li>
+                            <li>To illustrate, ...</li>
+                            <li>A case in point is ...</li>
+                            <li>Such as ...</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-stone-700 mb-2">To Conclude an Essay</h4>
+                        <ul class="list-disc list-inside text-sm text-stone-600 space-y-1">
+                            <li>In conclusion, ...</li>
+                            <li>To sum up, ...</li>
+                            <li>In summary, ...</li>
+                            <li>All things considered, ...</li>
+                            <li>In light of the above, ...</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-6 md:p-8 rounded-xl shadow-md mt-8">
+                <h3 class="text-2xl font-bold text-stone-800 mb-4">General Band 9 Vocabulary</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div>
+                        <h4 class="font-semibold text-stone-700 mb-2">For Arguments</h4>
+                        <ul class="list-disc list-inside text-sm text-stone-600 space-y-1">
+                            <li><strong>Proponents:</strong> Supporters of an idea.</li>
+                            <li><strong>Advocates:</strong> People who publicly support or recommend a policy.</li>
+                            <li><strong>Detractors:</strong> Critics of a policy or idea.</li>
+                            <li><strong>Contentious:</strong> Causing or likely to cause an argument.</li>
+                            <li><strong>Pragmatic:</strong> Dealing with things sensibly and realistically.</li>
+                            <li><strong>Unfettered:</strong> Not limited by rules or controls.</li>
+                            <li><strong>Tenet:</strong> A principle or belief, especially one of the main principles of a religion or philosophy.</li>
+                            <li><strong>Prevalent:</strong> Widespread in a particular area or at a particular time.</li>
+                            <li><strong>Nuanced:</strong> Characterized by subtle shades of meaning or expression.</li>
+                            <li><strong>Empirical:</strong> Based on, concerned with, or verifiable by observation or experience rather than theory or pure logic.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-stone-700 mb-2">For Impact & Change</h4>
+                        <ul class="list-disc list-inside text-sm text-stone-600 space-y-1">
+                            <li><strong>Profound:</strong> Very great or intense.</li>
+                            <li><strong>Unprecedented:</strong> Never done or known before.</li>
+                            <li><strong>Inexorable:</strong> Impossible to stop or prevent.</li>
+                            <li><strong>Catalyst:</strong> A person or thing that precipitates an event.</li>
+                            <li><strong>Mitigate:</strong> To make something less severe or painful.</li>
+                            <li><strong>Ramifications:</strong> A complex or unwelcome consequence of an action or event.</li>
+                            <li><strong>Transformative:</strong> Causing a marked change in someone or something.</li>
+                            <li><strong>Erosion:</strong> The process of gradually destroying something.</li>
+                            <li><strong>Synergy:</strong> The interaction or cooperation of two or more organizations, substances, or other agents to produce a combined effect greater than the sum of their separate effects.</li>
+                            <li><strong>Epochal:</strong> Relating to or characteristic of an epoch or era; highly significant or momentous.</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-stone-700 mb-2">For Society</h4>
+                        <ul class="list-disc list-inside text-sm text-stone-600 space-y-1">
+                            <li><strong>Socioeconomic:</strong> Relating to or concerned with the interaction of social and economic factors.</li>
+                            <li><strong>Disparity:</strong> A great difference.</li>
+                            <li><strong>Plight:</strong> A dangerous, difficult, or otherwise unfortunate situation.</li>
+                            <li><strong>In a concerted effort:</strong> In a coordinated and united way.</li>
+                            <li><strong>The populace:</strong> The people residing in a country.</li>
+                            <li><strong>Equity:</strong> The quality of being fair and impartial.</li>
+                            <li><strong>Autonomy:</strong> The right or condition of self-government.</li>
+                            <li><strong>Cohesion:</strong> The action or fact of forming a united whole.</li>
+                            <li><strong>Interconnectedness:</strong> The state of being connected with each other.</li>
+                            <li><strong>Infrastructure:</strong> The basic physical and organizational structures needed for the operation of a society.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="education" class="content-section">
+            <!-- Content for Education will be injected here by JavaScript -->
+        </section>
+
+        <section id="technology" class="content-section">
+            <!-- Content for Technology will be injected here by JavaScript -->
+        </section>
+
+        <section id="environment" class="content-section">
+            <!-- Content for Environment will be injected here by JavaScript -->
+        </section>
+        
+        <section id="government" class="content-section">
+            <!-- Content for Government & Society will be injected here by JavaScript -->
+        </section>
+
+        <section id="health" class="content-section">
+            <!-- Content for Health will be injected here by JavaScript -->
+        </section>
+
+        <section id="work" class="content-section">
+            <!-- Content for Work & Employment will be injected here by JavaScript -->
+        </section>
+        
+        <section id="culture" class="content-section">
+            <!-- Content for Culture & Globalization will be injected here by JavaScript -->
+        </section>
+
+        <section id="media" class="content-section">
+            <!-- Content for Media & Communication will be injected here by JavaScript -->
+        </section>
+
+        <section id="family" class="content-section">
+            <!-- Content for Family & Children will be injected here by JavaScript -->
+        </section>
+        
+        <section id="urbanization" class="content-section">
+            <!-- Content for Urbanization & Housing will be injected here by JavaScript -->
+        </section>
+
+        <section id="sports" class="content-section">
+            <!-- Content for Sports & Leisure will be injected here by JavaScript -->
+        </section>
+
+        <section id="arts" class="content-section">
+            <!-- Content for Arts & Literature will be injected here by JavaScript -->
+        </section>
+
+        <section id="crime" class="content-section">
+            <!-- Content for Crime & Law will be injected here by JavaScript -->
+        </section>
+
+        <section id="food" class="content-section">
+            <!-- Content for Food & Diet will be injected here by JavaScript -->
+        </section>
+
+        <section id="travel" class="content-section">
+            <!-- Content for Travel & Tourism will be injected here by JavaScript -->
+        </section>
+
+        <section id="science" class="content-section">
+            <!-- Content for Science & Research will be injected here by JavaScript -->
+        </section>
+        
+        <section id="gemini-feedback" class="content-section">
+            <!-- AI Feedback content will be injected here -->
+        </section>
+
+    </main>
+
+    <div id="essay-modal" class="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none">
+        <div class="modal-content bg-white rounded-lg shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto transform scale-95">
+            <div class="sticky top-0 bg-white p-4 border-b border-stone-200 flex justify-between items-center">
+                <h3 id="modal-title" class="text-lg font-semibold text-stone-800">Sample Essay Analysis</h3>
+                <button id="close-modal-button" class="text-stone-500 hover:text-stone-800 text-2xl">&times;</button>
+            </div>
+            <div id="modal-body" class="p-6 md:p-8">
+                <!-- Essay content will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const appData = {
+            general: {
+                title: "General",
+                icon: "💡",
+                intro: "These words and phrases are essential for any essay, regardless of the topic. They will help you to structure your argument, express your opinion, and connect your ideas effectively.",
+                questions: [],
+                vocabulary: [
+                    { word: "Consequently", meaning: "As a result.", example: "The government invested heavily in public transport; consequently, traffic congestion was reduced." },
+                    { word: "Furthermore", meaning: "In addition; besides.", example: "The city has a thriving arts scene. Furthermore, it offers a wide range of recreational activities." },
+                    { word: "Nevertheless", meaning: "In spite of that; however.", example: "The plan was ambitious; nevertheless, they were determined to succeed." },
+                    { word: "Conversely", meaning: "In an opposite or contrary way.", example: "Some people argue for a longer work week. Conversely, others believe in a shorter one." },
+                    { word: "Pragmatic", meaning: "Dealing with things sensibly and realistically.", example: "A pragmatic approach to the problem is needed." },
+                    { word: "Proponents", meaning: "People who publicly support or recommend a particular policy or theory.", example: "Proponents of the new policy argue that it will create jobs." },
+                    { word: "Detractors", meaning: "People who disparage or belittle something.", example: "Despite the success of the project, it still has its detractors." },
+                    { word: "Contentious", meaning: "Likely to cause an argument; controversial.", example: "The issue of climate change is a contentious one." },
+                    { word: "Mitigate", meaning: "To make something less severe or painful.", example: "The new regulations are designed to mitigate the effects of pollution." },
+                    { word: "Profound", meaning: "Very great or intense.", example: "The internet has had a profound impact on modern life." },
+                    { word: "Inexorable", meaning: "Impossible to stop or prevent.", example: "The inexorable rise of automation is a major concern for many workers." },
+                    { word: "Catalyst", meaning: "A person or thing that precipitates an event.", example: "The economic crisis was a catalyst for social change." },
+                    { word: "Socioeconomic", meaning: "Relating to or concerned with the interaction of social and economic factors.", example: "The government must consider the socioeconomic impact of its policies." },
+                    { word: "Disparity", meaning: "A great difference.", example: "The disparity between the rich and the poor is a growing problem." },
+                    { word: "Holistic", meaning: "Characterized by the belief that the parts of something are interconnected.", example: "A holistic approach to education considers the needs of the whole person." },
+                    { word: "In a concerted effort", meaning: "In a coordinated and united way.", example: "The team worked in a concerted effort to complete the project." },
+                    { word: "The populace", meaning: "The people residing in a country.", example: "The new law was popular with the populace." },
+                    { word: "Unfettered", meaning: "Not limited by rules or controls.", example: "The unfettered growth of industry can lead to environmental damage." },
+                    { word: "Tenet", meaning: "A principle or belief, especially one of the main principles of a religion or philosophy.", example: "The core tenet of the policy is to promote equality." },
+                    { word: "Prevalent", meaning: "Widespread in a particular area or at a particular time.", example: "The use of social media is now prevalent among all age groups." },
+                    { word: "Nuanced", meaning: "Characterized by subtle shades of meaning or expression.", example: "A nuanced understanding of the issue is required to solve it." },
+                    { word: "Empirical", meaning: "Based on, concerned with, or verifiable by observation or experience rather than theory or pure logic.", example: "The scientist's claim was based on empirical evidence." },
+                    { word: "Ramifications", meaning: "A complex or unwelcome consequence of an action or event.", example: "The new law has serious ramifications for the economy." },
+                    { word: "Transformative", meaning: "Causing a marked change in someone or something.", example: "Education is a transformative experience for many people." },
+                    { word: "Erosion", meaning: "The process of gradually destroying something.", example: "The erosion of traditional values is a concern for some." },
+                    { word: "Synergy", meaning: "The interaction or cooperation of two or more organizations, substances, or other agents to produce a combined effect greater than the sum of their separate effects.", example: "The synergy between the two departments led to a successful project." },
+                    { word: "Epochal", meaning: "Relating to or characteristic of an epoch or era; highly significant or momentous.", example: "The invention of the internet was an epochal event in human history." },
+                    { word: "Equity", meaning: "The quality of being fair and impartial.", example: "The government is working to promote equity in the education system." },
+                    { word: "Autonomy", meaning: "The right or condition of self-government.", example: "The core argument against government health bans is the principle of individual autonomy." },
+                    { word: "Cohesion", meaning: "The action or fact of forming a united whole.", example: "Team cohesion is a key factor in the success of any sports team." },
+                    { word: "Interconnectedness", meaning: "The state of being connected with each other.", example: "Globalization has led to an unprecedented level of global interconnectedness." },
+                    { word: "Infrastructure", meaning: "The basic physical and organizational structures needed for the operation of a society.", example: "Investing in public infrastructure, such as roads and bridges, is a key responsibility of the government." },
+                ],
+                phrases: [
+                    { phrase: "A double-edged sword", func: "To describe something with both positive and negative consequences." },
+                    { phrase: "To address the root causes", func: "To suggest a fundamental solution to a problem." },
+                    { phrase: "A matter of public concern", func: "For describing a widespread issue." },
+                    { phrase: "To strike a balance", func: "For discussing a compromise between two opposing ideas." },
+                    { phrase: "To have a detrimental impact on", func: "For describing a negative consequence." },
+                    { phrase: "To be at the vanguard of change", func: "For describing a leader in a movement or industry." },
+                    { phrase: "To put a strain on public services", func: "For discussing a negative consequence of overpopulation or overuse." },
+                    { phrase: "To pave the way for future breakthroughs", func: "For discussing the long-term benefits of research or innovation." },
+                    { phrase: "To ignite a passion", func: "For discussing a positive effect on individuals." },
+                    { phrase: "To foster a sense of community", func: "For discussing a positive social outcome." },
+                ],
+                ideas: { positive: [], negative: [] },
+                sampleEssay: null
+            },
+            education: {
+                title: "Education",
+                icon: "🎓",
+                intro: "Education is a central theme in IELTS, covering topics from school curricula to the role of technology in learning. This section provides questions, vocabulary, and arguments to help you build a robust and informed essay on this multifaceted subject.",
+                questions: [
+                    { type: "Opinion", text: "To what extent do you agree or disagree that financial education should be a mandatory subject in schools?" },
+                    { type: "Opinion", text: "Some people believe that university education is more effective if it focuses on theoretical knowledge, while others argue that practical skills should be prioritized. To what extent do you agree or disagree?" },
+                    { type: "Discussion", text: "Some people believe that children should start school at a very early age, while others think they should begin later. Discuss both views and give your opinion." },
+                    { type: "Discussion", text: "Many people argue that the values learned from family have a greater influence on a child's future success than the knowledge and skills learned at school. Discuss both views and give your opinion." },
+                    { type: "Problem-Solution", text: "Bullying is an increasing problem in many schools. What do you think are the causes of this problem, and what solutions can you suggest?" },
+                    { type: "Problem-Solution", text: "Fewer students are choosing to study science subjects at university. What are the causes of this trend, and what measures can be taken to address it?" },
+                    { type: "Advantages-Disadvantages", text: "Online education has become increasingly popular in recent years. Do the advantages of online education outweigh the disadvantages?" },
+                ],
+                vocabulary: [
+                    { word: "Pedagogy", meaning: "The art and science of teaching.", example: "Effective pedagogy focuses on student engagement rather than rote memorization." },
+                    { word: "Holistic Education", meaning: "Education addressing the whole person, including intellectual and emotional development.", example: "A holistic education system aims to cultivate well-rounded individuals." },
+                    { word: "Tertiary Education", meaning: "Higher education at a university or college level.", example: "The cost of tertiary education remains a significant barrier for many students." },
+                    { word: "Lifelong Learning", meaning: "The ongoing, voluntary, and self-motivated pursuit of knowledge.", example: "In a rapidly changing job market, lifelong learning is crucial for professional success." },
+                    { word: "Curriculum", meaning: "The subjects comprising a course of study in a school or college.", example: "The school revised its curriculum to include more practical skills." },
+                    { word: "Socioeconomic disparity", meaning: "Unequal distribution of wealth and opportunities.", example: "Mandatory financial education could help mitigate socioeconomic disparity." },
+                    { word: "Fiscal responsibility", meaning: "The ability to manage one's financial affairs prudently.", example: "Students who learn about fiscal responsibility are more likely to make sound financial decisions later in life." },
+                    { word: "Pragmatism", meaning: "A practical, matter-of-fact approach to problems.", example: "Introducing financial education is an act of educational pragmatism." },
+                    { word: "Rote learning", meaning: "Memorization of information based on repetition.", example: "Rote learning is often criticized for failing to foster true understanding." },
+                    { word: "Cognitive development", meaning: "The construction of thought processes, including remembering, problem-solving, and decision-making.", example: "Early childhood education is vital for a child's cognitive development." },
+                    { word: "Standardized testing", meaning: "A test administered and scored in a consistent, or 'standard', manner.", example: "Critics argue that standardized testing promotes teaching to the test rather than genuine learning." },
+                    { word: "Extracurricular activities", meaning: "Activities falling outside the normal curriculum of a school or college.", example: "Participation in extracurricular activities can help students develop a wide range of social skills." },
+                    { word: "Critical thinking", meaning: "The objective analysis and evaluation of an issue to form a judgment.", example: "Modern education should prioritize teaching critical thinking over simple information recall." },
+                    { word: "Digital literacy", meaning: "The ability to find, evaluate, create, and communicate information using digital technology.", example: "Digital literacy is an essential skill for students in the 21st century." },
+                    { word: "E-learning", meaning: "Learning conducted via electronic media, typically on the Internet.", example: "The rise of e-learning has made education more accessible to people in remote areas." },
+                    { word: "Peer interaction", meaning: "Social interaction with one's peers.", example: "Peer interaction is crucial for developing social skills and emotional intelligence." },
+                    { word: "Academic performance", meaning: "The extent to which a student has achieved their short or long-term educational goals.", example: "Factors such as sleep and nutrition can significantly impact a student's academic performance." },
+                    { word: "Distance education", meaning: "A form of education where the students are not physically present at a school.", example: "Distance education has opened up opportunities for people who cannot attend a traditional university." },
+                    { word: "Vocational training", meaning: "Training for a specific career or trade.", example: "Vocational training provides students with the practical skills needed to enter the workforce directly." },
+                    { word: "Student-centered learning", meaning: "A teaching method in which students are at the center of the learning process.", example: "Student-centered learning allows students to take control of their own education." },
+                ],
+                phrases: [
+                    { phrase: "A cornerstone of societal progress", func: "Emphasizing the importance of education." },
+                    { phrase: "To equip students for the future", func: "Describing the purpose of education." },
+                    { phrase: "Fostering a culture of excellence", func: "Discussing a strong academic environment." },
+                    { phrase: "To bridge the digital divide", func: "For topics related to equal access to technology." },
+                    { phrase: "A matter of personal accountability", func: "For topics on student responsibility." },
+                    { phrase: "To cultivate a love of learning", func: "Discussing the long-term goal of education." },
+                    { phrase: "To fall short of expectations", func: "Describing a negative outcome." },
+                    { phrase: "To provide a solid foundation", func: "Talking about fundamental knowledge." },
+                    { phrase: "A key determinant of success", func: "Highlighting an important factor." },
+                    { phrase: "In an increasingly competitive global landscape", func: "Contextualizing the importance of education." },
+                ],
+                ideas: {
+                    positive: [
+                        { title: "Enhances Financial Well-being", text: "Financial education in schools prepares students to make sound decisions as adults, such as managing debt and making long-term investments, helping to break cycles of poverty." },
+                        { title: "Fosters Critical Thinking", text: "Integrating technology empowers students to become independent learners. Access to vast online resources helps develop critical thinking and problem-solving skills." },
+                        { title: "Develops Practical Skills", text: "Incorporating practical skills and hands-on experience equips students with the competencies needed to succeed in their careers and makes them more competitive." }
+                    ],
+                    negative: [
+                        { title: "Risk of Cynicism and Egoism", text: "An emphasis on financial education may foster a profit-driven mindset, potentially turning young people into cynical individuals who prioritize financial gain over empathy." },
+                        { title: "Exacerbates the Digital Divide", text: "Relying on technology can widen the gap between students, as not all have equal access to reliable internet or modern devices, perpetuating socioeconomic disparities." },
+                        { title: "Diminishes Fundamental Skills", text: "Over-reliance on digital tools can negatively affect skills like handwriting and mental math, while reduced face-to-face interaction can impede social skill development." }
+                    ]
+                },
+                sampleEssay: {
+                    prompt: "Some people believe that public health is the government's responsibility, while others think people should be responsible for their own health. Discuss both views and give your opinion.",
+                    essay: `<p class="mb-4">In contemporary society, the question of whether public health is a matter of governmental responsibility or personal accountability is a subject of considerable debate. While advocates for a more interventionist state argue that governments have a duty to ensure public well-being, others assert that individual autonomy in health-related choices is paramount. A comprehensive approach, which recognizes the pivotal roles of both the state and the individual, is the most effective way forward.</p><p class="mb-4">On the one hand, a strong case can be made for governmental intervention in public health. The state is uniquely positioned to implement policies on a large scale that can significantly influence societal health outcomes. For instance, national healthcare systems ensure that even the most vulnerable members of society have access to essential medical services, thereby promoting equity in health. Furthermore, governments can enforce regulations on harmful substances, such as implementing a sugar tax on carbonated beverages, which has been shown to reduce consumption and prevent chronic ailments. This approach is based on the premise that collective action is necessary to address systemic issues and protect the populace from commercial interests that may undermine public well-being.</p><p class="mb-4">On the other hand, it is equally important to acknowledge the role of individual responsibility. Proponents of this view argue that without personal accountability, government efforts can be rendered ineffective. Individuals are ultimately the ones who make daily choices about their diet, exercise, and lifestyle habits. A person who is not committed to self-discipline and healthy living can easily circumvent regulations or ignore public health campaigns. This viewpoint emphasizes that true, lasting change must be cultivated from within, as it is individuals who have the final say over their own lives and bodies.</p><p>In conclusion, while both the government and individuals play significant roles in promoting public health, a collaborative approach that leverages the strengths of both is the most logical path. Governments should provide the necessary infrastructure and implement effective policies to educate the public and curb harmful practices. However, individuals must take responsibility for their own well-being by actively making informed lifestyle choices. It is only through this partnership that a healthier and more resilient society can be achieved.</p>`,
+                    analysis: `<h4 class="font-semibold text-stone-700 mb-2">Expert Analysis</h4><ul class="list-disc list-inside space-y-2 text-sm text-stone-600"><li><strong>Task Response:</strong> The essay directly addresses all parts of the prompt. It thoroughly discusses the arguments for both government and individual responsibility in two separate body paragraphs, and the final paragraph presents a clear and well-justified opinion that advocates for a balanced, collaborative approach.</li><li><strong>Coherence and Cohesion:</strong> The essay is well-structured and easy to follow. The introduction clearly sets up the discussion, and the use of linking phrases such as "On the one hand," "On the other hand," and "In conclusion" provides a logical and seamless flow.</li><li><strong>Lexical Resource:</strong> The vocabulary used is wide-ranging and precise. Words and phrases like <em>interventionist state</em>, <em>paramount</em>, <em>proponents</em>, <em>render ineffective</em>, and <em>circumvent</em> demonstrate a high level of lexical sophistication.</li><li><strong>Grammatical Range and Accuracy:</strong> The essay incorporates a variety of complex grammatical structures. The grammar is consistently accurate, contributing to a fluid and professional tone.</li></ul>`
+                }
+            },
+            technology: {
+                title: "Technology",
+                icon: "💻",
+                intro: "Technology is a dynamic and multifaceted topic in IELTS. This section covers its impact on work, society, and communication, providing the language and ideas needed for a high-scoring essay.",
+                questions: [
+                    { type: "Opinion", text: "Do you agree or disagree that working from home should be encouraged as it is good for workers and employers?" },
+                    { type: "Discussion", text: "Some people believe that technology has made people more connected, while others think it has made them more isolated. Discuss both views and give your opinion." },
+                    { type: "Problem-Solution", text: "The increasing frequency of satellite launches and space debris is becoming a threat to the Earth. What are the main causes? What measures can be taken to address this issue?" },
+                    { type: "Advantages-Disadvantages", text: "The development of artificial intelligence (AI) has many positive effects, but it also has potential risks. Do the advantages of AI outweigh the disadvantages?" },
+                ],
+                vocabulary: [
+                    { word: "Automation", meaning: "The use of technology to perform tasks without human assistance.", example: "The rise of automation has significantly increased productivity in the manufacturing sector." },
+                    { word: "Telecommuting", meaning: "Working from a remote location, such as home.", example: "The growth of telecommuting has reduced traffic congestion in major cities." },
+                    { word: "Paradigm shift", meaning: "A fundamental change in approach or underlying assumptions.", example: "The internet has caused a paradigm shift in how we access information." },
+                    { word: "Digital divide", meaning: "The gap between those who have access to technology and those who do not.", example: "Bridging the digital divide is crucial for ensuring social and economic equity in a modern society." },
+                    { word: "Cybersecurity", meaning: "The protection of digital systems from cybercrime.", example: "Businesses and individuals must invest in strong cybersecurity measures to safeguard their personal data." },
+                    { word: "Innovation", meaning: "The introduction of new ideas, devices, or methods.", example: "Technological innovation is the driving force behind modern economic growth." },
+                    { word: "Disruptive technology", meaning: "An innovation that creates a new market and value network and eventually displaces established market-leading firms, products, and alliances.", example: "Artificial intelligence is a disruptive technology that is changing every industry." },
+                    { word: "Surveillance", meaning: "The act of closely observing someone or something.", example: "Concerns about digital surveillance have led to a greater demand for privacy-enhancing technologies." },
+                    { word: "Connectivity", meaning: "The state or extent of being connected or interconnected.", example: "Global connectivity has made it easier for people from different parts of the world to communicate." },
+                    { word: "Technological Singularity", meaning: "A hypothetical future point in time at which technological growth becomes uncontrollable and irreversible, resulting in unforeseeable changes to human civilization.", example: "Some futurists predict a technological singularity within the next few decades." },
+                ],
+                phrases: [
+                    { phrase: "The advent of sophisticated technology", func: "To introduce a technological trend." },
+                    { phrase: "To bridge the geographical divide", func: "For connecting people in different locations." },
+                    { phrase: "A double-edged sword", func: "Describing something with both positive and negative consequences." },
+                    { phrase: "To navigate the complexities", func: "To describe the challenge of using or understanding complex technology." },
+                    { phrase: "To impede the development of", func: "To describe a negative impact or hindrance." },
+                    { phrase: "To democratize access to information", func: "Highlighting a positive societal effect." },
+                    { phrase: "To revolutionize an industry", func: "Describing a major positive change." },
+                    { phrase: "A threat to traditional employment", func: "For discussing job-related concerns." },
+                    { phrase: "To streamline processes", func: "For describing efficiency gains." },
+                    { phrase: "The relentless pace of change", func: "For discussing the speed of technological development." },
+                ],
+                ideas: {
+                    positive: [
+                        { title: "Enhanced Productivity and Flexibility", text: "Remote work offers flexibility, allowing employees to better manage work-life balance. Eliminating commute time and reducing office distractions often increases productivity." },
+                        { title: "Unprecedented Access to Information", text: "The internet has democratized knowledge, providing unlimited access to information and educational resources, which is transformative for marginalized individuals." },
+                        { title: "Automating Risky Tasks", text: "AI and robotics can perform dangerous or arduous tasks in fields like bomb disposal and space exploration, enhancing safety and reducing human error." }
+                    ],
+                    negative: [
+                        { title: "Promoting Social Isolation", text: "Technology can foster social isolation by replacing meaningful face-to-face interactions with superficial digital ones, diminishing social skills." },
+                        { title: "Threat of Job Displacement", text: "Automation and AI pose a threat to traditional jobs. As machines become more capable, many roles may become obsolete, creating a societal challenge." },
+                        { title: "Vulnerability and Security Risks", text: "Increasing reliance on technology makes individuals vulnerable to cybercrime like identity theft and data breaches, requiring robust cybersecurity measures." }
+                    ]
+                },
+                sampleEssay: null
+            },
+            environment: {
+                title: "Environment",
+                icon: "🌍",
+                intro: "Environmental issues, from climate change to pollution, are frequently tested in IELTS. This section provides the language and ideas needed to build a nuanced argument on this critical topic.",
+                questions: [
+                    { type: "Opinion", text: "To what extent do you agree or disagree that the most effective way to tackle climate change is by increasing taxes on fossil fuels?" },
+                    { type: "Discussion", text: "Some people believe that protecting the environment is the government's responsibility, while others believe that it is the duty of each individual. Discuss both views and give your opinion." },
+                    { type: "Problem-Solution", text: "The increasing frequency of satellite launches and space debris is becoming a threat to the Earth. What are the main causes? What measures can be taken to address this issue?" },
+                    { type: "Advantages-Disadvantages", text: "Some people believe that tourism harms the environment. Do the advantages of tourism outweigh the disadvantages for the environment?" },
+                ],
+                vocabulary: [
+                    { word: "Mitigation", meaning: "The action of reducing the severity of something.", example: "Governments must focus on the mitigation of carbon emissions to combat climate change." },
+                    { word: "Sustainability", meaning: "The ability to be maintained at a certain rate or level.", example: "Environmental sustainability is a goal that requires the coordinated efforts of both governments and individuals." },
+                    { word: "Biodiversity", meaning: "The variety of life in a particular habitat.", example: "The protection of biodiversity is essential for a healthy ecosystem." },
+                    { word: "Carbon Footprint", meaning: "The amount of carbon dioxide released by a person or organization.", example: "An individual's carbon footprint can be reduced by taking public transport and reducing consumption." },
+                    { word: "Proactive", meaning: "Creating or controlling a situation rather than just responding to it.", example: "A proactive approach to climate change involves investing in renewable energy rather than simply reacting to its effects." },
+                    { word: "Stewardship", meaning: "The job of supervising or taking care of something.", example: "Environmental stewardship is a shared responsibility, but governments are tasked with its ultimate oversight." },
+                    { word: "Legislation", meaning: "Laws, considered collectively.", example: "New international legislation is desperately needed to regulate the disposal of satellites." },
+                    { word: "Ecosystem", meaning: "A biological community of interacting organisms.", example: "The protection of fragile marine ecosystems is a challenge that requires international legislative mandates." },
+                    { word: "Depletion", meaning: "Reduction in the number or quantity of something.", example: "The depletion of natural resources is a major cause of environmental degradation." },
+                    { word: "Environmental Degradation", meaning: "The deterioration of the environment through depletion of resources.", example: "Industrial negligence is a leading cause of severe environmental degradation." },
+                    { word: "Anthropogenic", meaning: "Originating in human activity.", example: "Anthropogenic climate change is a result of human activities." },
+                    { word: "Renewable energy", meaning: "Energy from a source that is not depleted when used.", example: "Investing in renewable energy sources like solar and wind power is crucial for a sustainable future." },
+                    { word: "Deforestation", meaning: "The action of clearing a wide area of trees.", example: "Massive deforestation in the Amazon rainforest has had a devastating impact on local ecosystems." },
+                    { word: "Sustainable development", meaning: "Development that meets the needs of the present without compromising the ability of future generations to meet their own needs.", example: "Sustainable development requires a balance between economic growth and environmental protection." },
+                    { word: "Pollutant", meaning: "A substance that pollutes something, especially water or the atmosphere.", example: "Industrial waste is a major source of pollutants in our rivers and oceans." },
+                    { word: "Conservation", meaning: "The act of preserving, guarding, or protecting.", example: "Wildlife conservation efforts are vital to prevent the extinction of endangered species." },
+                    { word: "Global warming", meaning: "A gradual increase in the overall temperature of the earth's atmosphere.", example: "The melting of polar ice caps is a direct consequence of global warming." },
+                    { word: "Ecological footprint", meaning: "The impact of a person or community on the environment.", example: "Reducing our ecological footprint is a critical step towards living more sustainably." },
+                    { word: "Habitat destruction", meaning: "The process by which a natural habitat is rendered functionally unable to support the species present.", example: "Urban expansion has led to widespread habitat destruction, threatening local wildlife." },
+                    { word: "Climate change", meaning: "A change in global or regional climate patterns.", example: "Climate change poses one of the greatest threats to global stability." },
+                ],
+                phrases: [
+                    { phrase: "To address the root causes", func: "To suggest a fundamental solution to a problem." },
+                    { phrase: "A matter of collective responsibility", func: "For arguing for a combined approach to a problem." },
+                    { phrase: "The advent of green technology", func: "To introduce a new environmental trend." },
+                    { phrase: "To take a holistic approach", func: "To suggest a broad, comprehensive solution." },
+                    { phrase: "A wake-up call for humanity", func: "For discussing a serious, pressing issue." },
+                    { phrase: "To be at the vanguard of change", func: "For describing a leader in an environmental movement." },
+                    { phrase: "To strike a balance", func: "For discussing a compromise between two opposing ideas." },
+                    { phrase: "A ticking time bomb", func: "For describing a problem that will have severe consequences if not addressed." },
+                    { phrase: "To curb emissions", func: "For discussing policies to reduce pollution." },
+                    { phrase: "In a concerted effort", func: "For describing a united and coordinated approach." },
+                ],
+                ideas: {
+                    positive: [
+                        { title: "Governmental Leverage and Scalability", text: "Governments are uniquely positioned to address large-scale environmental issues that are beyond the scope of individual action, such as controlling industrial pollution and negotiating international treaties." },
+                        { title: "Technological Innovation in Debris Removal", text: "A new space industry can be funded and dedicated to cleaning up existing debris, using innovative technologies like robotic arms or magnetic nets to actively capture and de-orbit space junk." },
+                        { title: "Individual Action as a Cultural Catalyst", text: "While government action is essential, individual responsibility is the catalyst for a broader cultural shift towards sustainability. Small-scale actions like recycling and reducing consumption can create a groundswell of public pressure." }
+                    ],
+                    negative: [
+                        { title: "The 'Moral Hazard' of Government Responsibility", text: "If environmental protection is seen as solely the government's duty, it creates a 'moral hazard' where individuals feel absolved of personal responsibility and continue to engage in damaging behaviors." },
+                        { title: "The 'Tragedy of the Commons'", text: "Without government regulation, individuals, companies, and nations will act in their own short-term self-interest, leading to the depletion of shared resources like air, water, and oceans." },
+                        { title: "Economic Repercussions", text: "Imposing strict regulations, such as green taxes, could have severe economic repercussions, potentially leading to job losses and a rise in the cost of goods for consumers." }
+                    ]
+                },
+                sampleEssay: {
+                    prompt: "The increasing frequency of satellite launches and space debris is becoming a threat to the Earth. What are the main causes? What measures can be taken to address this issue?",
+                    essay: `<p class="mb-4">The proliferation of satellites and the resulting increase in space debris represent a pressing issue that poses a significant threat to global space activities. This problem is rooted in a confluence of technological and economic factors, and its remediation will require a concerted, multi-pronged approach encompassing both policy and technological innovation.</p><p class="mb-4">The primary cause of the current predicament is the "new space race," which is driven not by government ambition but by the privatization of the space industry. Commercial entities, motivated by the pursuit of profit and the ambition to provide global connectivity, are launching "mega-constellations" of satellites into low Earth orbit at an unprecedented rate. This trend, coupled with the historical lack of foresight in designing satellites without a reliable end-of-life plan, has created a ticking time bomb. The problem is compounded by a lack of a unified global authority to regulate this shared resource, leading to a "tragedy of the cosmic commons" where individual actors pollute the orbital environment with impunity.</p><p class="mb-4">To mitigate this looming threat, a range of measures must be undertaken. First and foremost, new international legislation is essential to impose stricter regulations on satellite launches and the disposal of defunct objects. A fundamental step is to mandate that all new satellites include a reliable, on-board de-orbiting mechanism to ensure they can be removed from orbit at the end of their operational life. To enforce this, a "space tax" could be levied on launches, with the revenue allocated to funding "active debris removal" missions. Additionally, there is a pressing need for the development of a comprehensive, real-time "space traffic management" system, similar to air traffic control, to track all orbital objects and prevent future collisions.</p><p>In conclusion, the problem of space debris is a direct consequence of a lack of foresight and a fragmented regulatory framework in the face of rapid technological advancement. Addressing this issue requires a holistic approach that combines strict legislative mandates with a commitment to technological innovation. By prioritizing space stewardship and global cooperation, it is possible to clean up the orbital environment and safeguard its use for humanity's future.</p>`,
+                    analysis: `<h4 class="font-semibold text-stone-700 mb-2">Expert Analysis</h4><ul class="list-disc list-inside space-y-2 text-sm text-stone-600"><li><strong>Task Response:</strong> The essay fully addresses both parts of the prompt, providing a clear explanation of the causes and a well-developed discussion of the solutions.</li><li><strong>Coherence and Cohesion:</strong> The essay is logically structured with a clear introduction, two main body paragraphs, and a conclusion. Linking devices such as "Furthermore" and "In conclusion" are used effectively to create a cohesive argument.</li><li><strong>Lexical Resource:</strong> A wide range of high-level vocabulary is used accurately and appropriately, including <em>proliferation</em>, <em>remediation</em>, <em>unprecedented</em>, <em>de-orbiting mechanisms</em>, and <em>tragedy of the cosmic commons</em>.</li><li><strong>Grammatical Range and Accuracy:</strong> The essay uses a variety of complex sentence structures, including the use of participial phrases and relative clauses, to convey complex ideas without errors.</li></ul>`
+                }
+            },
+            government: {
+                title: "Government & Society",
+                icon: "🏛️",
+                intro: "Essays on government and society often require a discussion of public policy, social responsibility, and the balance between individual liberty and collective good. This section provides a foundation for tackling these complex topics.",
+                questions: [
+                    { type: "Opinion", text: "To what extent do you agree or disagree that governments should spend more money on public services than on military defense?" },
+                    { type: "Discussion", text: "Some people believe that censorship is necessary to protect citizens from harmful content, while others argue that it is a violation of free speech. Discuss both views and give your opinion." },
+                    { type: "Problem-Solution", text: "The rise in social isolation in modern society is becoming a serious problem. What are the causes of this issue, and what measures can the government take to address it?" },
+                    { type: "Advantages-Disadvantages", text: "In some countries, governments are encouraging people to save more for their retirement. Do the advantages of this trend outweigh the disadvantages?" },
+                ],
+                vocabulary: [
+                    { word: "Fiscal policy", meaning: "The use of government spending and taxation to influence the economy.", example: "Governments can use fiscal policy to stimulate economic growth or to combat inflation." },
+                    { word: "Public funds", meaning: "Money collected from citizens by the government.", example: "There is a continuous debate about the most judicious use of public funds." },
+                    { word: "Infrastructure", meaning: "The basic physical and organizational structures needed for the operation of a society.", example: "Investing in public infrastructure, such as roads and bridges, is a key responsibility of the government." },
+                    { word: "Social contract", meaning: "An implicit agreement among the members of a society to cooperate for social benefits.", example: "The social contract dictates that citizens surrender some rights in exchange for state protection." },
+                    { word: "Censorship", meaning: "The suppression of speech, public communication, or other information.", example: "Government censorship is a contentious issue, as it restricts the free flow of ideas." },
+                    { word: "Autonomy", meaning: "The right or condition of self-government.", example: "The core argument against government health bans is the principle of individual autonomy." },
+                    { word: "Bureaucracy", meaning: "A system of government in which most of the important decisions are made by state officials rather than by elected representatives.", example: "The complex bureaucracy in many government departments can lead to inefficiency." },
+                    { word: "Legislation", meaning: "Laws, considered collectively.", example: "New legislation on environmental protection has been introduced by the government." },
+                    { word: "Accountability", meaning: "The state of being responsible for one's actions.", example: "Political accountability is essential for a healthy democracy." },
+                    { word: "Socioeconomic", meaning: "Relating to or concerned with the interaction of social and economic factors.", example: "The government must consider the socioeconomic impact of its new policies." },
+                ],
+                phrases: [
+                    { phrase: "A contentious issue", func: "To introduce a topic with significant debate." },
+                    { phrase: "To infringe upon personal liberty", func: "For discussing a negative impact of government policy." },
+                    { phrase: "To ensure public well-being", func: "For discussing the role of government." },
+                    { phrase: "A matter of public concern", func: "For describing a widespread issue." },
+                    { phrase: "To strike a balance", func: "For discussing a compromise between two opposing ideas." },
+                    { phrase: "A fiscal burden on the taxpayer", func: "For discussing the financial cost of government programs." },
+                    { phrase: "To uphold democratic principles", func: "For discussing the foundation of a democratic society." },
+                    { phrase: "To be at the vanguard of change", func: "For describing a leader in a social movement." },
+                    { phrase: "To curb social unrest", func: "For discussing policies to prevent social instability." },
+                    { phrase: "To allocate resources", func: "For discussing how money or assets are distributed." },
+                ],
+                ideas: {
+                    positive: [
+                        { title: "Economic Stability", text: "Government spending on public services like education and healthcare creates jobs and fosters a more productive workforce, which contributes to long-term economic stability." },
+                        { title: "Social Equity", text: "Investment in public services can reduce socioeconomic disparities by providing equal access to essential resources, regardless of a person's financial background." },
+                        { title: "National Security Beyond Military Power", text: "A healthy, educated, and well-cared-for population is a nation's greatest asset and a form of security that goes beyond military strength." }
+                    ],
+                    negative: [
+                        { title: "Fiscal Burden", text: "Excessive government spending on public services can lead to a significant fiscal burden on taxpayers, potentially stifling private sector growth and innovation." },
+                        { title: "Bureaucratic Inefficiency", text: "Public services can be plagued by bureaucratic inefficiency and a lack of accountability, leading to a waste of public funds and poor service delivery." },
+                        { title: "Erosion of Personal Responsibility", text: "Over-reliance on government-provided services can erode the sense of personal responsibility, leading to a culture of dependency." }
+                    ]
+                },
+                sampleEssay: null
+            },
+            health: {
+                title: "Health",
+                icon: "❤️",
+                intro: "Health is a universal concern and a frequent IELTS topic. This section provides a guide for writing about health and wellness, covering diet, lifestyle, and government policy.",
+                questions: [
+                    { type: "Opinion", text: "Some people believe that the prevention of health problems is more important than treatment. To what extent do you agree or disagree with this statement?" },
+                    { type: "Discussion", text: "Some people think that public health is the government's responsibility, while others think people should be responsible for their own health. Discuss both sides and give your opinion." },
+                    { type: "Problem-Solution", text: "Obesity is becoming a serious problem in many countries. What are the causes, and what can be done to address it?" },
+                    { type: "Advantages-Disadvantages", text: "Many people now use the internet to find information about their health problems. Do the advantages of this trend outweigh the disadvantages?" },
+                ],
+                vocabulary: [
+                    { word: "Sedentary Lifestyle", meaning: "A lifestyle characterized by a lack of physical activity.", example: "A sedentary lifestyle is a primary contributor to a range of chronic health problems." },
+                    { word: "Preventative Medicine", meaning: "Medical care focused on disease prevention rather than treatment.", example: "Governments should invest more in preventative medicine to reduce the societal burden of illness." },
+                    { word: "Chronic Ailment", meaning: "A long-lasting and difficult-to-eradicate illness.", example: "Diabetes is a chronic ailment that requires lifelong management." },
+                    { word: "Interventionist", meaning: "Favoring government intervention in social affairs.", example: "Advocates for stricter food regulations hold an interventionist viewpoint." },
+                    { word: "Autonomy", meaning: "The right or condition of self-government.", example: "The core argument against government health bans is the principle of individual autonomy." },
+                    { word: "Holistic", meaning: "Characterized by the belief that the parts of something are interconnected.", example: "A holistic approach to health considers mind, body, and spirit." },
+                    { word: "Public health", meaning: "The health of the population as a whole.", example: "The government is launching a new public health campaign to promote vaccination." },
+                    { word: "Epidemic", meaning: "A widespread occurrence of an infectious disease in a community at a particular time.", example: "The new virus quickly became an epidemic, overwhelming local hospitals." },
+                    { word: "Universal healthcare", meaning: "A healthcare system that provides medical services to all citizens.", example: "Universal healthcare is a core tenet of many socialist societies." },
+                    { word: "Healthcare disparity", meaning: "Differences in healthcare access and quality among different populations.", example: "Socioeconomic status often contributes to significant healthcare disparity." },
+                ],
+                phrases: [
+                    { phrase: "A matter of personal accountability", func: "For arguing for individual responsibility." },
+                    { phrase: "To address the root causes", func: "To suggest a fundamental solution to a problem." },
+                    { phrase: "To mitigate the risks", func: "To discuss measures to reduce negative consequences." },
+                    { phrase: "A collaborative effort", func: "For advocating a combined approach between government and individuals." },
+                    { phrase: "To impose stricter regulations", func: "For discussing government policy on health." },
+                    { phrase: "A proactive approach", func: "For discussing a preventative measure." },
+                    { phrase: "To promote public well-being", func: "For discussing the goal of a health policy." },
+                    { phrase: "A burden on the healthcare system", func: "For discussing a negative consequence." },
+                    { phrase: "To raise awareness", func: "For discussing a public information campaign." },
+                    { phrase: "A cornerstone of a healthy society", func: "For emphasizing the importance of a particular health-related idea." },
+                ],
+                ideas: {
+                    positive: [
+                        { title: "Effective Government Intervention", text: "Governments can protect public health through policies like sugar taxes and clearer food labeling, which can significantly influence consumer behavior and improve national health." },
+                        { title: "Personal Empowerment", text: "Shifting health responsibility to individuals encourages personal accountability and self-discipline, leading to more sustainable, long-term healthy behaviors." },
+                        { title: "Community-Based Solutions", text: "Combatting sedentary lifestyles requires systemic change, such as investing in pedestrian-friendly infrastructure and public parks to promote physical activity." }
+                    ],
+                    negative: [
+                        { title: "The 'Big Food' Problem", text: "The powerful food industry can undermine public health policies by lobbying for weak regulations and finding ways to circumvent new rules." },
+                        { title: "Insufficient Family Guidance", text: "Many children lack adequate guidance on nutrition at home, highlighting the need for a comprehensive curriculum in schools to teach essential life skills." },
+                        { title: "Economic and Social Barriers", text: "A healthy lifestyle is often influenced by socioeconomic factors. Healthy food can be more expensive, and a lack of time or safe public spaces can make exercise difficult." }
+                    ]
+                },
+                sampleEssay: {
+                    prompt: "Some people believe that the prevention of health problems is more important than treatment. To what extent do you agree or disagree with this statement?",
+                    essay: `<p class="mb-4">In many nations, the conversation surrounding public health often revolves around the allocation of funds towards treatment. However, an increasingly prevalent view is that a focus on preventing illness is far more effective. From my perspective, I wholeheartedly agree with this notion, as a proactive approach to health not only reduces the societal burden of disease but also fosters a more resilient and productive population.</p><p class="mb-4">The primary argument for prioritizing preventative medicine is its profound long-term impact. Treating chronic ailments such as heart disease and diabetes places an immense and often unsustainable financial strain on national healthcare systems. By contrast, investing in public health initiatives—such as campaigns to promote healthy eating, physical activity, and regular check-ups—can address the root causes of these illnesses before they manifest. This proactive approach is a more fiscally responsible and humane strategy, as it mitigates human suffering and reduces the need for expensive, long-term care.</p><p class="mb-4">Furthermore, a focus on prevention empowers individuals and cultivates a culture of personal accountability. When the public is equipped with the knowledge and resources to make informed lifestyle choices, they are more likely to take an active role in their own well-being. For instance, the promotion of community-based solutions, such as pedestrian-friendly infrastructure and public parks, encourages citizens to adopt a more active and less sedentary lifestyle. This societal shift towards proactive health management, when supported by governmental policies, creates a synergy that is far more powerful than a system that merely reacts to illness after it occurs.</p><p>In conclusion, while the treatment of illness will always remain a vital component of any healthcare system, the focus must shift to prevention. The benefits of this approach—from reducing the societal burden of disease to empowering individuals and fostering a healthier culture—are a compelling argument for its prioritization. It is only through a dedicated commitment to preventative medicine that we can build a truly resilient and healthy society for the future.</p>`,
+                    analysis: `<h4 class="font-semibold text-stone-700 mb-2">Expert Analysis</h4><ul class="list-disc list-inside space-y-2 text-sm text-stone-600"><li><strong>Task Response:</strong> The essay takes a clear position and maintains it throughout. The arguments are well-developed and supported by a logical flow of ideas, addressing the core of the prompt.</li><li><strong>Coherence and Cohesion:</strong> The essay is well-structured and uses a variety of linking words and phrases such as "However," "By contrast," and "Furthermore" to ensure a smooth transition between sentences and paragraphs.</li><li><strong>Lexical Resource:</strong> The vocabulary is precise and natural. Words like <em>proactive</em>, <em>holistically</em>, <em>alleviate</em>, and <em>mitigate</em> are used accurately and appropriately, demonstrating a high level of lexical sophistication.</li><li><strong>Grammatical Range and Accuracy:</strong> The essay utilizes a range of complex grammatical structures, including conditional phrases and clauses, without errors. The grammar is consistently accurate, contributing to a fluid and professional tone.</li></ul>`
+                }
+            },
+            work: {
+                title: "Work & Employment",
+                icon: "💼",
+                intro: "The modern workplace is evolving rapidly. Essays on this topic require a discussion of new work models, career changes, and the impact of technology. This section provides the tools to write a high-scoring essay on work and employment.",
+                questions: [
+                    { type: "Opinion", text: "Some people believe that working from home increases productivity. Do you agree or disagree?" },
+                    { type: "Discussion", text: "Many people change careers during their working life. Discuss the advantages and disadvantages of this trend." },
+                    { type: "Problem-Solution", text: "The increasing automation of jobs is causing concern among many people. What are the problems caused by this trend, and what solutions can be suggested?" },
+                    { type: "Advantages-Disadvantages", text: "Some people believe that a long working week is good for both the economy and employees. Do the advantages of a long working week outweigh the disadvantages?" },
+                ],
+                vocabulary: [
+                    { word: "Telecommuting", meaning: "Working from a remote location, such as home.", example: "The growth of telecommuting has reduced traffic congestion in major cities." },
+                    { word: "Automation", meaning: "The use of technology to perform tasks without human assistance.", example: "The rise of automation has significantly increased productivity in the manufacturing sector." },
+                    { word: "Job displacement", meaning: "When jobs are lost due to a change in technology or an industry.", example: "The automation of factory work has led to significant job displacement in the manufacturing sector." },
+                    { word: "Work-life balance", meaning: "The equilibrium between professional work and personal life.", example: "Remote work arrangements are often praised for improving an employee's work-life balance." },
+                    { word: "Gig economy", meaning: "A labor market characterized by the prevalence of short-term contracts or freelance work.", example: "The gig economy offers a flexible lifestyle but often lacks job security and benefits." },
+                    { word: "Career trajectory", meaning: "The path of an individual's career over time.", example: "Changing careers can alter one's entire career trajectory." },
+                    { word: "Job security", meaning: "The probability that an individual will keep their job.", example: "In an unstable economy, job security is a primary concern for many workers." },
+                    { word: "Upskilling", meaning: "The process of learning new skills.", example: "To remain competitive in the job market, workers must focus on upskilling and adapting to new technologies." },
+                    { word: "Downsizing", meaning: "The process of reducing the number of employees in a company.", example: "The company announced a major downsizing effort to cut costs." },
+                    { word: "Outsourcing", meaning: "Obtaining goods or services from an outside supplier.", example: "Many companies are outsourcing their IT services to firms in other countries." },
+                ],
+                phrases: [
+                    { phrase: "To thrive in a competitive market", func: "For discussing success in the job market." },
+                    { phrase: "A double-edged sword", func: "To describe something with both positive and negative consequences." },
+                    { phrase: "To navigate the complexities", func: "To describe the challenge of adapting to a new work environment." },
+                    { phrase: "To streamline processes", func: "For describing efficiency gains." },
+                    { phrase: "To foster a sense of loyalty", func: "For discussing a positive workplace culture." },
+                    { phrase: "A pressing concern for society", func: "For introducing a serious social problem." },
+                    { phrase: "To embrace a flexible work model", func: "For discussing new working arrangements." },
+                    { phrase: "To have a detrimental impact on", func: "For describing a negative consequence." },
+                    { phrase: "The relentless pace of change", func: "For discussing the speed of technological development." },
+                    { phrase: "To be at the vanguard of change", func: "For describing a leader in an industry." },
+                ],
+                ideas: {
+                    positive: [
+                        { title: "Enhanced Flexibility and Autonomy", text: "Flexible work arrangements like telecommuting offer a higher degree of personal freedom, allowing employees to manage their schedules and work at their most productive times." },
+                        { title: "Reduced Infrastructure Costs for Businesses", text: "For companies, a remote-first model can lead to significant cost savings on office space, utilities, and other infrastructure, making them more competitive." },
+                        { title: "Global Talent Pool Access", text: "Remote work allows companies to hire top talent from anywhere in the world, breaking down geographical barriers and fostering a more diverse workforce." }
+                    ],
+                    negative: [
+                        { title: "Erosion of Team Cohesion", text: "The lack of face-to-face interaction can hinder team cohesion and spontaneous collaboration, which are often crucial for innovation and problem-solving." },
+                        { title: "Social Isolation", text: "Working alone can lead to feelings of loneliness and isolation, negatively impacting an employee's mental well-being and sense of belonging." },
+                        { title: "Job Insecurity in the Gig Economy", text: "The rise of the gig economy means many workers lack job security, health insurance, and retirement benefits, creating financial instability and stress." }
+                    ]
+                },
+                sampleEssay: null
+            },
+            culture: {
+                title: "Culture & Globalization",
+                icon: "🌐",
+                intro: "Globalization is a key theme in IELTS, requiring an analysis of its impact on local cultures, traditions, and national identities. This section provides a solid foundation for addressing these topics.",
+                questions: [
+                    { type: "Opinion", text: "To what extent do you agree or disagree that globalization has led to the loss of cultural identity?" },
+                    { type: "Discussion", text: "Some people believe that international tourism is a great way to promote understanding between different cultures, while others argue it leads to cultural loss. Discuss both views and give your opinion." },
+                    { type: "Advantages-Disadvantages", text: "The increasing popularity of international sports and entertainment events brings many benefits to host countries. Do the advantages outweigh the disadvantages?" },
+                ],
+                vocabulary: [
+                    { word: "Cultural homogenization", meaning: "The process by which local cultures are transformed or absorbed by a dominant, external culture.", example: "Critics of globalization often cite cultural homogenization as a major concern." },
+                    { word: "Cultural exchange", meaning: "The reciprocal sharing of ideas, traditions, and values between different cultures.", example: "Study abroad programs promote cultural exchange and mutual understanding." },
+                    { word: "Multiculturalism", meaning: "The presence of several distinct cultural or ethnic groups within a society.", example: "Many modern cities are characterized by multiculturalism, which enriches urban life." },
+                    { word: "Acculturation", meaning: "The process of cultural change and psychological change that results from contact between two or more cultures.", example: "Immigrants often go through a process of acculturation as they adapt to a new society." },
+                    { word: "Ethnocentrism", meaning: "The belief that one's own culture is superior to all others.", example: "Ethnocentrism can lead to prejudice and misunderstandings between different cultural groups." },
+                    { word: "Cultural heritage", meaning: "The legacy of physical artifacts and intangible attributes of a group or society.", example: "Governments should invest in preserving their nation's cultural heritage." },
+                    { word: "Assimilation", meaning: "The process by which a person or a group's culture comes to resemble that of another group.", example: "Some argue that complete assimilation leads to a loss of one's original identity." },
+                    { word: "Diaspora", meaning: "The dispersion of any people from their original homeland.", example: "The global Indian diaspora has spread its culture to many parts of the world." },
+                    { word: "Interconnectedness", meaning: "The state of being connected with each other.", example: "Globalization has led to an unprecedented level of global interconnectedness." },
+                    { word: "Cultural imperialism", meaning: "The imposition of a dominant culture on other cultures.", example: "Some view the spread of Western media as a form of cultural imperialism." },
+                ],
+                phrases: [
+                    { phrase: "A double-edged sword", func: "To describe something with both positive and negative consequences." },
+                    { phrase: "To foster mutual understanding", func: "For discussing a positive outcome of cultural exchange." },
+                    { phrase: "To erode cultural traditions", func: "For discussing a negative consequence." },
+                    { phrase: "A melting pot of cultures", func: "For describing a multicultural society." },
+                    { phrase: "A global village", func: "For describing a world where people are interconnected." },
+                    { phrase: "To transcend borders", func: "For discussing something that crosses international boundaries." },
+                    { phrase: "To be a mosaic of different cultures", func: "For describing a society with distinct cultural groups." },
+                    { phrase: "A threat to national identity", func: "For discussing a negative impact of globalization." },
+                    { phrase: "To embrace cultural diversity", func: "For discussing a positive attitude towards different cultures." },
+                    { phrase: "To undermine local customs", func: "For discussing a negative impact of foreign influence." },
+                ],
+                ideas: {
+                    positive: [
+                        { title: "Enhanced Cultural Understanding", text: "Globalization promotes cultural exchange, which can lead to greater understanding and tolerance between people from different backgrounds, breaking down stereotypes and prejudice." },
+                        { title: "Economic Prosperity", text: "Increased tourism and international trade can bring significant economic benefits, creating jobs and stimulating local economies, allowing countries to invest in public services." },
+                        { title: "Access to New Ideas", text: "Globalization allows for the free flow of ideas, innovations, and technologies, which can enrich and revitalize local cultures with new art forms, music, and culinary traditions." }
+                    ],
+                    negative: [
+                        { title: "Loss of Cultural Uniqueness", text: "The dominance of Western media and consumer products can lead to cultural homogenization, where local traditions and languages are marginalized and eventually disappear." },
+                        { title: "Increased Exploitation", text: "Unregulated tourism can lead to the commercialization and exploitation of local cultures, turning ancient traditions into superficial spectacles for tourists." },
+                        { title: "Social Instability", text: "Rapid cultural change can cause social instability and a feeling of alienation among the population, particularly among older generations who feel their way of life is under threat." }
+                    ]
+                },
+                sampleEssay: null
+            },
+            media: {
+                title: "Media & Communication",
+                icon: "📡",
+                intro: "This section explores the impact of media on society, from the influence of news outlets to the effects of social media. This topic requires an analysis of communication, information dissemination, and media ethics.",
+                questions: [
+                    { type: "Opinion", text: "Some people believe that social media has a detrimental effect on society. To what extent do you agree or disagree?" },
+                    { type: "Discussion", text: "Some people believe that traditional news media, such as newspapers and television, are becoming obsolete, while others argue that they are still essential. Discuss both views and give your opinion." },
+                    { type: "Problem-Solution", text: "The spread of misinformation and 'fake news' is a growing problem. What are the causes of this issue, and what solutions can you suggest?" },
+                ],
+                vocabulary: [
+                    { word: "Misinformation", meaning: "False or inaccurate information, especially that which is deliberately intended to deceive.", example: "The spread of misinformation on social media is a serious threat to public discourse." },
+                    { word: "Sensationalism", meaning: "The use of exciting or shocking stories to provoke public interest or excitement.", example: "Tabloid journalism often relies on sensationalism to sell papers." },
+                    { word: "Disinformation", meaning: "False information intended to deceive or mislead, especially propaganda.", example: "Foreign governments have been accused of using disinformation campaigns to influence elections." },
+                    { word: "Censorship", meaning: "The suppression of speech, public communication, or other information.", example: "Government censorship is a contentious issue, as it restricts the free flow of ideas." },
+                    { word: "Credibility", meaning: "The quality of being trusted and believed in.", example: "The credibility of news sources is often questioned in the age of digital media." },
+                    { word: "Mainstream media", meaning: "Traditional forms of media, such as newspapers and television, that are widely circulated and influential.", example: "Many people are turning away from mainstream media in favor of alternative news sources." },
+                    { word: "Bias", meaning: "Prejudice in favor of or against one thing, person, or group.", example: "Journalistic ethics require journalists to report without political bias." },
+                    { word: "Propaganda", meaning: "Information, especially of a biased or misleading nature, used to promote a particular political cause or point of view.", example: "During the war, both sides used propaganda to sway public opinion." },
+                    { word: "Digital footprint", meaning: "The trail of data that is left by a person's use of digital services.", example: "It is important to be aware of your digital footprint, as it can be used to track your online activity." },
+                    { word: "Clickbait", meaning: "Content whose main purpose is to attract attention and encourage visitors to click on a link.", example: "Many online articles use clickbait headlines to get more views." },
+                ],
+                phrases: [
+                    { phrase: "A double-edged sword", func: "To describe something with both positive and negative consequences." },
+                    { phrase: "A matter of public concern", func: "For describing a widespread issue." },
+                    { phrase: "To be on the wane", func: "For describing something that is declining in popularity." },
+                    { phrase: "To democratize access to information", func: "Highlighting a positive societal effect." },
+                    { phrase: "To hold the powerful to account", func: "For discussing the role of the media in a democracy." },
+                    { phrase: "A firestorm of criticism", func: "For describing a strong negative reaction to something." },
+                    { phrase: "To go viral", func: "For describing something that becomes very popular online very quickly." },
+                    { phrase: "A threat to social cohesion", func: "For discussing a negative impact on society." },
+                    { phrase: "To navigate the complexities", func: "To describe the challenge of using or understanding complex technology." },
+                    { phrase: "To foster a sense of community", func: "For discussing a positive aspect of online interaction." },
+                ],
+                ideas: {
+                    positive: [
+                        { title: "Unprecedented Access to Information", text: "Social media and online platforms have democratized access to information, allowing citizens to stay informed about current events from a variety of sources, which is crucial for a healthy democracy." },
+                        { title: "Fostering Global Connectivity", text: "Social media has enabled unprecedented global connectivity, allowing people to form communities across geographical boundaries, which can foster cross-cultural understanding and empathy." },
+                        { title: "A Platform for Social Change", text: "Social media has become a powerful tool for social change, allowing individuals and groups to organize and raise awareness about important issues, leading to widespread social movements." }
+                    ],
+                    negative: [
+                        { title: "The Proliferation of Misinformation", text: "The absence of editorial oversight on social media platforms has led to the rapid spread of misinformation and 'fake news,' which can mislead the public and undermine trust in traditional institutions." },
+                        { title: "A Threat to Mental Health", text: "The constant need for validation and comparison on social media platforms can have a detrimental effect on an individual's mental health, leading to anxiety, depression, and low self-esteem." },
+                        { title: "The Echo Chamber Effect", text: "Social media algorithms often create 'echo chambers,' where users are only exposed to content that aligns with their existing beliefs, reinforcing their biases and hindering open-minded discussion." }
+                    ]
+                },
+                sampleEssay: null
+            },
+            family: {
+                title: "Family & Children",
+                icon: "👨‍👩‍👧‍👦",
+                intro: "Essays on family and children often focus on parenting styles, the roles of parents and schools, and the challenges of modern family life. This section provides questions and ideas for a high-scoring response.",
+                questions: [
+                    { type: "Opinion", text: "Some people believe that parents should be solely responsible for their children's education, while others think schools have a more significant role. To what extent do you agree or disagree?" },
+                    { type: "Discussion", text: "Some people argue that family values are more important for a child's future success than academic achievement. Discuss both views and give your opinion." },
+                    { type: "Advantages-Disadvantages", text: "Many young people choose to live with their parents for longer. Do the advantages of this trend outweigh the disadvantages?" },
+                ],
+                vocabulary: [
+                    { word: "Upbringing", meaning: "The way in which a child is cared for and educated while growing up.", example: "A child's upbringing plays a crucial role in shaping their personality and values." },
+                    { word: "Parenting style", meaning: "The strategies that parents use in their child rearing.", example: "Different parenting styles can have a profound impact on a child's psychological development." },
+                    { word: "Kinship", meaning: "The state of being related to others.", example: "Strong kinship ties are a defining feature of many traditional societies." },
+                    { word: "Nuclear family", meaning: "A family group consisting of a father, mother, and their children.", example: "The nuclear family has become the most common family structure in many Western societies." },
+                    { word: "Extended family", meaning: "A family that extends beyond the nuclear family, including grandparents, aunts, uncles, and other relatives.", example: "In many cultures, the extended family plays a central role in raising children." },
+                    { word: "Sibling rivalry", meaning: "Competition or conflict between siblings.", example: "Sibling rivalry is a common phenomenon that can lead to jealousy and conflict." },
+                    { word: "Intergenerational", meaning: "Relating to, involving, or affecting several generations.", example: "The transfer of wealth from one generation to the next is an intergenerational issue." },
+                    { word: "Maternal instinct", meaning: "A mother's natural tendency to nurture and protect her child.", example: "Many studies suggest that a strong maternal instinct is a key factor in child development." },
+                    { word: "Paternal role", meaning: "The role of a father in a child's life.", example: "The paternal role has evolved over the past few decades, with fathers becoming more involved in child-rearing." },
+                    { word: "Child-rearing", meaning: "The process of bringing up a child from birth to maturity.", example: "Child-rearing practices vary significantly across different cultures." },
+                ],
+                phrases: [
+                    { phrase: "A strong foundation for the future", func: "For discussing the importance of early childhood development." },
+                    { phrase: "To instill a sense of discipline", func: "For discussing a parenting goal." },
+                    { phrase: "The erosion of traditional values", func: "For discussing a negative societal trend." },
+                    { phrase: "A matter of personal choice", func: "For discussing individual decisions about family life." },
+                    { phrase: "To foster a sense of belonging", func: "For discussing the importance of family and community." },
+                    { phrase: "A nurturing environment", func: "For discussing a positive upbringing." },
+                    { phrase: "To strike a balance", func: "For discussing a compromise between two opposing ideas." },
+                    { phrase: "A defining feature of a society", func: "For highlighting a key characteristic of a culture." },
+                    { phrase: "A cornerstone of society", func: "For emphasizing the importance of family." },
+                    { phrase: "To be a source of solace and support", func: "For discussing the emotional role of family." },
+                ],
+                ideas: {
+                    positive: [
+                        { title: "Enhanced Emotional Development", text: "Family provides a nurturing environment where children learn essential values like empathy, respect, and responsibility, which are crucial for their emotional development and social integration." },
+                        { title: "Financial Stability", text: "Adult children living with their parents can save money and achieve financial stability, which can help them buy a home or start a family later in life." },
+                        { title: "Intergenerational Support", text: "Extended families provide a support network for both parents and children, with grandparents often playing a central role in child-rearing and passing on cultural traditions." }
+                    ],
+                    negative: [
+                        { title: "Risk of Stunted Independence", text: "Over-reliance on parents can hinder a child's ability to develop self-reliance and independence, which are vital skills for adulthood." },
+                        { title: "Strain on Family Relationships", text: "The close proximity of adult children and their parents can lead to friction and conflict, particularly if there are disagreements over lifestyle and personal choices." },
+                        { title: "Erosion of Traditional Values", text: "The decline of the extended family has led to an erosion of traditional values and knowledge, as the intergenerational transfer of wisdom is becoming less common." }
+                    ]
+                },
+                sampleEssay: null
+            },
+            urbanization: {
+                title: "Urbanization & Housing",
+                icon: "🏙️",
+                intro: "This section addresses the trends of urbanization, the challenges of housing, and the role of city planning in modern society. This topic requires an analysis of urban sprawl, infrastructure, and quality of life in cities.",
+                questions: [
+                    { type: "Advantages-Disadvantages", text: "In many cities, planners tend to arrange shops, schools, offices and homes in specific areas and separate them from each other. Do you think the advantages of this policy outweigh the disadvantages?" },
+                    { type: "Problem-Solution", text: "The rapid growth of cities has led to a shortage of affordable housing. What are the causes of this problem, and what solutions can you suggest?" },
+                    { type: "Opinion", text: "Some people believe that the government should build new towns and cities in rural areas to reduce overpopulation in existing urban areas. To what extent do you agree or disagree?" },
+                ],
+                vocabulary: [
+                    { word: "Urbanization", meaning: "The process of making an area more urban.", example: "As a result of rapid urbanization, city planners are faced with the challenge of designing functional living spaces." },
+                    { word: "Urban Sprawl", meaning: "The uncontrolled expansion of urban areas.", example: "The separation of homes and workplaces is a primary cause of urban sprawl." },
+                    { word: "Gentrification", meaning: "The process of renovating a district to conform to middle-class taste.", example: "Urban revitalization projects can sometimes lead to gentrification, forcing lower-income residents out." },
+                    { word: "Infrastructure", meaning: "The basic physical and organizational structures needed for the operation of a society.", example: "Investing in public infrastructure, such as roads and bridges, is a key responsibility of the government." },
+                    { word: "Metropolis", meaning: "A very large and densely populated city.", example: "Tokyo is a sprawling metropolis with a population of over 37 million people." },
+                    { word: "Affordable housing", meaning: "Housing which is deemed affordable to those with a median household income.", example: "The lack of affordable housing is a pressing concern for many urban residents." },
+                    { word: "Suburban", meaning: "Relating to or characteristic of a suburb.", example: "Many families are moving to the suburban areas to escape the hustle and bustle of city life." },
+                    { word: "Urban renewal", meaning: "The redevelopment of areas within a city.", example: "Urban renewal projects can revitalize a city, but they can also lead to the displacement of residents." },
+                    { word: "Overpopulation", meaning: "The condition of being populated with an excessively large number of people.", example: "Overpopulation in urban areas can lead to a strain on public services and infrastructure." },
+                    { word: "Green spaces", meaning: "Areas of parkland, gardens, or other natural spaces in a city.", example: "Urban planners should prioritize the creation of green spaces to improve the quality of life for residents." },
+                ],
+                phrases: [
+                    { phrase: "A pressing concern", func: "To introduce a serious problem." },
+                    { phrase: "A matter of urban policy", func: "For discussing city planning." },
+                    { phrase: "To mitigate the effects of", func: "To discuss measures to reduce negative consequences." },
+                    { phrase: "To foster a sense of community", func: "For discussing a positive social outcome." },
+                    { phrase: "To alleviate traffic congestion", func: "For discussing a solution to a transportation problem." },
+                    { phrase: "To strike a balance", func: "For discussing a compromise between two opposing ideas." },
+                    { phrase: "A tale of two cities", func: "For describing a city with significant socioeconomic disparity." },
+                    { phrase: "To be plagued by problems", func: "For describing a city with many issues." },
+                    { phrase: "To put a strain on public services", func: "For discussing a negative consequence of overpopulation." },
+                    { phrase: "A beacon of progress", func: "For describing a city that is a model for others." },
+                ],
+                ideas: {
+                    positive: [
+                        { title: "Optimized Urban Efficiency", text: "Separating residential, commercial, and industrial zones allows for the efficient delivery of public services like transportation and waste management." },
+                        { title: "Health and Safety", text: "By demarcating industrial zones, urban planners can mitigate health risks for residents by keeping toxic fumes and noise pollution away from homes and schools." },
+                        { title: "Reduced Commute Times", text: "Proper zoning can lead to shorter and more efficient commutes, as people are able to live closer to their workplaces, which reduces traffic congestion and air pollution." }
+                    ],
+                    negative: [
+                        { title: "Erosion of Mixed-Use Communities", text: "This rigid separation of functions destroys the vibrant, walkable, and mixed-use communities that have historically been the heart of a city." },
+                        { title: "Exacerbating Socioeconomic Segregation", text: "Zoning often leads to the spatial separation of socioeconomic classes, reinforcing social segregation and perpetuating inequality." },
+                        { title: "Increased Reliance on Private Vehicles", text: "The distance between residential and commercial zones forces residents to rely on private vehicles, which increases traffic congestion and a city's carbon footprint." }
+                    ]
+                },
+                sampleEssay: null
+            },
+            sports: {
+                title: "Sports & Leisure",
+                icon: "🏅",
+                intro: "This section explores the role of sports in society, from professional athletics to physical fitness. This topic requires a discussion of the advantages and disadvantages of sports, as well as their economic and social impact.",
+                questions: [
+                    { type: "Opinion", text: "Some people believe that professional athletes are paid excessively high salaries. To what extent do you agree or disagree with this statement?" },
+                    { type: "Discussion", text: "Some people think that sports play a vital role in fostering national pride, while others believe this focus can lead to unhealthy rivalries. Discuss both views and give your opinion." },
+                    { type: "Advantages-Disadvantages", text: "The rise of e-sports has made video games a professional sport. Do the advantages of this trend outweigh the disadvantages?" },
+                ],
+                vocabulary: [
+                    { word: "Amateur", meaning: "A person who engages in a pursuit, especially a sport, on an unpaid basis.", example: "The Olympics were once an amateur-only event." },
+                    { word: "Professionalism", meaning: "The competence or skill expected of a professional.", example: "The professionalism of the athletes was evident in their dedication and discipline." },
+                    { word: "Sportsmanship", meaning: "Fair and generous behavior or treatment of others in a sports contest.", example: "Good sportsmanship is a key life skill that children can learn from playing team sports." },
+                    { word: "Athleticism", meaning: "The physical qualities that are characteristic of athletes.", example: "The immense athleticism of the players was on full display during the game." },
+                    { word: "Endurance", meaning: "The capacity of a person to withstand fatigue and stress.", example: "Marathon runners require incredible endurance to complete the race." },
+                    { word: "Adrenaline", meaning: "A hormone secreted in response to stress.", example: "The crowd's roar gave the players a rush of adrenaline." },
+                    { word: "Team cohesion", meaning: "The extent to which members of a group are attracted to each other and willing to work together.", example: "Team cohesion is a key factor in the success of any sports team." },
+                    { word: "Spectator sport", meaning: "A sport that is entertaining to watch for a large number of spectators.", example: "Football is the world's most popular spectator sport." },
+                    { word: "Doping", meaning: "The use of banned athletic performance-enhancing drugs by athletes.", example: "Doping scandals have tarnished the reputation of many professional sports." },
+                    { word: "E-sports", meaning: "Competitive video gaming.", example: "E-sports is a rapidly growing industry with a massive global audience." },
+                ],
+                phrases: [
+                    { phrase: "A matter of national pride", func: "For discussing a source of national pride." },
+                    { phrase: "To foster a sense of community", func: "For discussing a positive social outcome." },
+                    { phrase: "A double-edged sword", func: "To describe something with both positive and negative consequences." },
+                    { phrase: "To be a source of solace and support", func: "For discussing the emotional role of sports." },
+                    { phrase: "To ignite a passion", func: "For discussing a positive effect on individuals." },
+                    { phrase: "To have a detrimental impact on", func: "For describing a negative consequence." },
+                    { phrase: "To be at the vanguard of change", func: "For describing a leader in an industry." },
+                    { phrase: "A commercialized industry", func: "For discussing the business aspect of sports." },
+                    { phrase: "A testament to human endeavor", func: "For discussing the inspiring nature of sports." },
+                    { phrase: "To be on the wane", func: "For describing something that is declining in popularity." },
+                ],
+                ideas: {
+                    positive: [
+                        { title: "Promoting Health and Fitness", text: "Sports play a vital role in promoting physical health and fitness, which can help to combat a range of chronic ailments and improve the overall well-being of a population." },
+                        { title: "Fostering Social Cohesion", text: "Team sports teach valuable skills like teamwork, cooperation, and discipline, which can help to foster a sense of social cohesion and community spirit." },
+                        { title: "Economic Benefits", text: "Major sporting events like the Olympics and the World Cup can bring significant economic benefits to host countries, attracting tourists and creating jobs." }
+                    ],
+                    negative: [
+                        { title: "Unhealthy Rivalries", text: "An excessive focus on winning can lead to unhealthy rivalries, poor sportsmanship, and even violence, undermining the positive values of sports." },
+                        { title: "Distorted Values", text: "The high salaries of professional athletes can create a distorted sense of values, with young people prioritizing fame and wealth over education and other important pursuits." },
+                        { title: "Risk of Injury", text: "Competitive sports can be physically demanding, with a high risk of injury, particularly in contact sports like football and rugby." }
+                    ]
+                },
+                sampleEssay: null
+            },
+            arts: {
+                title: "Arts & Literature",
+                icon: "🎨",
+                intro: "This section focuses on the value of arts and literature in society. Essays on this topic often revolve around government funding for the arts, cultural preservation, and the role of art in social commentary.",
+                questions: [
+                    { type: "Opinion", text: "Some people believe that government funding for the arts is a waste of public money. To what extent do you agree or disagree?" },
+                    { type: "Discussion", text: "Some people believe that art should be a reflection of society, while others argue that art should be a source of inspiration and escapism. Discuss both views and give your opinion." },
+                    { type: "Problem-Solution", text: "The lack of appreciation for classical music and literature among young people is a growing concern. What are the causes of this trend, and what solutions can you suggest?" },
+                ],
+                vocabulary: [
+                    { word: "Aesthetics", meaning: "A set of principles concerned with the nature and appreciation of beauty.", example: "The artist's work is a study in aesthetics, with a focus on harmony and balance." },
+                    { word: "Cultural heritage", meaning: "The legacy of physical artifacts and intangible attributes of a group or society.", example: "Governments should invest in preserving their nation's cultural heritage." },
+                    { word: "Patronage", meaning: "The support given by a patron to an artist.", example: "The arts have flourished for centuries under the patronage of wealthy individuals and governments." },
+                    { word: "Artistic expression", meaning: "The communication of ideas or feelings through art.", example: "Artistic expression is a fundamental aspect of human culture." },
+                    { word: "Masterpiece", meaning: "A work of outstanding artistry, skill, or workmanship.", example: "The Mona Lisa is considered a masterpiece of the Renaissance period." },
+                    { word: "Genre", meaning: "A category of artistic composition characterized by a particular style, form, or content.", example: "Science fiction is a popular genre of literature and film." },
+                    { word: "Subversive", meaning: "Seeking to overthrow or undermine an established system or institution.", example: "Many artists use their work to create a subversive commentary on society." },
+                    { word: "Intangible", meaning: "Unable to be touched or grasped; not having physical presence.", example: "Cultural heritage is both tangible and intangible, including traditions and customs." },
+                    { word: "Literary canon", meaning: "The body of books, narratives, and other texts considered to be the most important and influential.", example: "The literary canon has been criticized for being too narrow and excluding works from diverse authors." },
+                    { word: "Escapism", meaning: "The tendency to seek distraction and relief from unpleasant realities, especially by seeking entertainment.", example: "For many, art provides a form of escapism from the stresses of daily life." },
+                ],
+                phrases: [
+                    { phrase: "A reflection of society", func: "For describing art that mirrors a culture." },
+                    { phrase: "To foster a sense of national identity", func: "For discussing a positive outcome of cultural preservation." },
+                    { phrase: "A matter of public concern", func: "For describing a widespread issue." },
+                    { phrase: "To be at the vanguard of change", func: "For describing a leader in an art movement." },
+                    { phrase: "A universal language", func: "For describing art as a form of communication that transcends borders." },
+                    { phrase: "To have a profound impact on", func: "For describing a significant influence." },
+                    { phrase: "To transcend the mundane", func: "For discussing art that goes beyond everyday life." },
+                    { phrase: "A beacon of hope", func: "For describing art that provides inspiration." },
+                    { phrase: "To ignite a passion", func: "For discussing a positive effect on individuals." },
+                    { phrase: "To be a source of solace and support", func: "For discussing the emotional role of art." },
+                ],
+                ideas: {
+                    positive: [
+                        { title: "Promoting Creativity and Innovation", text: "Arts and literature are crucial for fostering creativity and innovation, which are essential skills for a modern workforce and a dynamic society." },
+                        { title: "Preserving Cultural Heritage", text: "Government funding for the arts ensures that a nation's cultural heritage is preserved for future generations, contributing to a sense of national pride and identity." },
+                        { title: "Economic Benefits", text: "The arts and culture industry is a major driver of economic growth, creating jobs and attracting tourists who contribute to the local economy." }
+                    ],
+                    negative: [
+                        { title: "Fiscal Burden", text: "Government funding for the arts can be seen as a luxury in times of economic hardship, as public funds could be better spent on essential services like healthcare and education." },
+                        { title: "Subjective and Elitist", text: "Critics argue that government arts funding is subjective and often benefits a small, elite group of artists, rather than the general public." },
+                        { title: "Censorship and Control", text: "When art is funded by the government, it can be subject to censorship and political influence, which can stifle artistic expression and creativity." }
+                    ]
+                },
+                sampleEssay: null
+            },
+            crime: {
+                title: "Crime & Law",
+                icon: "⚖️",
+                intro: "Essays on crime and law often require a discussion of crime prevention, punishment, and the role of law enforcement in society. This section provides questions and ideas for a high-scoring response on this topic.",
+                questions: [
+                    { type: "Opinion", text: "To what extent do you agree or disagree that the best way to reduce crime is to punish criminals more severely?" },
+                    { type: "Discussion", text: "Some people believe that criminals should be rehabilitated through education and training, while others argue that they should be punished with long prison sentences. Discuss both views and give your opinion." },
+                    { type: "Problem-Solution", text: "The rising rate of juvenile crime is a growing concern in many countries. What are the causes of this issue, and what measures can be taken to address it?" },
+                ],
+                vocabulary: [
+                    { word: "Rehabilitation", meaning: "The action of restoring someone to health or normal life through training and therapy after imprisonment.", example: "Rehabilitation programs are designed to help criminals reintegrate into society as productive citizens." },
+                    { word: "Deterrence", meaning: "The action of discouraging an action or event through instilling doubt or fear of the consequences.", example: "The death penalty is often defended on the grounds of its deterrence effect." },
+                    { word: "Recidivism", meaning: "The tendency of a convicted criminal to reoffend.", example: "High rates of recidivism indicate a failure of the criminal justice system to rehabilitate offenders." },
+                    { word: "Juvenile delinquency", meaning: "The habitual committing of criminal acts or offenses by a young person.", example: "Addressing the root causes of juvenile delinquency, such as poverty and a lack of education, is crucial for crime prevention." },
+                    { word: "Criminology", meaning: "The scientific study of crime and criminals.", example: "Criminology provides valuable insights into the social and psychological factors that contribute to criminal behavior." },
+                    { word: "Capital punishment", meaning: "The legally authorized killing of someone as punishment for a crime.", example: "Capital punishment is a contentious issue, with strong arguments for and against it." },
+                    { word: "Community service", meaning: "Unpaid work, performed by a person or group of people for the benefit of the community.", example: "Community service is a form of non-custodial punishment for minor offenses." },
+                    { word: "Forensic", meaning: "Relating to or denoting the application of scientific methods to the investigation of crime.", example: "Forensic evidence, such as fingerprints and DNA, is often used to solve criminal cases." },
+                    { word: "Law enforcement", meaning: "The system of police and courts that is responsible for making sure that laws are obeyed.", example: "Law enforcement plays a vital role in maintaining order and public safety." },
+                    { word: "Incarceration", meaning: "The state of being confined in prison.", example: "The high rate of incarceration in some countries is a major social problem." },
+                ],
+                phrases: [
+                    { phrase: "A pressing concern for society", func: "For introducing a serious social problem." },
+                    { phrase: "To address the root causes", func: "To suggest a fundamental solution to a problem." },
+                    { phrase: "To have a detrimental impact on", func: "For describing a negative consequence." },
+                    { phrase: "To serve as a deterrent", func: "For discussing a preventative measure." },
+                    { phrase: "A matter of justice", func: "For discussing a legal issue." },
+                    { phrase: "To uphold the rule of law", func: "For discussing the importance of a legal system." },
+                    { phrase: "To strike a balance", func: "For discussing a compromise between two opposing ideas." },
+                    { phrase: "To be an integral part of", func: "For discussing a key component of a system." },
+                    { phrase: "A vicious cycle", func: "For describing a continuous negative pattern." },
+                    { phrase: "To reintegrate into society", func: "For discussing the goal of rehabilitation." },
+                ],
+                ideas: {
+                    positive: [
+                        { title: "Effective Deterrence", text: "Severe punishments can act as a powerful deterrent, discouraging potential criminals from engaging in illegal activities and protecting the public from harm." },
+                        { title: "Rehabilitation and Reintegration", text: "Rehabilitation programs provide criminals with the education and skills needed to become productive members of society, which can reduce recidivism and a person's likelihood of reoffending." },
+                        { title: "Justice for Victims", text: "A strong legal system that imposes strict penalties can ensure that victims of crime receive a sense of justice, which can help them to heal and move on with their lives." }
+                    ],
+                    negative: [
+                        { title: "Failure to Address Root Causes", text: "A sole focus on punishment fails to address the underlying socioeconomic factors that contribute to crime, such as poverty, lack of education, and social inequality." },
+                        { title: "High Recidivism Rates", text: "Harsh punishments, such as long prison sentences, can lead to high rates of recidivism, as they often fail to prepare criminals for a return to society." },
+                        { title: "Human Rights Concerns", text: "Some punishments, such as capital punishment, are seen as a violation of human rights and are considered to be inhumane by many international organizations." }
+                    ]
+                },
+                sampleEssay: null
+            },
+            food: {
+                title: "Food & Diet",
+                icon: "🍎",
+                intro: "This section focuses on the topics of food and diet, including healthy eating, food production, and food waste. This topic requires an analysis of personal responsibility, government regulations, and global food systems.",
+                questions: [
+                    { type: "Opinion", text: "Some people believe that a vegetarian diet is the best way to solve global food shortages. To what extent do you agree or disagree?" },
+                    { type: "Discussion", text: "Some people believe that governments should regulate the food industry to promote healthy eating, while others argue that individuals should be free to choose their own diet. Discuss both views and give your opinion." },
+                    { type: "Problem-Solution", text: "Food waste is a growing problem in many countries. What are the causes of this issue, and what measures can be taken to address it?" },
+                ],
+                vocabulary: [
+                    { word: "Malnutrition", meaning: "Lack of proper nutrition, caused by not having enough to eat or not eating enough of the right things.", example: "Malnutrition is a serious health problem in many developing countries." },
+                    { word: "Obesity", meaning: "The condition of being overweight to a degree that is considered unhealthy.", example: "Obesity is a major public health concern in many developed countries." },
+                    { word: "Nutritious", meaning: "Providing the substances that are necessary for health and growth.", example: "A balanced diet is essential for a nutritious and healthy life." },
+                    { word: "Processed food", meaning: "Any food that has been altered from its natural state for safety or convenience.", example: "The high consumption of processed food is a primary contributor to rising obesity rates." },
+                    { word: "Food security", meaning: "The state of having reliable access to a sufficient quantity of affordable, nutritious food.", example: "Ensuring food security is a major goal for many governments." },
+                    { word: "Sustainable agriculture", meaning: "The practice of farming using principles of ecology.", example: "Sustainable agriculture is a key component of a long-term solution to global food shortages." },
+                    { word: "Staple diet", meaning: "A food that is eaten routinely and in such quantities that it constitutes a dominant proportion of a person's diet.", example: "Rice is a staple diet for billions of people around the world." },
+                    { word: "Food waste", meaning: "Food that is discarded or lost during production, processing, or consumption.", example: "Reducing food waste is a crucial step towards a more sustainable food system." },
+                    { word: "Dietary habits", meaning: "The food and drink that a person or animal habitually consumes.", example: "Dietary habits are often influenced by culture, socioeconomic status, and personal preference." },
+                    { word: "Genetically modified", meaning: "Organisms whose genetic material has been altered using genetic engineering techniques.", example: "Genetically modified foods are a contentious issue, with strong arguments for and against their use." },
+                ],
+                phrases: [
+                    { phrase: "A matter of personal accountability", func: "For arguing for individual responsibility." },
+                    { phrase: "To address the root causes", func: "To suggest a fundamental solution to a problem." },
+                    { phrase: "A pressing concern for society", func: "For introducing a serious social problem." },
+                    { phrase: "A collaborative effort", func: "For advocating a combined approach between government and individuals." },
+                    { phrase: "To impose stricter regulations", func: "For discussing government policy on health." },
+                    { phrase: "A fiscal burden on the healthcare system", func: "For discussing the financial cost of unhealthy eating." },
+                    { phrase: "To mitigate the effects of", func: "To discuss measures to reduce negative consequences." },
+                    { phrase: "To foster a sense of responsibility", func: "For discussing a positive social outcome." },
+                    { phrase: "To put a strain on public services", func: "For discussing a negative consequence of unhealthy eating." },
+                    { phrase: "To be at the vanguard of change", func: "For describing a leader in an industry." },
+                ],
+                ideas: {
+                    positive: [
+                        { title: "Alleviating Global Food Shortages", text: "A shift towards a vegetarian diet could help to alleviate global food shortages, as it is more efficient to produce plant-based foods than animal-based foods." },
+                        { title: "Promoting Public Health", text: "Government regulations on the food industry can help to promote healthy eating and reduce the societal burden of chronic diseases like obesity and diabetes." },
+                        { title: "Reducing Environmental Impact", text: "A vegetarian diet has a smaller ecological footprint than a meat-based diet, as it requires less water, land, and energy to produce." }
+                    ],
+                    negative: [
+                        { title: "Economic Repercussions", text: "A shift towards a vegetarian diet could have severe economic repercussions for the agricultural and livestock industries, leading to job losses and a rise in the cost of goods for consumers." },
+                        { title: "Erosion of Personal Choice", text: "Some argue that government regulation of the food industry is a violation of personal freedom and that individuals should be free to choose their own diet." },
+                        { title: "Nutritional Deficiencies", text: "A poorly planned vegetarian diet can lead to nutritional deficiencies, particularly a lack of iron, vitamin B12, and protein." }
+                    ]
+                },
+                sampleEssay: null
+            },
+            travel: {
+                title: "Travel & Tourism",
+                icon: "✈️",
+                intro: "Essays on travel and tourism often require a discussion of its economic and cultural impact. This section provides a foundation for discussing the advantages and disadvantages of tourism.",
+                questions: [
+                    { type: "Opinion", text: "To what extent do you agree or disagree that international tourism is a great way to promote understanding between different cultures?" },
+                    { type: "Discussion", text: "Some people believe that tourism brings many benefits to a country, while others argue that it has a negative impact on the local environment and culture. Discuss both views and give your opinion." },
+                    { type: "Problem-Solution", text: "The rise of mass tourism has led to over-crowding and damage to historical sites. What are the causes of this issue, and what solutions can you suggest?" },
+                ],
+                vocabulary: [
+                    { word: "Cultural exchange", meaning: "The reciprocal sharing of ideas, traditions, and values between different cultures.", example: "Tourism can facilitate cultural exchange and mutual understanding." },
+                    { word: "Ecotourism", meaning: "Tourism directed toward exotic, often threatened, natural environments, especially to support conservation efforts and observe wildlife.", example: "Ecotourism is a sustainable alternative to mass tourism." },
+                    { word: "Sustainable tourism", meaning: "Tourism that takes full account of its current and future economic, social, and environmental impacts.", example: "Sustainable tourism is a key component of a long-term solution to the negative effects of travel." },
+                    { word: "Wanderlust", meaning: "A strong desire to travel.", example: "A sense of wanderlust often inspires young people to travel the world after graduation." },
+                    { word: "Off the beaten track", meaning: "In a place that is not frequently visited by tourists.", example: "Many travelers prefer to explore destinations that are off the beaten track to experience a more authentic culture." },
+                    { word: "Over-tourism", meaning: "The excessive number of tourists visiting a particular destination.", example: "Over-tourism can put a strain on local infrastructure and negatively impact the quality of life for residents." },
+                    { word: "Cultural appropriation", meaning: "The unacknowledged or inappropriate adoption of the customs, practices, ideas, etc. of one people or society by members of another and typically more dominant people or society.", example: "Some tourists are accused of cultural appropriation when they adopt local customs without understanding their significance." },
+                    { word: "Economic boom", meaning: "A period of rapid economic growth.", example: "The tourism industry can create an economic boom for a local community, but it can also lead to inflation and a rise in the cost of living." },
+                    { word: "Hinterland", meaning: "An area lying beyond a coast or the banks of a river; the remote areas of a country.", example: "Many tourists are now exploring the hinterland to escape the crowded cities." },
+                    { word: "Jet-setter", meaning: "A person who travels frequently and for pleasure.", example: "The rise of the jet-setter has led to a globalized culture of luxury travel." },
+                ],
+                phrases: [
+                    { phrase: "A double-edged sword", func: "To describe something with both positive and negative consequences." },
+                    { phrase: "To foster mutual understanding", func: "For discussing a positive outcome of cultural exchange." },
+                    { phrase: "To erode cultural traditions", func: "For discussing a negative consequence." },
+                    { phrase: "A matter of personal choice", func: "For discussing individual decisions about travel." },
+                    { phrase: "To transcend borders", func: "For discussing something that crosses international boundaries." },
+                    { phrase: "A fiscal burden on the taxpayer", func: "For discussing the financial cost of tourism." },
+                    { phrase: "To put a strain on public services", func: "For discussing a negative consequence of over-tourism." },
+                    { phrase: "To be at the vanguard of change", func: "For describing a leader in an industry." },
+                    { phrase: "To have a detrimental impact on", func: "For describing a negative consequence." },
+                    { phrase: "To ignite a passion", func: "For discussing a positive effect on individuals." },
+                ],
+                ideas: {
+                    positive: [
+                        { title: "Economic Prosperity", text: "Tourism can bring significant economic benefits to a country, creating jobs and stimulating local economies, which can help to improve public services and infrastructure." },
+                        { title: "Fostering Cultural Understanding", text: "Travel can help to break down stereotypes and prejudice by allowing people to experience different cultures and traditions firsthand, which can foster mutual understanding and empathy." },
+                        { title: "Preservation of Heritage", text: "Revenue generated from tourism can be used to fund the preservation of historical sites and natural wonders, ensuring they are protected for future generations." }
+                    ],
+                    negative: [
+                        { title: "Environmental Degradation", text: "Tourism can have a negative impact on the local environment, leading to pollution, habitat destruction, and a strain on natural resources." },
+                        { title: "Erosion of Cultural Traditions", text: "The commercialization of local cultures to cater to tourists can lead to the erosion of authentic traditions and customs, turning them into a superficial spectacle." },
+                        { title: "Economic Inequality", text: "The wealth generated by tourism is often concentrated in the hands of a few large corporations, which can lead to economic inequality and a rise in the cost of living for locals." }
+                    ]
+                },
+                sampleEssay: null
+            },
+            science: {
+                title: "Science & Research",
+                icon: "🔬",
+                intro: "This section explores the topics of science and research, from the ethics of scientific discovery to the funding of scientific projects. This topic requires a discussion of the advantages and disadvantages of scientific progress.",
+                questions: [
+                    { type: "Opinion", text: "To what extent do you agree or disagree that scientific research should be a priority for government funding, even if the results are not immediately applicable?" },
+                    { type: "Discussion", text: "Some people believe that scientific research should be subject to strict ethical guidelines, while others argue that such guidelines can hinder scientific progress. Discuss both views and give your opinion." },
+                    { type: "Advantages-Disadvantages", text: "The development of gene technology has many potential benefits for humanity. Do the advantages of gene technology outweigh the disadvantages?" },
+                ],
+                vocabulary: [
+                    { word: "Scientific paradigm", meaning: "A distinct set of concepts or thought patterns, including theories, research methods, postulates, and standards for what constitutes legitimate contributions to a field.", example: "The discovery of DNA was a paradigm shift in the field of biology." },
+                    { word: "Empirical evidence", meaning: "Information acquired by observation or experimentation.", example: "Scientific theories must be supported by empirical evidence to be considered valid." },
+                    { word: "Hypothesis", meaning: "A proposed explanation for a phenomenon.", example: "The scientist's hypothesis was a bold claim that needed to be tested with a series of experiments." },
+                    { word: "Ethical implications", meaning: "The moral consequences or effects of something.", example: "The ethical implications of human cloning are a subject of intense debate." },
+                    { word: "Peer review", meaning: "The evaluation of work by one or more people with similar competencies as the producers of the work.", example: "Peer review is a crucial step in the scientific process to ensure the quality and validity of research." },
+                    { word: "Breakthrough", meaning: "A sudden, dramatic, and important discovery or development.", example: "The discovery of a cure for cancer would be a major scientific breakthrough." },
+                    { word: "Innovation", meaning: "The introduction of new ideas, devices, or methods.", example: "Technological innovation is the driving force behind modern economic growth." },
+                    { word: "Unforeseen consequences", meaning: "Consequences that were not anticipated or intended.", example: "The use of new technologies can have unforeseen consequences, both positive and negative." },
+                    { word: "Serendipity", meaning: "The occurrence and development of events by chance in a happy or beneficial way.", example: "The discovery of penicillin was a case of serendipity, as it was a result of an accidental observation." },
+                    { word: "Research and development", meaning: "The investigative activities that a business conducts to improve existing products and procedures or to lead to the development of new products and procedures.", example: "Investment in research and development is crucial for a country's long-term economic prosperity." },
+                ],
+                phrases: [
+                    { phrase: "A double-edged sword", func: "To describe something with both positive and negative consequences." },
+                    { phrase: "To push the boundaries of knowledge", func: "For discussing scientific exploration." },
+                    { phrase: "To address a pressing need", func: "For discussing the purpose of a research project." },
+                    { phrase: "To have a profound impact on", func: "For describing a significant influence." },
+                    { phrase: "To be at the vanguard of change", func: "For describing a leader in a scientific field." },
+                    { phrase: "A matter of ethical concern", func: "For discussing a moral issue." },
+                    { phrase: "To strike a balance", func: "For discussing a compromise between two opposing ideas." },
+                    { phrase: "To foster a culture of inquiry", func: "For discussing a positive intellectual environment." },
+                    { phrase: "To pave the way for future breakthroughs", func: "For discussing the long-term benefits of research." },
+                    { phrase: "To have a detrimental impact on", func: "For describing a negative consequence." },
+                ],
+                ideas: {
+                    positive: [
+                        { title: "Driving Force of Progress", text: "Scientific research is the driving force of human progress, leading to innovations that improve public health, quality of life, and economic prosperity." },
+                        { title: "Solving Global Challenges", text: "Scientific research is essential for addressing global challenges such as climate change, food shortages, and disease." },
+                        { title: "Enhancing Quality of Life", text: "Scientific discoveries have led to countless innovations that have made our lives easier, more convenient, and more comfortable." }
+                    ],
+                    negative: [
+                        { title: "Ethical Concerns", text: "Scientific research can have serious ethical implications, particularly in fields like gene technology and artificial intelligence, which can have unforeseen consequences for humanity." },
+                        { title: "Misuse of Technology", text: "Scientific discoveries can be misused for malicious purposes, such as the development of new weapons of war or the creation of new forms of surveillance." },
+                        { title: "Unforeseen Consequences", text: "The pursuit of scientific knowledge can lead to unforeseen consequences, such as the creation of new environmental problems or a threat to personal privacy." }
+                    ]
+                },
+                sampleEssay: null
+            },
+            geminiFeedback: {
+                title: "AI Essay Feedback",
+                icon: "✨",
+                intro: "This powerful tool uses the Gemini API to provide an instant and detailed analysis of your IELTS essay. The AI will generate a random question for you to respond to. When you submit your response, the AI will provide a Band Score estimate and a detailed, four-part feedback analysis based on the official IELTS criteria. This will help you identify areas for improvement and master your writing skills.",
+            }
+        };
+
+        let chartInstances = {};
+
+        function createTopicSectionHTML(topicKey) {
+            const topicData = appData[topicKey];
+            const sampleEssayButtonHTML = topicData.sampleEssay
+                ? `<button class="open-modal-button bg-orange-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-orange-700 transition-colors" data-topic="${topicKey}">View Sample Essay & Analysis</button>`
+                : '';
+            
+            const hasVocab = topicData.vocabulary && topicData.vocabulary.length > 0;
+            const hasPhrases = topicData.phrases && topicData.phrases.length > 0;
+            const hasIdeas = topicData.ideas && (topicData.ideas.positive.length > 0 || topicData.ideas.negative.length > 0);
+            const hasQuestions = topicData.questions && topicData.questions.length > 0;
+
+            if (topicKey === "geminiFeedback") {
+                return `
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl md:text-4xl font-bold text-stone-800 mb-4">${topicData.icon} ${topicData.title}</h2>
+                        <p class="max-w-3xl mx-auto text-stone-600">${topicData.intro}</p>
+                    </div>
+                    <div class="bg-white p-6 md:p-8 rounded-xl shadow-md mb-8">
+                        <h3 class="text-2xl font-bold text-stone-800 mb-4 flex items-center justify-between">
+                            Question
+                            <button id="generate-question-btn" class="text-sm bg-stone-200 text-stone-700 px-3 py-1 rounded-full hover:bg-stone-300 transition-colors">Generate New Question</button>
+                        </h3>
+                        <textarea id="question-display" class="w-full h-24 p-4 border border-stone-300 rounded-md bg-stone-50 text-stone-700" readonly></textarea>
+                        <h3 class="text-2xl font-bold text-stone-800 mt-8 mb-4">Your Essay</h3>
+                        <textarea id="essay-input" class="w-full h-80 p-4 border border-stone-300 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="Write your IELTS Task 2 essay here..."></textarea>
+                        <button id="get-feedback-btn" class="mt-4 w-full bg-blue-600 text-white font-semibold py-3 px-4 rounded-lg hover:bg-blue-700 transition-colors">Get Feedback ✨</button>
+                    </div>
+                    <div id="feedback-output" class="mt-8">
+                        <div id="feedback-loading" class="text-center text-stone-500 hidden">
+                            <span class="animate-spin inline-block h-8 w-8 rounded-full border-4 border-t-4 border-blue-500 border-t-blue-200"></span>
+                            <p class="mt-2">Analyzing your essay...</p>
+                        </div>
+                        <div id="feedback-content" class="bg-white p-6 md:p-8 rounded-xl shadow-md hidden">
+                            <h3 class="text-2xl font-bold text-stone-800 mb-4">Your Feedback</h3>
+                            <div class="prose-custom text-stone-700" id="feedback-text"></div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (topicKey === "general") {
+                return `
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl md:text-4xl font-bold text-stone-800 mb-4">${topicData.icon} ${topicData.title}</h2>
+                        <p class="max-w-3xl mx-auto text-stone-600">${topicData.intro}</p>
+                    </div>
+                    <div class="bg-white p-6 md:p-8 rounded-xl shadow-md">
+                        <h3 class="text-2xl font-bold text-stone-800 mb-4">Linking Words & Phrases</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div>
+                                <h4 class="font-semibold text-stone-700 mb-2">To Introduce an Idea</h4>
+                                <ul class="list-disc list-inside text-sm text-stone-600 space-y-1">
+                                    <li>First and foremost, ...</li>
+                                    <li>To begin with, ...</li>
+                                    <li>It is widely believed that ...</li>
+                                    <li>A primary concern is ...</li>
+                                    <li>The advent of ...</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-stone-700 mb-2">To Add More Information</h4>
+                                <ul class="list-disc list-inside text-sm text-stone-600 space-y-1">
+                                    <li>Furthermore, ...</li>
+                                    <li>In addition, ...</li>
+                                    <li>Moreover, ...</li>
+                                    <li>Additionally, ...</li>
+                                    <li>Not only ... but also ...</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-stone-700 mb-2">To Show Contrast</h4>
+                                <ul class="list-disc list-inside text-sm text-stone-600 space-y-1">
+                                    <li>However, ...</li>
+                                    <li>In contrast, ...</li>
+                                    <li>On the other hand, ...</li>
+                                    <li>Nevertheless, ...</li>
+                                    <li>Conversely, ...</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-stone-700 mb-2">To Show Cause & Effect</h4>
+                                <ul class="list-disc list-inside text-sm text-stone-600 space-y-1">
+                                    <li>Consequently, ...</li>
+                                    <li>As a result, ...</li>
+                                    <li>Therefore, ...</li>
+                                    <li>Thus, ...</li>
+                                    <li>This can lead to ...</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-stone-700 mb-2">To Give Examples</h4>
+                                <ul class="list-disc list-inside text-sm text-stone-600 space-y-1">
+                                    <li>For instance, ...</li>
+                                    <li>For example, ...</li>
+                                    <li>To illustrate, ...</li>
+                                    <li>A case in point is ...</li>
+                                    <li>Such as ...</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-stone-700 mb-2">To Conclude an Essay</h4>
+                                <ul class="list-disc list-inside text-sm text-stone-600 space-y-1">
+                                    <li>In conclusion, ...</li>
+                                    <li>To sum up, ...</li>
+                                    <li>In summary, ...</li>
+                                    <li>All things considered, ...</li>
+                                    <li>In light of the above, ...</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 md:p-8 rounded-xl shadow-md mt-8">
+                        <h3 class="text-2xl font-bold text-stone-800 mb-4">General Band 9 Vocabulary</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            <div>
+                                <h4 class="font-semibold text-stone-700 mb-2">For Arguments</h4>
+                                <ul class="list-disc list-inside text-sm text-stone-600 space-y-1">
+                                    <li><strong>Proponents:</strong> Supporters of an idea.</li>
+                                    <li><strong>Advocates:</strong> People who publicly support or recommend a policy.</li>
+                                    <li><strong>Detractors:</strong> Critics of a policy or idea.</li>
+                                    <li><strong>Contentious:</strong> Causing or likely to cause an argument.</li>
+                                    <li><strong>Pragmatic:</strong> Dealing with things sensibly and realistically.</li>
+                                    <li><strong>Unfettered:</strong> Not limited by rules or controls.</li>
+                                    <li><strong>Tenet:</strong> A principle or belief, especially one of the main principles of a religion or philosophy.</li>
+                                    <li><strong>Prevalent:</strong> Widespread in a particular area or at a particular time.</li>
+                                    <li><strong>Nuanced:</strong> Characterized by subtle shades of meaning or expression.</li>
+                                    <li><strong>Empirical:</strong> Based on, concerned with, or verifiable by observation or experience rather than theory or pure logic.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-stone-700 mb-2">For Impact & Change</h4>
+                                <ul class="list-disc list-inside text-sm text-stone-600 space-y-1">
+                                    <li><strong>Profound:</strong> Very great or intense.</li>
+                                    <li><strong>Unprecedented:</strong> Never done or known before.</li>
+                                    <li><strong>Inexorable:</strong> Impossible to stop or prevent.</li>
+                                    <li><strong>Catalyst:</strong> A person or thing that precipitates an event.</li>
+                                    <li><strong>Mitigate:</strong> To make something less severe or painful.</li>
+                                    <li><strong>Ramifications:</strong> A complex or unwelcome consequence of an action or event.</li>
+                                    <li><strong>Transformative:</strong> Causing a marked change in someone or something.</li>
+                                    <li><strong>Erosion:</strong> The process of gradually destroying something.</li>
+                                    <li><strong>Synergy:</strong> The interaction or cooperation of two or more organizations, substances, or other agents to produce a combined effect greater than the sum of their separate effects.</li>
+                                    <li><strong>Epochal:</strong> Relating to or characteristic of an epoch or era; highly significant or momentous.</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-stone-700 mb-2">For Society</h4>
+                                <ul class="list-disc list-inside text-sm text-stone-600 space-y-1">
+                                    <li><strong>Socioeconomic:</strong> Relating to or concerned with the interaction of social and economic factors.</li>
+                                    <li><strong>Disparity:</strong> A great difference.</li>
+                                    <li><strong>Plight:</strong> A dangerous, difficult, or otherwise unfortunate situation.</li>
+                                    <li><strong>In a concerted effort:</strong> In a coordinated and united way.</li>
+                                    <li><strong>The populace:</strong> The people residing in a country.</li>
+                                    <li><strong>Equity:</strong> The quality of being fair and impartial.</li>
+                                    <li><strong>Autonomy:</strong> The right or condition of self-government.</li>
+                                    <li><strong>Cohesion:</strong> The action or fact of forming a united whole.</li>
+                                    <li><strong>Interconnectedness:</strong> The state of being connected with each other.</li>
+                                    <li><strong>Infrastructure:</strong> The basic physical and organizational structures needed for the operation of a society.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            if (!hasQuestions && !hasVocab && !hasPhrases && !hasIdeas) {
+                return `
+                    <div class="text-center mb-12">
+                        <h2 class="text-3xl md:text-4xl font-bold text-stone-800 mb-4">${topicData.icon} ${topicData.title}</h2>
+                        <p class="max-w-3xl mx-auto text-stone-600">${topicData.intro}</p>
+                        <p class="max-w-3xl mx-auto text-stone-500 mt-8 italic">More content for this section is coming soon. Please choose another topic or request more content for this one!</p>
+                    </div>
+                `;
+            }
+
+            return `
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold text-stone-800 mb-4">${topicData.icon} ${topicData.title}</h2>
+                    <p class="max-w-3xl mx-auto text-stone-600">${topicData.intro}</p>
+                </div>
+
+                ${hasQuestions ? `
+                    <div class="bg-white p-6 md:p-8 rounded-xl shadow-md mb-8">
+                        <h3 class="text-2xl font-bold text-stone-800 mb-4">Question Bank</h3>
+                        <div class="flex flex-wrap gap-2 mb-4" id="${topicKey}-filter-buttons">
+                            <button class="filter-btn bg-stone-200 text-stone-700 px-3 py-1 rounded-full text-sm font-medium hover:bg-orange-200 active" data-topic="${topicKey}" data-filter="all">All</button>
+                            <button class="filter-btn bg-stone-200 text-stone-700 px-3 py-1 rounded-full text-sm font-medium hover:bg-orange-200" data-topic="${topicKey}" data-filter="Opinion">Opinion</button>
+                            <button class="filter-btn bg-stone-200 text-stone-700 px-3 py-1 rounded-full text-sm font-medium hover:bg-orange-200" data-topic="${topicKey}" data-filter="Discussion">Discussion</button>
+                            <button class="filter-btn bg-stone-200 text-stone-700 px-3 py-1 rounded-full text-sm font-medium hover:bg-orange-200" data-topic="${topicKey}" data-filter="Problem-Solution">Problem-Solution</button>
+                            <button class="filter-btn bg-stone-200 text-stone-700 px-3 py-1 rounded-full text-sm font-medium hover:bg-orange-200" data-topic="${topicKey}" data-filter="Advantages-Disadvantages">Advantages/Disadvantages</button>
+                        </div>
+                        <ul id="${topicKey}-questions" class="space-y-3 list-disc list-inside text-stone-700">
+                            ${topicData.questions.map(q => `<li data-type="${q.type}">${q.text}</li>`).join('')}
+                        </ul>
+                    </div>
+                ` : ''}
+
+                ${hasVocab || hasPhrases ? `
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                        ${hasVocab ? `
+                            <div class="bg-white p-6 md:p-8 rounded-xl shadow-md">
+                                <h3 class="text-2xl font-bold text-stone-800 mb-4">Band 9 Vocabulary</h3>
+                                <div class="space-y-4">
+                                    ${topicData.vocabulary.map(v => `
+                                        <div>
+                                            <p class="font-semibold text-stone-800">${v.word}</p>
+                                            <p class="text-sm text-stone-600 italic">"${v.meaning}"</p>
+                                            <p class="text-sm text-stone-500 mt-1"><strong>Example:</strong> ${v.example}</p>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                        ${hasPhrases ? `
+                            <div class="bg-white p-6 md:p-8 rounded-xl shadow-md">
+                                <h3 class="text-2xl font-bold text-stone-800 mb-4">Useful Phrases</h3>
+                                <div class="space-y-4">
+                                    ${topicData.phrases.map(p => `
+                                        <div>
+                                            <p class="font-semibold text-stone-800">"${p.phrase}"</p>
+                                            <p class="text-sm text-stone-600">${p.func}</p>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                ` : ''}
+
+                ${hasIdeas ? `
+                    <div class="bg-white p-6 md:p-8 rounded-xl shadow-md">
+                        <h3 class="text-2xl font-bold text-stone-800 mb-4 text-center">Argument Explorer</h3>
+                        <p class="text-center text-stone-600 mb-6 max-w-2xl mx-auto">Click on the bars in the chart below to reveal the detailed arguments for each perspective. This helps in understanding how to build a balanced and nuanced discussion.</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                            <div class="chart-container">
+                                <canvas id="${topicKey}-chart"></canvas>
+                            </div>
+                            <div id="${topicKey}-ideas-display" class="p-4 bg-stone-50 rounded-lg min-h-[200px]">
+                               <p class="text-stone-500 text-center">Select a category from the chart to see the ideas.</p>
+                            </div>
+                        </div>
+                    </div>
+                ` : ''}
+                
+                <div class="text-center mt-12">
+                    ${sampleEssayButtonHTML}
+                </div>
+            `;
+        }
+        
+        function renderArgumentChart(topicKey) {
+            const topicData = appData[topicKey];
+            if (!topicData || !topicData.ideas || (topicData.ideas.positive.length === 0 && topicData.ideas.negative.length === 0)) {
+                return;
+            }
+
+            const ctx = document.getElementById(`${topicKey}-chart`);
+            if (!ctx) return;
+
+            const chartId = `${topicKey}-chart`;
+            
+            if (chartInstances[chartId]) {
+                chartInstances[chartId].destroy();
+            }
+
+            chartInstances[chartId] = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Positive Ideas', 'Negative Ideas'],
+                    datasets: [{
+                        label: 'Number of Ideas',
+                        data: [topicData.ideas.positive.length, topicData.ideas.negative.length],
+                        backgroundColor: [
+                            'rgba(34, 197, 94, 0.6)', // green-500
+                            'rgba(239, 68, 68, 0.6)'  // red-500
+                        ],
+                        borderColor: [
+                            'rgba(34, 197, 94, 1)',
+                            'rgba(239, 68, 68, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    indexAxis: 'y',
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            enabled: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    },
+                    onClick: (event, elements) => {
+                        if (elements.length > 0) {
+                            const elementIndex = elements[0].index;
+                            const ideasDisplay = document.getElementById(`${topicKey}-ideas-display`);
+                            let ideasHTML = '';
+                            if (elementIndex === 0) { // Positive
+                                ideasHTML = topicData.ideas.positive.map(idea => `
+                                    <div class="mb-3">
+                                        <h4 class="font-semibold text-green-700">${idea.title}</h4>
+                                        <p class="text-sm text-stone-600">${idea.text}</p>
+                                    </div>
+                                `).join('');
+                            } else { // Negative
+                                ideasHTML = topicData.ideas.negative.map(idea => `
+                                    <div class="mb-3">
+                                        <h4 class="font-semibold text-red-700">${idea.title}</h4>
+                                        <p class="text-sm text-stone-600">${idea.text}</p>
+                                    </div>
+                                `).join('');
+                            }
+                            ideasDisplay.innerHTML = ideasHTML;
+                        }
+                    }
+                }
+            });
+        }
+        
+        async function getEssayFeedback(prompt, essayText) {
+            const systemPrompt = `You are an expert IELTS examiner and virtual tutor. Your task is to analyze an IELTS Writing Task 2 essay based on a provided question. Evaluate it against the four official criteria: Task Response, Coherence and Cohesion, Lexical Resource, and Grammatical Range and Accuracy. Provide a detailed paragraph-long analysis for each criterion. Also, identify 3-5 specific suggestions for improvement. Finally, provide an estimated Band score (from 5.0 to 9.0). The output must be a single, valid JSON object with the following keys: 'band_score' (string), 'feedback_task_response' (string), 'feedback_coherence_cohesion' (string), 'feedback_lexical_resource' (string), 'feedback_grammar' (string), and 'suggestions' (an array of strings). Do not include any text or markdown outside the JSON object.`;
+            
+            const userPrompt = `IELTS Writing Task 2 Question: "${prompt}"\n\nMy Essay:\n${essayText}`;
+            
+            const payload = {
+                contents: [{ role: "user", parts: [{ text: userPrompt }] }],
+                systemInstruction: {
+                    parts: [{ text: systemPrompt }]
+                },
+                generationConfig: {
+                    responseMimeType: "application/json"
+                }
+            };
+            
+            let retryCount = 0;
+            const maxRetries = 3;
+            const delay = 1000;
+
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=`;
+
+            while (retryCount < maxRetries) {
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        if (response.status === 429) {
+                            console.warn("Too many requests. Retrying with exponential backoff.");
+                            await new Promise(res => setTimeout(res, delay * (2 ** retryCount)));
+                            retryCount++;
+                            continue;
+                        } else {
+                            throw new Error(`API error: ${response.statusText}`);
+                        }
+                    }
+
+                    const result = await response.json();
+                    if (result.candidates && result.candidates.length > 0 && result.candidates[0].content) {
+                        return JSON.parse(result.candidates[0].content.parts[0].text);
+                    } else {
+                        throw new Error("Invalid API response format.");
+                    }
+                } catch (error) {
+                    console.error("Fetch failed:", error);
+                    throw error;
+                }
+            }
+            throw new Error("Maximum retries reached. Could not get a response.");
+        }
+
+
+        function switchContent(hash) {
+            const topicKey = hash.substring(1);
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            const activeSection = document.getElementById(topicKey);
+            const activeLink = document.querySelector(`.nav-link[href="#${topicKey}"]`);
+
+            if (activeSection) {
+                activeSection.classList.add('active');
+                if (activeLink) {
+                    activeLink.classList.add('active');
+                }
+                const topicData = appData[topicKey];
+                if (topicData && topicData.ideas && (topicData.ideas.positive.length > 0 || topicData.ideas.negative.length > 0)) {
+                    setTimeout(() => renderArgumentChart(topicKey), 50);
+                }
+                if (topicKey === 'gemini-feedback') {
+                    generateRandomQuestion();
+                }
+            } else {
+                document.getElementById('home').classList.add('active');
+                 document.querySelector('.nav-link[href="#home"]').classList.add('active');
+            }
+        }
+        
+        function generateRandomQuestion() {
+            const questionDisplay = document.getElementById('question-display');
+            if (!questionDisplay) return;
+
+            const allQuestions = Object.values(appData).flatMap(topic => topic.questions || []);
+            const randomIndex = Math.floor(Math.random() * allQuestions.length);
+            const randomQuestion = allQuestions[randomIndex];
+            questionDisplay.value = randomQuestion.text;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            Object.keys(appData).forEach(topicKey => {
+                const section = document.getElementById(topicKey);
+                if (section) {
+                    section.innerHTML = createTopicSectionHTML(topicKey);
+                }
+            });
+
+            const initialHash = window.location.hash || '#home';
+            switchContent(initialHash);
+            
+            document.body.addEventListener('click', async (e) => {
+                const targetLink = e.target.closest('a[href^="#"]');
+                if (targetLink) {
+                    e.preventDefault();
+                    const hash = new URL(targetLink.href).hash;
+                    if (hash) {
+                        history.pushState(null, '', hash);
+                        switchContent(hash);
+                        document.getElementById('mobile-menu').classList.add('hidden');
+                    }
+                }
+
+                if (e.target.classList.contains('filter-btn')) {
+                    const topicKey = e.target.dataset.topic;
+                    const filter = e.target.dataset.filter;
+                    
+                    document.querySelectorAll(`#${topicKey}-filter-buttons .filter-btn`).forEach(btn => btn.classList.remove('active', 'bg-orange-500', 'text-white'));
+                    e.target.classList.add('active', 'bg-orange-500', 'text-white');
+
+                    document.querySelectorAll(`#${topicKey}-questions li`).forEach(li => {
+                        if (filter === 'all' || li.dataset.type === filter) {
+                            li.style.display = 'list-item';
+                        } else {
+                            li.style.display = 'none';
+                        }
+                    });
+                }
+                
+                if (e.target.classList.contains('open-modal-button')) {
+                    const topicKey = e.target.dataset.topic;
+                    const essayData = appData[topicKey].sampleEssay;
+                    if (essayData) {
+                        document.getElementById('modal-title').textContent = `Sample Essay: ${topicKey.charAt(0).toUpperCase() + topicKey.slice(1)}`;
+                        document.getElementById('modal-body').innerHTML = `
+                            <p class="mb-4 p-4 bg-stone-100 rounded-lg text-sm"><strong>Prompt:</strong> ${essayData.prompt}</p>
+                            <div class="prose max-w-none text-stone-700">${essayData.essay}</div>
+                            <hr class="my-6">
+                            ${essayData.analysis}
+                        `;
+                        const modal = document.getElementById('essay-modal');
+                        modal.classList.remove('opacity-0', 'pointer-events-none');
+                        modal.querySelector('.modal-content').classList.remove('scale-95');
+                    }
+                }
+                
+                if (e.target.id === 'generate-question-btn') {
+                    generateRandomQuestion();
+                }
+
+                if (e.target.id === 'get-feedback-btn') {
+                    const questionInput = document.getElementById('question-display');
+                    const essayInput = document.getElementById('essay-input');
+                    const feedbackLoading = document.getElementById('feedback-loading');
+                    const feedbackContent = document.getElementById('feedback-content');
+                    const feedbackText = document.getElementById('feedback-text');
+                    const button = e.target;
+
+                    const question = questionInput.value.trim();
+                    const essay = essayInput.value.trim();
+
+                    if (!question) {
+                        feedbackText.innerHTML = `<p class="text-red-500">Please generate a question first.</p>`;
+                        feedbackContent.classList.remove('hidden');
+                        return;
+                    }
+                    if (essay.length < 100) {
+                        feedbackText.innerHTML = `<p class="text-red-500">Please enter a longer essay (at least 100 characters) to get a detailed feedback.</p>`;
+                        feedbackContent.classList.remove('hidden');
+                        return;
+                    }
+
+                    button.disabled = true;
+                    feedbackContent.classList.add('hidden');
+                    feedbackLoading.classList.remove('hidden');
+
+                    try {
+                        const feedback = await getEssayFeedback(question, essay);
+                        const { band_score, feedback_task_response, feedback_coherence_cohesion, feedback_lexical_resource, feedback_grammar, suggestions } = feedback;
+                        
+                        const suggestionsList = suggestions.map(s => `<li>${s}</li>`).join('');
+
+                        feedbackText.innerHTML = `
+                            <p class="text-4xl font-bold text-center text-blue-600 mb-8">Estimated Band Score: ${band_score}</p>
+                            <h4 class="font-semibold text-stone-700 mb-2">Task Response</h4>
+                            <p class="text-sm text-stone-600 mb-4">${feedback_task_response}</p>
+                            <h4 class="font-semibold text-stone-700 mb-2">Coherence & Cohesion</h4>
+                            <p class="text-sm text-stone-600 mb-4">${feedback_coherence_cohesion}</p>
+                            <h4 class="font-semibold text-stone-700 mb-2">Lexical Resource</h4>
+                            <p class="text-sm text-stone-600 mb-4">${feedback_lexical_resource}</p>
+                            <h4 class="font-semibold text-stone-700 mb-2">Grammatical Range & Accuracy</h4>
+                            <p class="text-sm text-stone-600 mb-4">${feedback_grammar}</p>
+                            <h4 class="font-semibold text-stone-700 mb-2">Suggestions for Improvement</h4>
+                            <ul class="list-disc list-inside space-y-2 text-sm text-stone-600">
+                                ${suggestionsList}
+                            </ul>
+                        `;
+                        feedbackContent.classList.remove('hidden');
+                    } catch (error) {
+                        feedbackText.innerHTML = `<p class="text-red-500">An error occurred while getting feedback. Please try again later. ${error.message}</p>`;
+                        feedbackContent.classList.remove('hidden');
+                    } finally {
+                        feedbackLoading.classList.add('hidden');
+                        button.disabled = false;
+                    }
+                }
+            });
+
+            const closeModalButton = document.getElementById('close-modal-button');
+            const modalOverlay = document.getElementById('essay-modal');
+            
+            const closeModal = () => {
+                modalOverlay.classList.add('opacity-0', 'pointer-events-none');
+                modalOverlay.querySelector('.modal-content').classList.add('scale-95');
+            };
+
+            closeModalButton.addEventListener('click', closeModal);
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) {
+                    closeModal();
+                }
+            });
+
+            document.getElementById('mobile-menu-button').addEventListener('click', () => {
+                document.getElementById('mobile-menu').classList.toggle('hidden');
+            });
+
+            window.addEventListener('hashchange', () => {
+                switchContent(window.location.hash);
+            });
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</body>
+</html>
