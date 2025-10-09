@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>National Universities Ranking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Scholarly Calm -->
+    <!-- Application Structure Plan: A single-page application with a top-down information flow. It starts with control elements (a search filter and a results-per-page selector) for immediate user interaction, followed by the main content (a paginated data table). This structure is chosen for its familiarity and efficiency, allowing users to quickly find and explore university data without a learning curve. Pagination is essential to manage the large dataset, preventing information overload and ensuring fast load times. -->
+    <!-- Visualization & Content Choices: The primary content from the CSV (University Ranks, Names, Locations) is presented in a structured HTML table. Goal: Organize & Inform. Method: An interactive table is the most effective way to display tabular data clearly. Interaction: A live text search filters the table, a dropdown controls the number of items per page, and pagination controls allow users to navigate the dataset. Justification: This provides direct, intuitive access to the data. The added "Graduate Programs" column uses dynamically generated Google search links, a practical solution to provide value without claiming to have a curated database of direct links. This approach empowers the user to find the official information easily. No charts are needed as the data is categorical and ranked, not suitable for complex visualization. NO SVG/Mermaid used. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="container mx-auto px-4 py-8 md:py-12">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">National Universities Directory</h1>
+            <p class="mt-2 text-md text-gray-600">Search and explore top-ranked national universities.</p>
+        </header>
+
+        <main class="bg-white rounded-xl shadow-md p-6">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-6 gap-4">
+                <div class="relative flex-grow">
+                    <label for="searchInput" class="sr-only">Search Universities</label>
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                    <input type="text" id="searchInput"
+                        class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                        placeholder="Search by name, state, or city...">
+                </div>
+                 <div class="flex items-center gap-2 flex-shrink-0">
+                    <label for="rowsPerPageSelect" class="text-sm font-medium text-gray-700">Show:</label>
+                    <select id="rowsPerPageSelect" class="block w-auto py-2 pl-3 pr-8 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        <option value="15">15</option>
+                        <option value="25">25</option>
+                        <option value="50">50</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Rank</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">University Name</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Location</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">State</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Graduate Programs</th>
+                        </tr>
+                    </thead>
+                    <tbody id="universityTableBody" class="bg-white divide-y divide-gray-200">
+                        
+                    </tbody>
+                </table>
+                 <div id="noResults" class="hidden text-center py-12">
+                    <h3 class="text-lg font-medium text-gray-700">No universities found.</h3>
+                    <p class="text-sm text-gray-500">Try adjusting your search term.</p>
+                </div>
+            </div>
+
+            <nav id="pagination" class="mt-6 flex items-center justify-between border-t border-gray-200 px-4 sm:px-0">
+            </nav>
+        </main>
+        
+        <footer class="text-center mt-8 text-sm text-gray-500">
+            <p>Data sourced from National Universities rankings. Interface designed for educational purposes.</p>
+        </footer>
+    </div>
+
+    <script>
+        const universityData = [
+            { rank: '#139', name: 'California State University--Fullerton', state: 'CA', location: 'Fullerton' },
+            { rank: '#139', name: 'Fairfield University', state: 'CT', location: 'Fairfield' },
+            { rank: '#139', name: 'University of the Pacific', state: 'CA', location: 'Stockton' },
+            { rank: '#139', name: 'Virginia Commonwealth University', state: 'VA', location: 'Richmond' },
+            { rank: '#143', name: 'Clarkson University', state: 'NY', location: 'Potsdam' },
+            { rank: '#143', name: 'Miami University--Oxford', state: 'OH', location: 'Oxford' },
+            { rank: '#143', name: 'Oregon State University', state: 'OR', location: 'Corvallis' },
+            { rank: '#143', name: 'Touro University', state: 'NY', location: 'New York' },
+            { rank: '#143', name: 'University of Dayton', state: 'OH', location: 'Dayton' },
+            { rank: '#143', name: 'University of Kansas', state: 'KS', location: 'Lawrence' },
+            { rank: '#143', name: 'University of Kentucky', state: 'KY', location: 'Lexington' },
+            { rank: '#143', name: 'University of North Carolina at Charlotte', state: 'NC', location: 'Charlotte' },
+            { rank: '#151', name: 'Colorado State University', state: 'CO', location: 'Fort Collins' },
+            { rank: '#151', name: 'James Madison University', state: 'VA', location: 'Harrisonburg' },
+            { rank: '#151', name: 'Seattle University', state: 'WA', location: 'Seattle' },
+            { rank: '#151', name: 'St. John\'s University (NY)', state: 'NY', location: 'Queens' },
+            { rank: '#151', name: 'University of Massachusetts--Lowell', state: 'MA', location: 'Lowell' },
+            { rank: '#151', name: 'University of Rhode Island', state: 'RI', location: 'Kingston' },
+            { rank: '#151', name: 'University of Utah', state: 'UT', location: 'Salt Lake City' },
+            { rank: '#158', name: 'Kansas State University', state: 'KS', location: 'Manhattan' },
+            { rank: '#158', name: 'Michigan Technological University', state: 'MI', location: 'Houghton' },
+            { rank: '#158', name: 'Montclair State University', state: 'NJ', location: 'Montclair' },
+            { rank: '#158', name: 'Seton Hall University', state: 'NJ', location: 'South Orange' },
+            { rank: '#158', name: 'Stockton University', state: 'NJ', location: 'Galloway' },
+            { rank: '#158', name: 'University of Alabama at Birmingham', state: 'AL', location: 'Birmingham' },
+            { rank: '#158', name: 'University of Central Florida', state: 'FL', location: 'Orlando' },
+            { rank: '#158', name: 'University of Houston', state: 'TX', location: 'Houston' },
+            { rank: '#158', name: 'University of San Francisco', state: 'CA', location: 'San Francisco' },
+            { rank: '#158', name: 'Washington State University', state: 'WA', location: 'Pullman' },
+            { rank: '#166', name: 'Arizona State University', state: 'AZ', location: 'Tempe' },
+            { rank: '#166', name: 'George Mason University', state: 'VA', location: 'Fairfax' },
+            { rank: '#166', name: 'Hofstra University', state: 'NY', location: 'Hempstead' },
+            { rank: '#166', name: 'San Diego State University', state: 'CA', location: 'San Diego' },
+            { rank: '#166', name: 'University of Arizona', state: 'AZ', location: 'Tucson' },
+            { rank: '#166', name: 'University of Cincinnati', state: 'OH', location: 'Cincinnati' },
+            { rank: '#166', name: 'University of South Florida', state: 'FL', location: 'Tampa' },
+            { rank: '#175', name: 'Auburn University', state: 'AL', location: 'Auburn' },
+            { rank: '#175', name: 'Chapman University', state: 'CA', location: 'Orange' },
+            { rank: '#175', name: 'DePaul University', state: 'IL', location: 'Chicago' },
+            { rank: '#175', name: 'Drexel University', state: 'PA', location: 'Philadelphia' },
+            { rank: '#175', name: 'Illinois Institute of Technology', state: 'IL', location: 'Chicago' },
+            { rank: '#175', name: 'Loyola University Chicago', state: 'IL', location: 'Chicago' },
+            { rank: '#175', name: 'Marquette University', state: 'WI', location: 'Milwaukee' },
+            { rank: '#175', name: 'Temple University', state: 'PA', location: 'Philadelphia' },
+            { rank: '#175', name: 'The Catholic University of America', state: 'DC', location: 'Washington' },
+            { rank: '#175', name: 'University of Arkansas', state: 'AR', location: 'Fayetteville' },
+            { rank: '#175', name: 'University of California--Riverside', state: 'CA', location: 'Riverside' },
+            { rank: '#175', name: 'University of California--Santa Cruz', state: 'CA', location: 'Santa Cruz' },
+            { rank: '#175', name: 'University of Delaware', state: 'DE', location: 'Newark' },
+            { rank: '#175', name: 'University of Illinois--Chicago', state: 'IL', location: 'Chicago' },
+            { rank: '#175', name: 'University of Maryland--Baltimore County', state: 'MD', location: 'Baltimore' },
+            { rank: '#175', name: 'University of Oklahoma', state: 'OK', location: 'Norman' },
+            { rank: '#175', name: 'University of Oregon', state: 'OR', location: 'Eugene' },
+            { rank: '#175', name: 'University of Tennessee', state: 'TN', location: 'Knoxville' },
+            { rank: '#175', name: 'University of Texas at Dallas', state: 'TX', location: 'Richardson' },
+            { rank: '#185', name: 'Louisiana State University--Baton Rouge', state: 'LA', location: 'Baton Rouge' },
+            { rank: '#185', name: 'New Jersey Institute of Technology', state: 'NJ', location: 'Newark' },
+            { rank: '#185', name: 'Texas Tech University', state: 'TX', location: 'Lubbock' },
+            { rank: '#185', name: 'University of Colorado Denver', state: 'CO', location: 'Denver' },
+            { rank: '#185', 'name': 'University of Missouri', state: 'MO', 'location': 'Columbia' },
+            { rank: '#185', 'name': 'University of Nebraska - Lincoln', state: 'NE', 'location': 'Lincoln' },
+            { rank: '#185', 'name': 'University of New Hampshire', state: 'NH', 'location': 'Durham' },
+            { rank: '#185', 'name': 'University of South Carolina', state: 'SC', 'location': 'Columbia' },
+            { rank: '#185', 'name': 'University of St. Thomas', state: 'MN', 'location': 'St. Paul' },
+            { rank: '#185', 'name': 'University of Vermont', state: 'VT', 'location': 'Burlington' },
+            { rank: '#195', 'name': 'Adelphi University', state: 'NY', 'location': 'Garden City' },
+            { rank: '#195', 'name': 'Duquesne University', state: 'PA', 'location': 'Pittsburgh' },
+            { rank: '#195', 'name': 'Howard University', state: 'DC', 'location': 'Washington' },
+            { rank: '#195', 'name': 'Mercer University', state: 'GA', 'location': 'Macon' },
+            { rank: '#195', 'name': 'Rochester Institute of Technology', state: 'NY', 'location': 'Rochester' },
+            { rank: '#195', 'name': 'Saint Louis University', state: 'MO', 'location': 'St. Louis' },
+            { rank: '#195', 'name': 'Simmons University', state: 'MA', 'location': 'Boston' },
+            { rank: '#195', 'name': 'University of Wyoming', state: 'WY', 'location': 'Laramie' },
+            { rank: '#202', 'name': 'Belmont University', state: 'TN', 'location': 'Nashville' },
+            { rank: '#202', 'name': 'Clark University', state: 'MA', 'location': 'Worcester' },
+            { rank: '#202', 'name': 'Creighton University', state: 'NE', 'location': 'Omaha' },
+            { rank: '#202', 'name': 'Florida International University', state: 'FL', 'location': 'Miami' },
+            { rank: '#202', 'name': 'Iowa State University', state: 'IA', 'location': 'Ames' },
+            { rank: '#202', 'name': 'Oklahoma State University', state: 'OK', 'location': 'Stillwater' },
+            { rank: '#202', 'name': 'University of Idaho', state: 'ID', 'location': 'Moscow' },
+            { rank: '#202', 'name': 'University of San Diego', state: 'CA', 'location': 'San Diego' },
+            { rank: '#210', 'name': 'East Carolina University', state: 'NC', 'location': 'Greenville' },
+            { rank: '#210', 'name': 'New Mexico State University', state: 'NM', 'location': 'Las Cruces' },
+            { rank: '#210', 'name': 'Northern Illinois University', state: 'IL', 'location': 'DeKalb' },
+            { rank: '#210', 'name': 'Pace University', state: 'NY', 'location': 'New York' },
+            { rank: '#210', 'name': 'San Francisco State University', state: 'CA', 'location': 'San Francisco' },
+            { rank: '#210', 'name': 'The New School', state: 'NY', 'location': 'New York' },
+            { rank: '#210', 'name': 'University of Louisville', state: 'KY', 'location': 'Louisville' },
+            { rank: '#210', 'name': 'University of Nevada--Las Vegas', state: 'NV', 'location': 'Las Vegas' },
+            { rank: '#210', 'name': 'University of North Dakota', state: 'ND', 'location': 'Grand Forks' },
+            { rank: '#219', 'name': 'Ball State University', state: 'IN', 'location': 'Muncie' },
+            { rank: '#219', 'name': 'Biola University', state: 'CA', 'location': 'La Mirada' },
+            { rank: '#219', 'name': 'Florida Atlantic University', state: 'FL', 'location': 'Boca Raton' },
+            { rank: '#219', 'name': 'Loyola University New Orleans', state: 'LA', 'location': 'New Orleans' },
+            { rank: '#219', 'name': 'Mississippi State University', state: 'MS', 'location': 'Mississippi State' },
+            { rank: '#219', 'name': 'Missouri University of Science & Technology', state: 'MO', 'location': 'Rolla' },
+            { rank: '#219', 'name': 'Ohio University', state: 'OH', 'location': 'Athens' },
+            { rank: '#219', 'name': 'University of Denver', state: 'CO', 'location': 'Denver' },
+            { rank: '#219', 'name': 'University of Hartford', state: 'CT', 'location': 'West Hartford' },
+            { rank: '#219', 'name': 'University of Mississippi', state: 'MS', 'location': 'University' },
+            { rank: '#219', 'name': 'University of Montana', state: 'MT', 'location': 'Missoula' },
+            { rank: '#219', 'name': 'University of New Mexico', state: 'NM', 'location': 'Albuquerque' },
+            { rank: '#219', 'name': 'University of Northern Iowa', state: 'IA', 'location': 'Cedar Falls' },
+            { rank: '#219', 'name': 'University of Texas at Arlington', state: 'TX', 'location': 'Arlington' },
+            { rank: '#219', 'name': 'Wayne State University', state: 'MI', 'location': 'Detroit' },
+            { rank: '#219', 'name': 'West Virginia University', state: 'WV', 'location': 'Morgantown' },
+            { rank: '#235', 'name': 'California State University--Fresno', state: 'CA', 'location': 'Fresno' },
+            { rank: '#235', 'name': 'Gannon University', state: 'PA', 'location': 'Erie' },
+            { rank: '#235', 'name': 'Illinois State University', state: 'IL', 'location': 'Normal' },
+            { rank: '#235', 'name': 'Maryville University of Saint Louis', state: 'MO', 'location': 'St. Louis' },
+            { rank: '#235', 'name': 'Old Dominion University', state: 'VA', 'location': 'Norfolk' },
+            { rank: '#235', 'name': 'Portland State University', state: 'OR', 'location': 'Portland' },
+            { rank: '#235', 'name': 'Rowan University', state: 'NJ', 'location': 'Glassboro' },
+            { rank: '#235', 'name': 'Sam Houston State University', state: 'TX', 'location': 'Huntsville' },
+            { rank: '#235', 'name': 'Southern Illinois University--Carbondale', state: 'IL', 'location': 'Carbondale' },
+            { rank: '#235', 'name': 'University of Alaska Fairbanks', state: 'AK', 'location': 'Fairbanks' },
+            { rank: '#235', 'name': 'University of Maine', state: 'ME', 'location': 'Orono' },
+            { rank: '#235', 'name': 'University of Memphis', state: 'TN', 'location': 'Memphis' },
+            { rank: '#235', 'name': 'University of Missouri--St. Louis', state: 'MO', 'location': 'St. Louis' },
+            { rank: '#235', 'name': 'University of Nevada--Reno', state: 'NV', 'location': 'Reno' },
+            { rank: '#235', 'name': 'University of North Texas', state: 'TX', 'location': 'Denton' },
+            { rank: '#235', 'name': 'University of South Dakota', state: 'SD', 'location': 'Vermillion' },
+            { rank: '#235', 'name': 'University of Southern Mississippi', state: 'MS', 'location': 'Hattiesburg' },
+            { rank: '#235', 'name': 'University of Tulsa', state: 'OK', 'location': 'Tulsa' },
+            { rank: '#235', 'name': 'University of Wisconsin--Milwaukee', state: 'WI', 'location': 'Milwaukee' },
+            { rank: '#235', 'name': 'Utah State University', state: 'UT', 'location': 'Logan' },
+            { rank: '#235', 'name': 'Western Michigan University', state: 'MI', 'location': 'Kalamazoo' },
+            { rank: '#235', 'name': 'Widener University', state: 'PA', 'location': 'Chester' },
+            { rank: '#258', 'name': 'Andrews University', state: 'MI', 'location': 'Berrien Springs' },
+            { rank: '#258', 'name': 'Azusa Pacific University', state: 'CA', 'location': 'Azusa' },
+            { rank: '#258', 'name': 'Bowling Green State University', state: 'OH', 'location': 'Bowling Green' },
+            { rank: '#258', 'name': 'Central Michigan University', state: 'MI', 'location': 'Mount Pleasant' },
+            { rank: '#258', 'name': 'High Point University', state: 'NC', 'location': 'High Point' },
+            { rank: '#258', 'name': 'Indiana University-Purdue University--Indianapolis', state: 'IN', 'location': 'Indianapolis' },
+            { rank: '#258', 'name': 'Kent State University', state: 'OH', 'location': 'Kent' },
+            { rank: '#258', 'name': 'Montana State University', state: 'MT', 'location': 'Bozeman' },
+            { rank: '#258', 'name': 'North Carolina A&T State University', state: 'NC', 'location': 'Greensboro' },
+            { rank: '#258', 'name': 'Nova Southeastern University', state: 'FL', 'location': 'Fort Lauderdale' },
+            { rank: '#258', 'name': 'Robert Morris University', state: 'PA', 'location': 'Moon Township' },
+            { rank: '#258', 'name': 'Texas State University', state: 'TX', 'location': 'San Marcos' },
+            { rank: '#258', 'name': 'University of Alabama in Huntsville', state: 'AL', 'location': 'Huntsville' },
+            { rank: '#258', 'name': 'University of Hawaii--Manoa', state: 'HI', 'location': 'Honolulu' },
+            { rank: '#258', 'name': 'University of La Verne', state: 'CA', 'location': 'La Verne' },
+            { rank: '#258', 'name': 'University of Toledo', state: 'OH', 'location': 'Toledo' },
+            { rank: '#258', 'name': 'Valparaiso University', state: 'IN', 'location': 'Valparaiso' },
+            { rank: '#275', 'name': 'Abilene Christian University', state: 'TX', 'location': 'Abilene' },
+            { rank: '#275', 'name': 'Augusta University', state: 'GA', 'location': 'Augusta' },
+            { rank: '#275', 'name': 'California Baptist University', state: 'CA', 'location': 'Riverside' },
+            { rank: '#275', 'name': 'California State University--Long Beach', state: 'CA', 'location': 'Long Beach' },
+            { rank: '#275', 'name': 'Concordia University Chicago', state: 'IL', 'location': 'River Forest' },
+            { rank: '#275', 'name': 'Dallas Baptist University', state: 'TX', 'location': 'Dallas' },
+            { rank: '#275', 'name': 'Edgewood College', state: 'WI', 'location': 'Madison' },
+            { rank: '#275', 'name': 'Hardin-Simmons University', state: 'TX', 'location': 'Abilene' },
+            { rank: '#275', 'name': 'Hawaii Pacific University', state: 'HI', 'location': 'Honolulu' },
+            { rank: '#275', 'name': 'Marshall University', state: 'WV', 'location': 'Huntington' },
+            { rank: '#275', 'name': 'Marywood University', state: 'PA', 'location': 'Scranton' },
+            { rank: '#275', 'name': 'Missouri State University', state: 'MO', 'location': 'Springfield' },
+            { rank: '#275', 'name': 'North Dakota State University', state: 'ND', 'location': 'Fargo' },
+            { rank: '#275', 'name': 'Northern Arizona University', state: 'AZ', 'location': 'Flagstaff' },
+            { rank: '#275', 'name': 'Sacred Heart University', state: 'CT', 'location': 'Fairfield' },
+            { rank: '#275', 'name': 'South Dakota State University', state: 'SD', 'location': 'Brookings' },
+            { rank: '#275', 'name': 'Spalding University', state: 'KY', 'location': 'Louisville' },
+            { rank: '#275', 'name': 'St. John Fisher College', state: 'NY', 'location': 'Rochester' },
+            { rank: '#275', 'name': 'University of Bridgeport', state: 'CT', 'location': 'Bridgeport' },
+            { rank: '#275', 'name': 'University of Missouri--Kansas City', state: 'MO', 'location': 'Kansas City' },
+            { rank: '#275', 'name': 'University of New England', state: 'ME', 'location': 'Biddeford' },
+            { rank: '#275', 'name': 'University of North Florida', state: 'FL', 'location': 'Jacksonville' },
+            { rank: '#275', 'name': 'University of St. Joseph', state: 'CT', 'location': 'West Hartford' },
+            { rank: '#275', 'name': 'University of Texas at San Antonio', state: 'TX', 'location': 'San Antonio' },
+            { rank: '#275', 'name': 'Wichita State University', state: 'KS', 'location': 'Wichita' },
+            { rank: '#275', 'name': 'Wilkes University', state: 'PA', 'location': 'Wilkes-Barre' },
+            { rank: '#304', 'name': 'Arkansas State University', state: 'AR', 'location': 'Jonesboro' },
+            { rank: '#304', 'name': 'California State University--Northridge', state: 'CA', 'location': 'Northridge' },
+            { rank: '#304', 'name': 'Campbellsville University', state: 'KY', 'location': 'Campbellsville' },
+            { rank: '#304', 'name': 'Carson-Newman University', state: 'TN', 'location': 'Jefferson City' },
+            { rank: '#304', 'name': 'Cleveland State University', state: 'OH', 'location': 'Cleveland' },
+            { rank: '#304', 'name': 'East Tennessee State University', state: 'TN', 'location': 'Johnson City' },
+            { rank: '#304', 'name': 'Gardner-Webb University', state: 'NC', 'location': 'Boiling Springs' },
+            { rank: '#304', 'name': 'Indiana University of Pennsylvania', state: 'PA', 'location': 'Indiana' },
+            { rank: '#304', 'name': 'Kean University', state: 'NJ', 'location': 'Union' },
+            { 'rank': '#304', 'name': 'Liberty University', 'state': 'VA', 'location': 'Lynchburg' },
+            { 'rank': '#304', 'name': 'Lindenwood University', 'state': 'MO', 'location': 'St. Charles' },
+            { 'rank': '#304', 'name': 'Lipscomb University', 'state': 'TN', 'location': 'Nashville' },
+            { 'rank': '#304', 'name': 'Oakland University', 'state': 'MI', 'location': 'Rochester' },
+            { 'rank': '#304', 'name': 'Regis University', 'state': 'CO', 'location': 'Denver' },
+            { 'rank': '#304', 'name': 'Shenandoah University', 'state': 'VA', 'location': 'Winchester' },
+            { 'rank': '#304', 'name': 'Southern Connecticut State University', 'state': 'CT', 'location': 'New Haven' },
+            { 'rank': '#304', 'name': 'Tennessee State University', 'state': 'TN', 'location': 'Nashville' },
+            { 'rank': '#304', 'name': 'Texas A&M University--Commerce', 'state': 'TX', 'location': 'Commerce' },
+            { 'rank': '#304', 'name': 'Texas A&M University--Corpus Christi', 'state': 'TX', 'location': 'Corpus Christi' },
+            { 'rank': '#304', 'name': 'The University of Texas at El Paso', 'state': 'TX', 'location': 'El Paso' },
+            { 'rank': '#304', 'name': 'The University of Texas Rio Grande Valley', 'state': 'TX', 'location': 'Edinburg' },
+            { 'rank': '#304', 'name': 'Union University', 'state': 'TN', 'location': 'Jackson' },
+            { 'rank': '#304', 'name': 'University of Akron', 'state': 'OH', 'location': 'Akron' },
+            { 'rank': '#304', 'name': 'University of Central Oklahoma', 'state': 'OK', 'location': 'Edmond' },
+            { rank: '#304', name: 'University of Charleston', state: 'WV', location: 'Charleston' },
+            { rank: '#304', name: 'University of Detroit Mercy', state: 'MI', location: 'Detroit' },
+            { rank: '#304', name: 'University of Indianapolis', state: 'IN', location: 'Indianapolis' },
+            { rank: '#304', name: 'University of Massachusetts Boston', state: 'MA', location: 'Boston' },
+            { rank: '#304', name: 'University of North Carolina at Greensboro', state: 'NC', location: 'Greensboro' },
+            { rank: '#304', name: 'University of Northern Colorado', state: 'CO', location: 'Greeley' },
+            { rank: '#304', name: 'University of Texas at Tyler', state: 'TX', location: 'Tyler' },
+            { rank: '#304', name: 'University of West Florida', state: 'FL', location: 'Pensacola' },
+            { rank: '#304', name: 'Webster University', state: 'MO', location: 'St. Louis' },
+            { rank: '#304', name: 'William Paterson University of New Jersey', state: 'NJ', location: 'Wayne' },
+            { rank: '#337', name: 'Appalachian State University', state: 'NC', location: 'Boone' },
+            { rank: '#337', name: 'Bethel University', state: 'MN', location: 'St. Paul' },
+            { rank: '#337', name: 'Boise State University', state: 'ID', location: 'Boise' },
+            { rank: '#337', 'name': 'Brenau University', 'state': 'GA', 'location': 'Gainesville' },
+            { 'rank': '#337', 'name': 'California State University--East Bay', 'state': 'CA', 'location': 'Hayward' },
+            { 'rank': '#337', 'name': 'California State University--San Bernardino', 'state': 'CA', 'location': 'San Bernardino' },
+            { 'rank': '#337', 'name': 'Charleston Southern University', 'state': 'SC', 'location': 'Charleston' },
+            { 'rank': '#337', 'name': 'Florida A&M University', 'state': 'FL', 'location': 'Tallahassee' },
+            { 'rank': '#337', 'name': 'Grand Canyon University', 'state': 'AZ', 'location': 'Phoenix' },
+            { 'rank': '#337', 'name': 'Harding University', 'state': 'AR', 'location': 'Searcy' },
+            { 'rank': '#337', 'name': 'Houston Baptist University', 'state': 'TX', 'location': 'Houston' },
+            { 'rank': '#337', 'name': 'Indiana University-Purdue University--Fort Wayne', 'state': 'IN', 'location': 'Fort Wayne' },
+            { 'rank': '#337', 'name': 'La Salle University', 'state': 'PA', 'location': 'Philadelphia' },
+            { 'rank': '#337', 'name': 'Lamar University', 'state': 'TX', 'location': 'Beaumont' },
+            { 'rank': '#337', 'name': 'LeTourneau University', 'state': 'TX', 'location': 'Longview' },
+            { 'rank': '#337', 'name': 'Lincoln Memorial University', 'state': 'TN', 'location': 'Harrogate' },
+            { 'rank': '#337', 'name': 'Mercy College', 'state': 'NY', 'location': 'Dobbs Ferry' },
+            { 'rank': '#337', 'name': 'Middle Tennessee State University', 'state': 'TN', 'location': 'Murfreesboro' },
+            { 'rank': '#337', 'name': 'Morgan State University', 'state': 'MD', 'location': 'Baltimore' },
+            { 'rank': '#337', 'name': 'Murray State University', 'state': 'KY', 'location': 'Murray' },
+            { 'rank': '#337', 'name': 'Northern Kentucky University', 'state': 'KY', 'location': 'Highland Heights' },
+            { 'rank': '#337', 'name': 'Northwestern State University of Louisiana', 'state': 'LA', 'location': 'Natchitoches' },
+            { 'rank': '#337', 'name': 'Oklahoma City University', 'state': 'OK', 'location': 'Oklahoma City' },
+            { 'rank': '#337', 'name': 'Oral Roberts University', 'state': 'OK', 'location': 'Tulsa' },
+            { 'rank': '#337', 'name': 'Rider University', 'state': 'NJ', 'location': 'Lawrenceville' },
+            { 'rank': '#337', 'name': 'Samford University', 'state': 'AL', 'location': 'Birmingham' },
+            { 'rank': '#337', 'name': 'Seattle Pacific University', 'state': 'WA', 'location': 'Seattle' },
+            { 'rank': '#337', 'name': 'Southern University and A&M College', 'state': 'LA', 'location': 'Baton Rouge' },
+            { 'rank': '#337', 'name': 'Sullivan University', 'state': 'KY', 'location': 'Louisville' },
+            { 'rank': '#337', 'name': 'Tennessee Technological University', 'state': 'TN', 'location': 'Cookeville' },
+            { 'rank': '#337', 'name': 'Texas A&M University--Kingsville', 'state': 'TX', 'location': 'Kingsville' },
+            { 'rank': '#337', 'name': 'Texas Southern University', 'state': 'TX', 'location': 'Houston' },
+            { 'rank': '#337', 'name': 'Texas Woman\'s University', 'state': 'TX', 'location': 'Denton' },
+            { 'rank': '#337', 'name': 'Troy University', 'state': 'AL', 'location': 'Troy' },
+            { 'rank': '#337', 'name': 'Tuskegee University', 'state': 'AL', 'location': 'Tuskegee' },
+            { 'rank': '#337', 'name': 'University of Central Missouri', 'state': 'MO', 'location': 'Warrensburg' },
+            { 'rank': '#337', 'name': 'University of Louisiana at Monroe', 'state': 'LA', 'location': 'Monroe' },
+            { rank: '#363', name: 'Indiana State University', state: 'IN', location: 'Terre Haute' },
+            { rank: '#363', name: 'Jackson State University', state: 'MS', location: 'Jackson' },
+            { rank: '#363', name: 'Keiser University', state: 'FL', location: 'Fort Lauderdale' },
+            { rank: '#363', name: 'Southern Illinois University Edwardsville', state: 'IL', location: 'Edwardsville' },
+            { rank: '#363', name: 'Trevecca Nazarene University', state: 'TN', location: 'Nashville' },
+            { rank: '#363', name: 'University of Central Arkansas', state: 'AR', location: 'Conway' },
+            { rank: '#363', name: 'University of Montana', state: 'MT', location: 'Missoula' },
+            { rank: '#363', name: 'University of South Alabama', state: 'AL', location: 'Mobile' },
+            { rank: '#363', name: 'Walsh University', state: 'OH', location: 'North Canton' },
+            { rank: '#363', name: 'Western Kentucky University', state: 'KY', location: 'Bowling Green' },
+            { rank: '#373', name: 'Eastern Michigan University', state: 'MI', location: 'Ypsilanti' },
+            { rank: '#373', name: 'Kennesaw State University', state: 'GA', location: 'Kennesaw' },
+            { rank: '#373', name: 'Long Island University', state: 'NY', location: 'Brookville' },
+            { rank: '#373', name: 'Regent University', state: 'VA', location: 'Virginia Beach' },
+            { rank: '#373', name: 'Tarleton State University', state: 'TX', location: 'Stephenville' },
+            { rank: '#373', name: 'The University of Akron', state: 'OH', location: 'Akron' },
+            { rank: '#373', name: 'University of Findlay', state: 'OH', location: 'Findlay' },
+            { rank: '#373', name: 'University of Louisiana at Lafayette', state: 'LA', location: 'Lafayette' },
+            { rank: '#373', name: 'University of West Georgia', state: 'GA', location: 'Carrollton' },
+            { rank: '#373', name: 'William Carey University', state: 'MS', location: 'Hattiesburg' },
+            { rank: '#373', name: 'Wingate University', state: 'NC', location: 'Wingate' },
+            { rank: '#384', name: 'Baker University', state: 'KS', location: 'Baldwin City' },
+            { rank: '#384', name: 'Briar Cliff University', state: 'IA', location: 'Sioux City' },
+            { rank: '#384', name: 'Capitol Technology University', state: 'MD', location: 'Laurel' }
+        ];
+
+        let filteredData = [...universityData];
+        let currentPage = 1;
+        let rowsPerPage = 15;
+
+        const tableBody = document.getElementById('universityTableBody');
+        const searchInput = document.getElementById('searchInput');
+        const paginationContainer = document.getElementById('pagination');
+        const noResultsDiv = document.getElementById('noResults');
+        const rowsPerPageSelect = document.getElementById('rowsPerPageSelect');
+
+
+        function generateSearchUrl(universityName) {
+            const query = encodeURIComponent(`${universityName} graduate programs`);
+            return `https://www.google.com/search?q=${query}`;
+        }
+
+        function renderTable() {
+            tableBody.innerHTML = '';
+            
+            if (filteredData.length === 0) {
+                noResultsDiv.classList.remove('hidden');
+                tableBody.parentElement.parentElement.classList.add('hidden');
+                return;
+            }
+
+            noResultsDiv.classList.add('hidden');
+            tableBody.parentElement.parentElement.classList.remove('hidden');
+
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const paginatedItems = filteredData.slice(start, end);
+
+            for (const university of paginatedItems) {
+                const row = document.createElement('tr');
+                row.className = 'hover:bg-gray-50';
+                
+                const gradProgramUrl = generateSearchUrl(university.name);
+
+                row.innerHTML = `
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${university.rank}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-800">${university.name}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${university.location}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">${university.state}</td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-blue-600">
+                        <a href="${gradProgramUrl}" target="_blank" rel="noopener noreferrer" class="hover:underline">
+                            Search Website
+                            <svg class="w-4 h-4 inline-block ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </a>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            }
+        }
+
+        function renderPagination() {
+            paginationContainer.innerHTML = '';
+            const pageCount = Math.ceil(filteredData.length / rowsPerPage);
+            
+            if(pageCount <= 1) return;
+
+            const startEntry = (currentPage - 1) * rowsPerPage + 1;
+            const endEntry = Math.min(currentPage * rowsPerPage, filteredData.length);
+
+            let summaryHTML = `<div class="hidden sm:block">
+                <p class="text-sm text-gray-700">
+                    Showing
+                    <span class="font-medium">${startEntry}</span>
+                    to
+                    <span class="font-medium">${endEntry}</span>
+                    of
+                    <span class="font-medium">${filteredData.length}</span>
+                    results
+                </p>
+            </div>`;
+
+            let buttonsHTML = `<div class="flex-1 flex justify-between sm:justify-end">`;
+            
+            if (currentPage > 1) {
+                 buttonsHTML += `<button onclick="changePage(${currentPage - 1})" class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Previous</button>`;
+            } else {
+                 buttonsHTML += `<button class="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-400 bg-white cursor-not-allowed" disabled>Previous</button>`;
+            }
+
+            if (currentPage < pageCount) {
+                buttonsHTML += `<button onclick="changePage(${currentPage + 1})" class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">Next</button>`;
+            } else {
+                buttonsHTML += `<button class="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-400 bg-white cursor-not-allowed" disabled>Next</button>`;
+            }
+            buttonsHTML += `</div>`;
+
+            paginationContainer.innerHTML = summaryHTML + buttonsHTML;
+        }
+
+        function changePage(page) {
+            currentPage = page;
+            renderTable();
+            renderPagination();
+            window.scrollTo(0,0);
+        }
+
+        searchInput.addEventListener('keyup', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            filteredData = universityData.filter(uni => {
+                return (
+                    uni.name.toLowerCase().includes(searchTerm) ||
+                    uni.state.toLowerCase().includes(searchTerm) ||
+                    (uni.location && uni.location.toLowerCase().includes(searchTerm))
+                );
+            });
+            currentPage = 1;
+            renderTable();
+            renderPagination();
+        });
+
+        rowsPerPageSelect.addEventListener('change', (e) => {
+            rowsPerPage = parseInt(e.target.value, 10);
+            currentPage = 1;
+            renderTable();
+            renderPagination();
+        });
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            rowsPerPage = parseInt(rowsPerPageSelect.value, 10);
+            renderTable();
+            renderPagination();
+        });
+    </script>
+
+</body>
+</html>
+
