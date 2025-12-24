@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Futanta Chakma | Portfolio</title>
-    <link rel="icon" href="assests/images/favicon.ico">
+    <link rel="icon" href="assets/images/favicon.ico">
     <!-- Meta tags -->
     <meta name="viewport" content="with=device-width, initial-scale=1.0">
     <meta name="keywords" content="Futanta Chakma, futanta, futanta chakma, Futanta, Chakma, Futanta Chakma jnu, Futanta Chakma Portfolio Page, Futanta Chakma Portfolio Website, Futanta Chakma Portfolio Webpage, Futanta Chakma Portfolio Page">
@@ -34,7 +34,7 @@
 </head>
 <!-- header section -->
 <header>
-    <div class="logo"><a href="index.html"><img src="assests/images/logo_h.png" alt="" width="60px" height="48px"></a></div>
+    <div class="logo"><a href="index.html"><img src="assets/images/logo_h.png" alt="" width="60px" height="48px"></a></div>
     <ul class="navlist">
         <li><a href="index.html" class="active">Home</a></li>
         <li><a href="about.html">About</a></li>
@@ -268,6 +268,45 @@
             el.style.transition = 'all 0.6s ease-out';
             observer.observe(el);
         });
+    </script>
+    <script>
+    //sticky navbar//
+        const header = document.querySelector("header");
+        window.addEventListener("scroll",function(){
+            header.classList.toggle("sticky", window.scrollY > 50);
+        });
+        let menuIcon = document.querySelector("#menu-icon");
+        let navlist = document.querySelector(".navlist");
+
+        menuIcon.onclick = ()=>{
+            menuIcon.classList.toggle("bx-x");
+            navlist.classList.toggle("open");
+        }
+
+        window.onscroll = ()=>{
+            menuIcon.classList.remove("bx-x");
+            navlist.classList.remove("open");
+        }
+    </script>
+    <script>
+        const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('show-items');
+            }else{
+                entry.target.classList.remove('show-items');
+            }
+            });
+        });
+
+        const scrollScale = document.querySelectorAll('.scroll-scale');
+        scrollScale.forEach((el)=>observer.observe(el));
+
+        const scrollBottom = document.querySelector('.scroll-bottom');
+        scrollBottom.forEach((el)=>observer.observe(el));
+
+        const scrollTop = document.querySelector('.scroll-top');
+        scrollTop.forEach((el)=>observer.observe(el));
     </script>
     <script>
     //sticky navbar//
