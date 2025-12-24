@@ -45,7 +45,13 @@ html, body {
     transition: width 0.3s ease;
     overflow: hidden;
 }
-.side-nav:hover {
+/*
+ * Expand the side navigation on hover (desktop) or when the `expanded` class is
+ * present (desktop/mobile via click). This dual behaviour ensures a seamless
+ * experience across devices—hover on large screens, click on small screens.
+ */
+.side-nav:hover,
+.side-nav.expanded {
     width: 200px;
 }
 .side-nav .toggle-arrow {
@@ -58,7 +64,9 @@ html, body {
     pointer-events: none;
     transition: transform 0.3s ease;
 }
-.side-nav:hover .toggle-arrow {
+/* Rotate the toggle arrow when expanded or hovered */
+.side-nav:hover .toggle-arrow,
+.side-nav.expanded .toggle-arrow {
     transform: translateX(-50%) rotate(180deg);
 }
 .side-nav ul {
@@ -88,24 +96,26 @@ html, body {
     margin-right: 0.8rem;
     font-size: 1.25rem;
 }
+/* Labels are hidden by default; fade in when nav expands via hover or click */
 .side-nav .label {
     opacity: 0;
     transition: opacity 0.3s ease;
     white-space: nowrap;
 }
-.side-nav:hover .label {
+.side-nav:hover .label,
+.side-nav.expanded .label {
     opacity: 1;
 }
 
-.profile-photo {
-    width: 160px;
-    height: 160px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 3px solid var(--accent-color);
-    box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
-    margin: 0 auto 2rem;
-}
+/* Hero Section */
+/*
+ * Hero Section layout
+ *
+ * The hero section uses a columnar flex layout so that the profile photo sits
+ * above the introductory text. By default the section occupies almost the
+ * full viewport height and centers its contents. On smaller screens the
+ * margins and text sizes adjust via media queries defined later in this file.
+ */
 .hero {
     margin-top: 5rem;
     min-height: calc(100vh - 5rem);
