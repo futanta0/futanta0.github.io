@@ -73,7 +73,7 @@
             <img src="assests/images/pp.png" alt="Profile Picture" />
         </div>
         <div class="hero-content">
-            <h1>Hi, I'm <span class="accent">Futanta Chakma</span></h1>
+            <h1>Hi, I'm <span id="typed-name" class="accent"></span></h1>
             <p>Striving statistician with proven experience in research, data analysis, and proficiency in a range of technological tools and software. As a well-organized, collaborative, and quick learner with strong analytical approaches to solving any problem.</p>
             <div class="cta-buttons">
                 <a href="#projects" class="btn">View My Work</a>
@@ -377,5 +377,21 @@
             sections.forEach(section => sectionObserver.observe(section));
         });
     </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const typedNameElement = document.getElementById('typed-name');
+            const text = 'Futanta Chakma';
+            let idx = 0;
+            function typeChar() {
+                if (!typedNameElement) return;
+                if (idx < text.length) {
+                    typedNameElement.textContent += text.charAt(idx);
+                    idx++;
+                    setTimeout(typeChar, 150);
+                }
+            }
+            typeChar();
+        });
+    </script>    
 </body>
 </html>
