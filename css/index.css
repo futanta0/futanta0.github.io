@@ -34,6 +34,20 @@ html, body {
     overflow-x: hidden;
 }
 
+/* Typewriter effect for hero name */
+#typed-name {
+    display: inline;
+    overflow: hidden;
+    white-space: nowrap;
+    border-right: 0.15em solid var(--accent-color);
+    animation: blink-caret 0.75s step-end infinite;
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent; }
+    50% { border-color: var(--accent-color); }
+}
+
 /* Side Navigation */
 .side-nav {
     position: fixed;
@@ -173,6 +187,8 @@ html, body {
     font-size: clamp(2.5rem, 8vw, 4rem);
     margin-bottom: 1rem;
     line-height: 1.2;
+    /* Keep the greeting and the name on the same line */
+    white-space: nowrap;
 }
 .hero-content .accent {
     background: linear-gradient(135deg, var(--accent-color), #00a8cc);
