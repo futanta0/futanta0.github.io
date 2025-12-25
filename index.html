@@ -68,7 +68,7 @@
             <h1>Hi, I'm <span class="accent">Futanta Chakma</span></h1>
             <p>Striving statistician with proven experience in research, data analysis, and proficiency in a range of technological tools and software. As a well-organized, collaborative, and quick learner with strong analytical approaches to solving any problem.</p>
             <div class="cta-buttons">
-                <a href="#projects" class="btn primary">View My Work</a>
+                <a href="#projects" class="btn">View My Work</a>
                 <a href="#contact" class="btn">Get In Touch</a>
             </div>
         </div>
@@ -346,6 +346,28 @@
 
         const scrollTop = document.querySelector('.scroll-top');
         scrollTop.forEach((el)=>observer.observe(el));
+    </script>
+        <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.side-nav ul li a');
+            const sections = document.querySelectorAll('section[id]');
+            // Create a separate observer to track section visibility
+            const sectionObserver = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        const id = entry.target.getAttribute('id');
+                        navLinks.forEach(link => {
+                            if (link.getAttribute('href').slice(1) === id) {
+                                link.classList.add('active');
+                            } else {
+                                link.classList.remove('active');
+                            }
+                        });
+                    }
+                });
+            }, { threshold: 0.4 });
+            sections.forEach(section => sectionObserver.observe(section));
+        });
     </script>
 </body>
 </html>
