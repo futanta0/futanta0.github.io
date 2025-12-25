@@ -2,6 +2,9 @@
     --primary-color: #0a0e27;
     --secondary-color: #1a1f3a;
     --accent-color: #00d4ff;
+    /* Use the same colour for icons as the global accent colour. This makes
+       it easy to update all accent hues in one place via `--accent-color`. */
+    --icon-color: var(--accent-color);
     --text-light: #e0e0e0;
     --text-muted: #8a8a8a;
     --border-color: #2a2f45;
@@ -38,7 +41,12 @@ html, body {
     right: 0;
     transform: translateY(-50%);
     width: 60px;
-    background: rgba(10, 14, 39, 0.95);
+    /* Make the navigation bar 15% opaque (85% transparent) so that it blends
+       subtly with the page content while remaining legible. The alpha value
+       determines the level of opacity: 0.0 is fully transparent and 1.0 is
+       fully opaque. Using 0.15 here provides a balance between visibility
+       and transparency. */
+    background: rgba(10, 14, 39, 0.15);
     backdrop-filter: blur(10px);
     border-left: 1px solid var(--border-color);
     z-index: 1000;
@@ -90,11 +98,22 @@ html, body {
     transition: var(--transition);
 }
 .side-nav ul li a:hover {
+    /* Use the accent colour with transparency for hover state */
     background: rgba(0, 212, 255, 0.1);
+}
+.side-nav ul li a.active {
+    /* Highlight the active section link with a tint of the accent colour */
+    background: rgba(0, 212, 255, 0.25);
+}
+/* Make the active icon and label accent coloured */
+/* Ensure the active icon uses the turquoise colour defined above */
+.side-nav ul li a.active .icon {
+    color: var(--icon-color);
 }
 .side-nav .icon {
     margin-right: 0.8rem;
     font-size: 1.25rem;
+    color: var(--icon-color);
 }
 /* Labels are hidden by default; fade in when nav expands via hover or click */
 .side-nav .label {
@@ -469,6 +488,46 @@ h2::after {
     color: var(--primary-color);
     transform: translateY(-5px);
     box-shadow: 0 10px 30px rgba(0, 212, 255, 0.3);
+}
+
+/* Contact Form
+ *
+ * Provides styling for the contact form introduced in the Contact section. The
+ * form inputs and textarea take up the full width of their container and
+ * feature subtle borders, rounded corners and transitions. When focused,
+ * inputs highlight their border with the accent colour. The submit button
+ * inherits the global `.btn` styles and is given a small top margin to
+ * separate it from the inputs above. */
+.contact-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 3rem;
+}
+.contact-form form {
+    width: 100%;
+    max-width: 600px;
+}
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    background: var(--secondary-color);
+    color: var(--text-light);
+    font-size: 1rem;
+    transition: var(--transition);
+    resize: vertical;
+}
+.contact-form input:focus,
+.contact-form textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
+}
+.contact-form button.btn {
+    margin-top: 0.5rem;
 }
 
 /* Footer */
