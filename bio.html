@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>R Code Reference</title>
+<style>
+  :root {
+    --bg: #1e1e2e;
+    --panel: #181825;
+    --console-bg: #11111b;
+    --console-text: #cdd6f4;
+    --accent: #89b4fa;
+    --accent2: #a6e3a1;
+    --muted: #9399b2;
+    --border: #313244;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: #e6e6e6;
+    display: flex;
+    min-height: 100vh;
+  }
+  nav {
+    width: 300px;
+    flex-shrink: 0;
+    background: var(--panel);
+    padding: 24px 16px;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
+    height: 100vh;
+    overflow-y: auto;
+    border-right: 1px solid var(--border);
+  }
+  nav h1 { font-size: 16px; color: var(--accent); margin: 0 0 16px 4px; }
+  nav ul { list-style: none; padding: 0; margin: 0; }
+  nav li { margin-bottom: 6px; }
+  nav a {
+    color: #cdd6f4;
+    text-decoration: none;
+    font-size: 13px;
+    display: block;
+    padding: 6px 8px;
+    border-radius: 6px;
+  }
+  nav a:hover { background: var(--border); color: var(--accent); }
+  main { flex: 1; padding: 32px 40px 80px; max-width: 980px; }
+  header.page-head { margin-bottom: 32px; }
+  header.page-head h1 { font-size: 26px; margin: 0 0 8px; }
+  header.page-head p { color: var(--muted); margin: 0 0 16px; font-size: 14px; max-width: 720px; }
+  .copy-all-btn {
+    background: var(--accent2);
+    color: #11111b;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  .copy-all-btn:hover { filter: brightness(1.08); }
+  .file-section { margin-bottom: 44px; padding-top: 16px; border-top: 1px solid var(--border); }
+  .file-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .file-head h2 { font-size: 19px; margin: 0; color: var(--accent); }
+  .chunk { margin-bottom: 18px; }
+  .chunk-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .chunk-title { font-size: 13.5px; color: #f5c2e7; font-weight: 600; }
+  .copy-btn {
+    background: var(--border);
+    color: #cdd6f4;
+    border: 1px solid #45475a;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .copy-btn:hover { background: #45475a; }
+  .copy-btn.copied { background: var(--accent2); color: #11111b; border-color: var(--accent2); }
+  .console {
+    background: var(--console-bg);
+    color: var(--console-text);
+    padding: 14px 16px;
+    border-radius: 8px;
+    overflow-x: auto;
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0;
+    border: 1px solid var(--border);
+    white-space: pre;
+  }
+  footer { color: var(--muted); font-size: 12px; margin-top: 40px; }
+  @media (max-width: 800px) {
+    body { flex-direction: column; }
+    nav { width: 100%; height: auto; position: relative; border-right: none; border-bottom: 1px solid var(--border); }
+    main { padding: 24px 16px 60px; }
+  }
+</style>
+</head>
+<body>
+<nav>
+  <h1>Contents</h1>
+  <ul>
+<li><a href="#file0">Biostat Lab — Examples 1–5</a></li><li><a href="#file1">Example 1 &amp; 2 — Exponential and Weibull Reliability</a></li><li><a href="#file2">Example 3 — Schizophrenia Survival Analysis</a></li><li><a href="#file3">Example 6 — Leukemia Two-Sample KM Comparison</a></li><li><a href="#file4">ART HIV Dataset — Kaplan-Meier Analysis</a></li><li><a href="#file5">HYPERT — Hypertension Screening (Logistic Regression)</a></li><li><a href="#file6">Hypertension_Lab — Logistic Regression (a–q)</a></li>
+  </ul>
+</nav>
+<main>
+  <header class="page-head">
+    <h1>R Code Reference</h1>
+    <p>All R code from the biostatistics survival-analysis and logistic-regression sample answer sheets, shown console-style with a short title above each snippet. Use "Copy" on any snippet, "Copy whole file's code" for one example, or "Copy everything" for all of it.</p>
+    <button class="copy-all-btn" id="copy-all">Copy everything</button>
+  </header>
+
+    <section class="file-section" id="file0">
+      <div class="file-head">
+        <h2>Biostat Lab — Examples 1–5</h2>
+        <button class="copy-btn copy-file-btn" data-file="file0">Copy whole file's code</button>
+      </div>
+
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(1i) Probability of surviving 10,000 hours</span>
+          <button class="copy-btn" data-target="file0-c0">Copy</button>
+        </div>
+        <pre class="console" id="file0-c0"><code>lambda &lt;- 0.00025
+S.10000 &lt;- exp(-lambda*10000)
+S.10000</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(1ii) Probability of surviving next 20,000 hours</span>
+          <button class="copy-btn" data-target="file0-c1">Copy</button>
+        </div>
+        <pre class="console" id="file0-c1"><code>S.20000_10000 &lt;- exp(-lambda*30000)/exp(-lambda*10000)
+S.20000_10000
+
+# Or,
+S.20000 &lt;- exp(-lambda*20000)
+S.20000</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(1iii) Mean time to failure (MTTF)</span>
+          <button class="copy-btn" data-target="file0-c2">Copy</button>
+        </div>
+        <pre class="console" id="file0-c2"><code>MTTF &lt;- 1/lambda
+MTTF</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(1iv) Median time to failure</span>
+          <button class="copy-btn" data-target="file0-c3">Copy</button>
+        </div>
+        <pre class="console" id="file0-c3"><code>t_0.5 &lt;- (-1/lambda)*log(0.5)
+t_0.5</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(1v) Time by which 30% will fail</span>
+          <button class="copy-btn" data-target="file0-c4">Copy</button>
+        </div>
+        <pre class="console" id="file0-c4"><code>t_0.7 &lt;- (-1/lambda)*log(0.7)
+t_0.7</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(1vi) Time by which 63.21% will fail</span>
+          <button class="copy-btn" data-target="file0-c5">Copy</button>
+        </div>
+        <pre class="console" id="file0-c5"><code>t_0.3679 &lt;- (-1/lambda)*log(0.3679)
+t_0.3679</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(2) Plot probability mass function</span>
+          <button class="copy-btn" data-target="file0-c6">Copy</button>
+        </div>
+        <pre class="console" id="file0-c6"><code>par(mfrow=c(1,2)) # multi frame row, row=1, column=2
+x &lt;- 0:5
+px &lt;- c(0.05, 0.15, 0.25, 0.30, 0.20, 0.05)
+plot(x, px, type = "h", lwd=2, xlab="X", ylab="P(x)", main="Probability mass function for X")
+# lwd is line width
+points(x, px, pch=19) # pch is plotting character</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(2) Plot cumulative distribution function</span>
+          <button class="copy-btn" data-target="file0-c7">Copy</button>
+        </div>
+        <pre class="console" id="file0-c7"><code>Fx &lt;- cumsum(px)
+plot(x, Fx, type="s", xlab="X", ylab="F(x)", main = "Probability distribution function for X")
+par(mfrow=c(1,1))</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(3i) Automobile descriptive statistics</span>
+          <button class="copy-btn" data-target="file0-c8">Copy</button>
+        </div>
+        <pre class="console" id="file0-c8"><code>setwd("C:/Users/MHR Pranto/Downloads/Telegram Desktop")
+usage_data &lt;- read.csv("Automobile.csv", sep=",")
+str(usage_data)
+
+# Basic Descriptive Statistics
+summary(usage_data)
+
+# Basic Descriptive Statistics for age
+mean(usage_data$Age, trim = 0.05)
+sd(usage_data$Age)
+sd(usage_data$Age)/mean(usage_data$Age)*100
+IQR(usage_data$Age)
+
+# Basic Descriptive Statistics for usage
+mean(usage_data$Usage, trim = 0.05)
+sd(usage_data$Usage)
+sd(usage_data$Usage)/mean(usage_data$Usage)*100
+IQR(usage_data$Usage)
+
+# correlation of age and usage
+cor(usage_data$Age, usage_data$Usage)</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(3ii) Automobile ECDF plots</span>
+          <button class="copy-btn" data-target="file0-c9">Copy</button>
+        </div>
+        <pre class="console" id="file0-c9"><code>par(mfrow=c(1,2))
+plot.ecdf(usage_data$Age, verticals=T, do.points=F, xlab="Age (in days)",
+          ylab="ecdf", main = "Empirical cdf of Age") # Plots of ecdf of age
+plot.ecdf(usage_data$Usage, verticals=T, do.points=F, xlab="Usage (in km)",
+          ylab="ecdf", main="Empirical cdf of Usage") # Plots of ecdf of usage
+
+ecdf.Age &lt;- ecdf(usage_data$Age)
+ecdf.Age(90) # ecdf of age
+
+ecdf.Usage &lt;- ecdf(usage_data$Usage)
+ecdf.Usage(20000) # ecdf of usage
+par(mfrow=c(1,1))</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(4i) Weibull mean and variance</span>
+          <button class="copy-btn" data-target="file0-c10">Copy</button>
+        </div>
+        <pre class="console" id="file0-c10"><code>eta &lt;- 4000
+beta &lt;- 1.50
+mean.T &lt;- eta*gamma(1+1/beta)
+mean.T
+
+var.T &lt;- eta^2 * (gamma(1+2/beta) - (gamma(1+1/beta))^2)
+var.T</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(4ii) Weibull probability of operating 5000h</span>
+          <button class="copy-btn" data-target="file0-c11">Copy</button>
+        </div>
+        <pre class="console" id="file0-c11"><code>S.5000 &lt;- exp(-(5000/eta)^beta)
+S.5000</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(4iii) Weibull conditional probability</span>
+          <button class="copy-btn" data-target="file0-c12">Copy</button>
+        </div>
+        <pre class="console" id="file0-c12"><code>S.7000 &lt;- exp(-(7000/eta)^beta)
+S.2000_5000 &lt;- S.7000/S.5000
+S.2000_5000</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(4iii) Exponential memoryless check</span>
+          <button class="copy-btn" data-target="file0-c13">Copy</button>
+        </div>
+        <pre class="console" id="file0-c13"><code>S.2000.Exp &lt;- exp(-1/eta*2000)
+S.2000.Exp</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(5i) Schizophrenia import, factor labels, censoring tables</span>
+          <button class="copy-btn" data-target="file0-c14">Copy</button>
+        </div>
+        <pre class="console" id="file0-c14"><code># Read the CSV file
+schizo &lt;- read.csv("Schizophrenia.csv", sep=",")
+str(schizo)
+
+# Export to CSV without row names
+write.csv(schizo, file='Schizophrenia.csv', row.names=FALSE)
+
+# Labeling the factors
+schizo &lt;- within(schizo, {
+  sex &lt;- factor(Gender, labels = c("Male", "Female"))
+  censor &lt;- factor(Censor, labels = c("Censor", "Death"))
+  marital &lt;- factor(Marital, labels = c("Single", "Married", "Alone again"))
+  Time &lt;- as.numeric(Time)
+})
+str(schizo)
+
+table(schizo$censor) # number of censored observations
+table(schizo$censor, schizo$marital) # number of censored observations by marital status
+table(schizo$censor, schizo$sex) # number of censored observations by gender</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(5ii) Schizophrenia KM plot (base + ggsurvplot)</span>
+          <button class="copy-btn" data-target="file0-c15">Copy</button>
+        </div>
+        <pre class="console" id="file0-c15"><code>library(survival)
+library(ggplot2)
+library(survminer)
+
+schizo_surv &lt;- survfit(Surv(Time, Censor) ~ 1, data = schizo,
+                        type = "kaplan-meier", conf.type = "log-log")
+
+# Median Survival time
+print(schizo_surv)
+summary(schizo_surv)
+
+# plot(schizo_surv)
+plot(schizo_surv, xlab = "Days of follow-up", ylab="Survival Probability",
+     main= "Overall survival curve")
+
+# or,
+ggsurvplot(schizo_surv,        # survfit object with calculated statistics.
+           data = schizo,      # data used to fit survival curves.
+           risk.table = TRUE,  # show risk table.
+           pval = FALSE,       # show p-value of log-rank test.
+           conf.int = T,       # show confidence intervals for point estimates of survival curves.
+           xlim = c(0,1800),   # present narrower X axis, but not affect survival estimates.
+           xlab = "Follow-up Time in days", # customize X axis label.
+           surv.median.line = "hv",
+           legend = "none")
+
+# or,
+ggsurvplot(
+  schizo_surv,          # survfit object with calculated statistics.
+  data = schizo,        # data used to fit survival curves.
+  risk.table = TRUE,    # show risk table.
+  pval = FALSE,         # show p-value of log-rank test.
+  conf.int = T,         # show confidence intervals for point estimates of survival curves.
+  xlim = c(0,1800),     # present narrower X axis, but not affect survival estimates.
+  xlab = "Follow-up Time in days", # customize X axis label.
+  surv.median.line = "hv",
+  break.time.by = 500,  # break X axis in time intervals by 500.
+  ggtheme = theme_light(), # customize plot and risk table with a theme.
+  risk.table.y.text.col = T, # colour risk table text annotations.
+  risk.table.y.text = T # show bars instead of names in text annotations in legend of risk table
+)</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(5iii) Median survival &amp; CI at 6/18/36 months</span>
+          <button class="copy-btn" data-target="file0-c16">Copy</button>
+        </div>
+        <pre class="console" id="file0-c16"><code>print(summary(schizo_surv, time=c(6*30, 18*30, 36*30)))
+print(schizo_surv)
+
+# If median is not computed: the median survival time cannot be estimated for this data because
+# the proportion of patients who experience the event is less than 50% and hence the estimation
+# is not possible.</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(5iv) KM curve by marital status</span>
+          <button class="copy-btn" data-target="file0-c17">Copy</button>
+        </div>
+        <pre class="console" id="file0-c17"><code># Plot the Kaplan-Meier estimated survival curve for marital status.
+KM_schizo_mar &lt;- survfit(Surv(Time, Censor) ~ marital, data=schizo,
+                          type="kaplan-meier", conf.type="log-log")
+summary(KM_schizo_mar)
+plot(KM_schizo_mar)
+
+# ggsurvplot(KM_schizo, data = schizo)
+ggsurvplot(
+  KM_schizo_mar,        # survfit object with calculated statistics.
+  data = schizo,        # data used to fit survival curves.
+  risk.table = TRUE,    # show risk table.
+  pval = TRUE,          # show p-value of log-rank test.
+  conf.int = F,         # show confidence intervals for point estimates of survival curves.
+  xlim = c(0,1800),     # present narrower X axis, but not affect survival estimates.
+  xlab = "Time in days", # customize X axis label.
+  break.time.by = 500,  # break X axis in time intervals by 500.
+  surv.median.line = "hv",
+  ggtheme = theme_light(), # customize plot and risk table with a theme.
+  risk.table.y.text.col = T, # colour risk table text annotations.
+  risk.table.y.text = T # show bars instead of names in text annotations in legend of risk table
+)
+
+# Median Survival time for marital status group of patients.
+print(KM_schizo_mar)</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(5v) KM curve by gender</span>
+          <button class="copy-btn" data-target="file0-c18">Copy</button>
+        </div>
+        <pre class="console" id="file0-c18"><code># Plot the Kaplan-Meier estimated survival curve for gender.
+KM_schizo_gender &lt;- survfit(Surv(Time, Censor) ~ sex, data=schizo,
+                             type="kaplan-meier", conf.type="log-log")
+summary(KM_schizo_gender)
+plot(KM_schizo_gender)
+
+# ggsurvplot(KM_schizo, data = schizo)
+ggsurvplot(
+  KM_schizo_gender,     # survfit object with calculated statistics.
+  data = schizo,        # data used to fit survival curves.
+  risk.table = TRUE,    # show risk table.
+  pval = TRUE,          # show p-value of log-rank test.
+  conf.int = F,         # show confidence intervals for point estimates of survival curves.
+  xlim = c(0,1800),     # present narrower X axis, but not affect survival estimates.
+  xlab = "Time in days", # customize X axis label.
+  break.time.by = 500,  # break X axis in time intervals by 500.
+  surv.median.line = "hv",
+  ggtheme = theme_light(), # customize plot and risk table with a theme.
+  risk.table.y.text.col = T, # colour risk table text annotations.
+  risk.table.y.text = T # show bars instead of names in text annotations in legend of risk table
+)
+
+# Median Survival time for gender of patients.
+print(KM_schizo_gender)</code></pre>
+      </div>
+    </section>
+    <section class="file-section" id="file1">
+      <div class="file-head">
+        <h2>Example 1 &amp; 2 — Exponential and Weibull Reliability</h2>
+        <button class="copy-btn copy-file-btn" data-file="file1">Copy whole file's code</button>
+      </div>
+
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">Setup: failure rate lambda</span>
+          <button class="copy-btn" data-target="file1-c0">Copy</button>
+        </div>
+        <pre class="console" id="file1-c0"><code>lambda &lt;- 0.00025</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(i) Probability of surviving 10,000 hours</span>
+          <button class="copy-btn" data-target="file1-c1">Copy</button>
+        </div>
+        <pre class="console" id="file1-c1"><code>S.10000 &lt;- exp(-lambda*10000)
+S.10000</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(ii) Probability of surviving next 20,000 hours (memoryless)</span>
+          <button class="copy-btn" data-target="file1-c2">Copy</button>
+        </div>
+        <pre class="console" id="file1-c2"><code>S.20000 &lt;- exp(-lambda*20000)
+S.20000</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(iii) Mean time to failure (MTTF)</span>
+          <button class="copy-btn" data-target="file1-c3">Copy</button>
+        </div>
+        <pre class="console" id="file1-c3"><code>MTTF &lt;- 1/lambda
+MTTF</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(iv) Median time to failure</span>
+          <button class="copy-btn" data-target="file1-c4">Copy</button>
+        </div>
+        <pre class="console" id="file1-c4"><code>t_0.5 &lt;- (1/lambda)*log(2)
+t_0.5</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(v) Time by which 30% of products fail</span>
+          <button class="copy-btn" data-target="file1-c5">Copy</button>
+        </div>
+        <pre class="console" id="file1-c5"><code>t_0.3 &lt;- (-1/lambda)*log(1-0.3)
+t_0.3</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(vi) Time by which 63.21% fail</span>
+          <button class="copy-btn" data-target="file1-c6">Copy</button>
+        </div>
+        <pre class="console" id="file1-c6"><code>t_0.6321 &lt;- -log(1-0.6321)/lambda
+t_0.6321
+
+F.4000 &lt;- 1 - exp(-lambda*4000)
+F.4000</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">Setup: Weibull scale/shape parameters</span>
+          <button class="copy-btn" data-target="file1-c7">Copy</button>
+        </div>
+        <pre class="console" id="file1-c7"><code>eta &lt;- 4000
+beta &lt;- 1.50</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(i) Weibull mean and variance</span>
+          <button class="copy-btn" data-target="file1-c8">Copy</button>
+        </div>
+        <pre class="console" id="file1-c8"><code>mean.T &lt;- eta*gamma(1+1/beta)
+mean.T
+
+var.T &lt;- eta^2 * (gamma(1+2/beta) - (gamma(1+1/beta))^2)
+var.T</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(ii) Probability of operating for 5000 hours</span>
+          <button class="copy-btn" data-target="file1-c9">Copy</button>
+        </div>
+        <pre class="console" id="file1-c9"><code>S.5000 &lt;- exp(-(5000/eta)^beta)
+S.5000</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(iii) Conditional survival and hazard</span>
+          <button class="copy-btn" data-target="file1-c10">Copy</button>
+        </div>
+        <pre class="console" id="file1-c10"><code>S.7000 &lt;- exp(-(7000/eta)^beta)
+S.2000_5000 &lt;- S.7000/S.5000
+S.2000_5000
+
+h.5000 &lt;- (beta/eta)*((5000/eta)^(beta-1))
+h.5000</code></pre>
+      </div>
+    </section>
+    <section class="file-section" id="file2">
+      <div class="file-head">
+        <h2>Example 3 — Schizophrenia Survival Analysis</h2>
+        <button class="copy-btn copy-file-btn" data-file="file2">Copy whole file's code</button>
+      </div>
+
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">Data import and factor labeling</span>
+          <button class="copy-btn" data-target="file2-c0">Copy</button>
+        </div>
+        <pre class="console" id="file2-c0"><code>library(survival)
+library(survminer)
+
+schizo &lt;- read.csv("Schizophrenia.csv", header = TRUE)
+
+schizo &lt;- within(schizo, {
+  sex     &lt;- factor(Gender, labels = c("Male", "Female"))
+  censor  &lt;- factor(Censor, labels = c("Censor", "Death"))
+  marital &lt;- factor(Marital, labels = c("Single", "Married", "Alone again"))
+  Time    &lt;- as.numeric(Time)
+})
+str(schizo)</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(i) Censored observations and events, by marital status/gender</span>
+          <button class="copy-btn" data-target="file2-c1">Copy</button>
+        </div>
+        <pre class="console" id="file2-c1"><code>table(schizo$censor)
+table(schizo$censor, schizo$marital)
+table(schizo$censor, schizo$sex)</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(ii) Overall Kaplan-Meier survival curve</span>
+          <button class="copy-btn" data-target="file2-c2">Copy</button>
+        </div>
+        <pre class="console" id="file2-c2"><code>km &lt;- survfit(Surv(Time, Censor) ~ 1, data = schizo, conf.type = "log-log")
+
+summary(km)
+km
+
+ggsurvplot(km,
+           data = schizo,
+           conf.int = TRUE,
+           risk.table = TRUE,
+           surv.median.line = "hv",
+           xlab = "Time in days",
+           ylab = "Survival probability",
+           title = "Overall Kaplan-Meier Survival Curve")</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(iii) Median survival &amp; survival at 6/18/36 months</span>
+          <button class="copy-btn" data-target="file2-c3">Copy</button>
+        </div>
+        <pre class="console" id="file2-c3"><code>summary(km, times = c(180, 540, 1080))</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(iv) Kaplan-Meier curve by marital status</span>
+          <button class="copy-btn" data-target="file2-c4">Copy</button>
+        </div>
+        <pre class="console" id="file2-c4"><code>km_marital &lt;- survfit(Surv(Time, Censor) ~ marital, data = schizo, conf.type = "log-log")
+km_marital
+
+ggsurvplot(km_marital,
+           data = schizo,
+           pval = TRUE,
+           risk.table = TRUE,
+           surv.median.line = "hv",
+           xlab = "Time in days",
+           ylab = "Survival probability",
+           title = "Kaplan-Meier Curve by Marital Status")</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(v) Kaplan-Meier curve by gender</span>
+          <button class="copy-btn" data-target="file2-c5">Copy</button>
+        </div>
+        <pre class="console" id="file2-c5"><code>km_gender &lt;- survfit(Surv(Time, Censor) ~ sex, data = schizo, conf.type = "log-log")
+km_gender
+
+ggsurvplot(km_gender,
+           data = schizo,
+           pval = TRUE,
+           risk.table = TRUE,
+           surv.median.line = "hv",
+           xlab = "Time in days",
+           ylab = "Survival probability",
+           title = "Kaplan-Meier Curve by Gender")</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">Bonus: Kaplan-Meier vs Nelson-Aalen comparison</span>
+          <button class="copy-btn" data-target="file2-c6">Copy</button>
+        </div>
+        <pre class="console" id="file2-c6"><code>time_points &lt;- c(90, 180, 270, 365)
+
+na &lt;- survfit(Surv(Time, Censor) ~ 1, data = schizo, type = "fh", conf.type = "log-log")
+
+km_sum &lt;- summary(km, times = time_points)
+na_sum &lt;- summary(na, times = time_points)
+
+comparison &lt;- data.frame(
+  Time   = time_points,
+  KM     = round(km_sum$surv, 4),
+  KM_LCL = round(km_sum$lower, 4),
+  KM_UCL = round(km_sum$upper, 4),
+  NA_S   = round(na_sum$surv, 4),
+  NA_LCL = round(na_sum$lower, 4),
+  NA_UCL = round(na_sum$upper, 4)
+)
+comparison</code></pre>
+      </div>
+    </section>
+    <section class="file-section" id="file3">
+      <div class="file-head">
+        <h2>Example 6 — Leukemia Two-Sample KM Comparison</h2>
+        <button class="copy-btn copy-file-btn" data-file="file3">Copy whole file's code</button>
+      </div>
+
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">Data setup: treatment and placebo groups</span>
+          <button class="copy-btn" data-target="file3-c0">Copy</button>
+        </div>
+        <pre class="console" id="file3-c0"><code>library(survival)
+
+mp      &lt;- data.frame(time  = c(6,6,6,7,10,13,16,22,23, 6,9,10,11,17,19,20,25,32,32,34,35),
+                       event = c(rep(1, 9), rep(0, 12)))
+
+placebo &lt;- data.frame(time  = c(1,1,2,2,3,4,4,5,5,8,8,8,8,11,11,12,12,15,17,22,23),
+                       event = rep(1, 21))</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(a) KM estimates and base R plot</span>
+          <button class="copy-btn" data-target="file3-c1">Copy</button>
+        </div>
+        <pre class="console" id="file3-c1"><code>km1 &lt;- survfit(Surv(time, event) ~ 1, data = mp)
+km2 &lt;- survfit(Surv(time, event) ~ 1, data = placebo)
+
+summary(km1)
+summary(km2)
+
+plot(km1, col = "red", lwd = 2, xlab = "Time (weeks)", ylab = "Survival Probability",
+     main = "Kaplan-Meier Curves", mark.time = TRUE, conf.int = FALSE)
+lines(km2, col = "blue", lwd = 2, mark.time = TRUE, conf.int = FALSE)
+legend("topright", legend = c("Treatment", "Placebo"), col = c("red", "blue"), lwd = 2)</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(a) ggplot2/survminer alternative</span>
+          <button class="copy-btn" data-target="file3-c2">Copy</button>
+        </div>
+        <pre class="console" id="file3-c2"><code>library(survminer)
+
+km_fit_gg &lt;- survfit(Surv(time, event) ~ group,
+                      data = rbind(transform(mp, group = "Treatment"),
+                                   transform(placebo, group = "Placebo")))
+
+ggsurvplot(km_fit_gg,
+           palette = c("blue", "red"),      # alphabetical group order: Placebo, Treatment
+           conf.int = FALSE,
+           legend.title = "",
+           legend.labs = c("Placebo", "Treatment"),
+           xlab = "Time (weeks)", ylab = "Survival Probability",
+           title = "Kaplan-Meier Curves")</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(b) Variance of the survival function</span>
+          <button class="copy-btn" data-target="file3-c3">Copy</button>
+        </div>
+        <pre class="console" id="file3-c3"><code>var_km1 &lt;- summary(km1)$std.err^2
+var_km2 &lt;- summary(km2)$std.err^2
+var_km1
+var_km2</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(c) 95% CI for S(16), group-1</span>
+          <button class="copy-btn" data-target="file3-c4">Copy</button>
+        </div>
+        <pre class="console" id="file3-c4"><code>summary(km1, times = 16)</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(d) 95% CI for median remission time, group-1</span>
+          <button class="copy-btn" data-target="file3-c5">Copy</button>
+        </div>
+        <pre class="console" id="file3-c5"><code>km1</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(e) Z-test for H0: S(16) = 0.9</span>
+          <button class="copy-btn" data-target="file3-c6">Copy</button>
+        </div>
+        <pre class="console" id="file3-c6"><code>km1S16 &lt;- summary(km1, times = 16)$surv
+SE16   &lt;- summary(km1, times = 16)$std.err
+Z      &lt;- (km1S16 - 0.9) / SE16
+p_val  &lt;- 2 * (1 - pnorm(abs(Z)))
+Z
+p_val</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(f) Log-rank test for equality of survival functions</span>
+          <button class="copy-btn" data-target="file3-c7">Copy</button>
+        </div>
+        <pre class="console" id="file3-c7"><code>mp$group      &lt;- "mp"
+placebo$group &lt;- "placebo"
+leuk &lt;- rbind(mp, placebo)
+
+logrank &lt;- survdiff(Surv(time, event) ~ group, data = leuk)
+logrank</code></pre>
+      </div>
+    </section>
+    <section class="file-section" id="file4">
+      <div class="file-head">
+        <h2>ART HIV Dataset — Kaplan-Meier Analysis</h2>
+        <button class="copy-btn copy-file-btn" data-file="file4">Copy whole file's code</button>
+      </div>
+
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">Import ART.csv and draw random 82-patient sample</span>
+          <button class="copy-btn" data-target="file4-c0">Copy</button>
+        </div>
+        <pre class="console" id="file4-c0"><code>ART &lt;- read.csv("ART.csv", header = TRUE)
+str(ART)
+
+set.seed(123456)                       # replace 123456 with your own ID number
+ART2 &lt;- ART[sample(nrow(ART), size = 82, replace = FALSE), ]
+nrow(ART2)</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">Create labeled factor variables</span>
+          <button class="copy-btn" data-target="file4-c1">Copy</button>
+        </div>
+        <pre class="console" id="file4-c1"><code>library(survival)
+library(survminer)
+
+ART2 &lt;- within(ART2, {
+  sex      &lt;- factor(Gender, labels = c("Male", "Female"))
+  status   &lt;- factor(Censor, labels = c("Censor", "Death"))
+  func     &lt;- factor(Function, labels = c("Bedridden", "Ambulatory", "Working"))
+  art_grp  &lt;- factor(ART, labels = c("D4T(30)-3TC-NVP", "D4T(40)-3TC-NVP", "AZT-3TC-NVP"))
+  Time     &lt;- as.numeric(Time)
+})
+str(ART2)</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(a) Censored observations/events, overall + by function/gender</span>
+          <button class="copy-btn" data-target="file4-c2">Copy</button>
+        </div>
+        <pre class="console" id="file4-c2"><code># Overall
+table(ART2$status)
+prop.table(table(ART2$status))
+
+# By functional status
+table(ART2$status, ART2$func)
+prop.table(table(ART2$status, ART2$func), margin = 2)
+
+# By gender
+table(ART2$status, ART2$sex)
+prop.table(table(ART2$status, ART2$sex), margin = 2)</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(b) Overall KM curve + survival at 15/25/35 months</span>
+          <button class="copy-btn" data-target="file4-c3">Copy</button>
+        </div>
+        <pre class="console" id="file4-c3"><code>km_all &lt;- survfit(Surv(Time, Censor) ~ 1, data = ART2, conf.type = "log-log")
+
+km_all
+summary(km_all)
+
+ggsurvplot(km_all,
+           data = ART2,
+           conf.int = TRUE,
+           risk.table = TRUE,
+           surv.median.line = "hv",
+           xlab = "Time (months)",
+           ylab = "Survival probability",
+           title = "Overall Kaplan-Meier Survival Curve (ART patients)")
+
+# Survival at specific time points with 95% CI
+summary(km_all, times = c(15, 25, 35))</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(c) KM curve by ART therapy</span>
+          <button class="copy-btn" data-target="file4-c4">Copy</button>
+        </div>
+        <pre class="console" id="file4-c4"><code>km_art &lt;- survfit(Surv(Time, Censor) ~ art_grp, data = ART2, conf.type = "log-log")
+
+km_art
+
+ggsurvplot(km_art,
+           data = ART2,
+           pval = TRUE,
+           conf.int = TRUE,
+           risk.table = TRUE,
+           surv.median.line = "hv",
+           xlab = "Time (months)",
+           ylab = "Survival probability",
+           legend.title = "ART therapy",
+           title = "Kaplan-Meier Curve by ART Therapy")</code></pre>
+      </div>
+    </section>
+    <section class="file-section" id="file5">
+      <div class="file-head">
+        <h2>HYPERT — Hypertension Screening (Logistic Regression)</h2>
+        <button class="copy-btn copy-file-btn" data-file="file5">Copy whole file's code</button>
+      </div>
+
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">Import HYPERT.csv, sample 650, export to SPSS</span>
+          <button class="copy-btn" data-target="file5-c0">Copy</button>
+        </div>
+        <pre class="console" id="file5-c0"><code>HYPERT &lt;- read.csv("HYPERT.csv", header = TRUE)
+str(HYPERT)
+
+set.seed(123456)                          # replace 123456 with your own ID number
+HYPERT2 &lt;- HYPERT[sample(nrow(HYPERT), size = 650, replace = FALSE), ]
+nrow(HYPERT2)
+
+library(haven)
+write_sav(HYPERT2, "HYPERT.sav")</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(a) Missing observations</span>
+          <button class="copy-btn" data-target="file5-c1">Copy</button>
+        </div>
+        <pre class="console" id="file5-c1"><code>sum(is.na(HYPERT2))
+colSums(is.na(HYPERT2))</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(b) Calculate BMI and BMICLASS</span>
+          <button class="copy-btn" data-target="file5-c2">Copy</button>
+        </div>
+        <pre class="console" id="file5-c2"><code># Calculate BMI
+HYPERT2$BMI &lt;- HYPERT2$weight / (HYPERT2$height/100)^2
+
+# Create BMI class
+HYPERT2$BMICLASS &lt;- cut(HYPERT2$BMI,
+                         breaks = c(-Inf, 20, 25, 30, Inf),
+                         labels = c(1, 2, 3, 4),
+                         right = FALSE)
+
+# Check the result
+table(HYPERT2$BMICLASS)</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(c) Risk of ISH for women + 95% CI</span>
+          <button class="copy-btn" data-target="file5-c3">Copy</button>
+        </div>
+        <pre class="console" id="file5-c3"><code>library(DescTools)
+
+women &lt;- subset(HYPERT2, sex == 1)
+x &lt;- sum(women$ISH == 1); n &lt;- nrow(women)
+
+BinomCI(x, n, method = "wald")</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(d) Association between ISH and BMICLASS</span>
+          <button class="copy-btn" data-target="file5-c4">Copy</button>
+        </div>
+        <pre class="console" id="file5-c4"><code>tab &lt;- table(HYPERT2$BMICLASS, HYPERT2$ISH)
+tab
+
+prop.table(tab, margin = 1)
+
+chisq.test(tab)</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(e) Logistic regression model + odds ratios</span>
+          <button class="copy-btn" data-target="file5-c5">Copy</button>
+        </div>
+        <pre class="console" id="file5-c5"><code>HYPERT2$sex      &lt;- factor(HYPERT2$sex, labels = c("Male", "Female"))
+HYPERT2$smoke93  &lt;- factor(HYPERT2$smoke93, labels = c("No", "Yes"))
+
+model &lt;- glm(ISH ~ age + sex + smoke93 + BMICLASS, data = HYPERT2, family = binomial(link = "logit"))
+summary(model)
+
+# Odds ratios and 95% CIs
+exp(coef(model))
+exp(confint(model))</code></pre>
+      </div>
+    </section>
+    <section class="file-section" id="file6">
+      <div class="file-head">
+        <h2>Hypertension_Lab — Logistic Regression (a–q)</h2>
+        <button class="copy-btn copy-file-btn" data-file="file6">Copy whole file's code</button>
+      </div>
+
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">Import Hypertension_Lab.csv</span>
+          <button class="copy-btn" data-target="file6-c0">Copy</button>
+        </div>
+        <pre class="console" id="file6-c0"><code>HT &lt;- read.csv("Hypertension_Lab.csv", header = TRUE)
+str(HT)</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(a) Missing observations</span>
+          <button class="copy-btn" data-target="file6-c1">Copy</button>
+        </div>
+        <pre class="console" id="file6-c1"><code>sum(is.na(HT))</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(b) Recode BMI into bmi_cat</span>
+          <button class="copy-btn" data-target="file6-c2">Copy</button>
+        </div>
+        <pre class="console" id="file6-c2"><code>HT$bmi_cat &lt;- cut(HT$bmi,
+                   breaks = c(-Inf, 25, 30, Inf),
+                   labels = c("Normal", "Overweight", "Obese"),
+                   right = FALSE)
+table(HT$bmi_cat)</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(c) Factorize required variables</span>
+          <button class="copy-btn" data-target="file6-c3">Copy</button>
+        </div>
+        <pre class="console" id="file6-c3"><code>HT$sex &lt;- factor(HT$Gender, labels = c("Male", "Female"))
+HT$ht  &lt;- factor(HT$hypert, labels = c("No", "Yes"))</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(d) Proportion table of gender</span>
+          <button class="copy-btn" data-target="file6-c4">Copy</button>
+        </div>
+        <pre class="console" id="file6-c4"><code>prop.table(table(HT$sex))</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(e) Risk of hypertension for males + 95% CI</span>
+          <button class="copy-btn" data-target="file6-c5">Copy</button>
+        </div>
+        <pre class="console" id="file6-c5"><code>male &lt;- subset(HT, sex == "Male")
+p  &lt;- mean(male$hypert)
+n  &lt;- nrow(male)
+se &lt;- sqrt(p * (1 - p) / n)
+
+c(p = p, n = n, se = se, lower = p - 1.96 * se, upper = p + 1.96 * se)</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(f) Association between hypertension and bmi_cat</span>
+          <button class="copy-btn" data-target="file6-c6">Copy</button>
+        </div>
+        <pre class="console" id="file6-c6"><code>t &lt;- table(HT$bmi_cat, HT$ht)
+t
+
+prop.table(t, margin = 1)
+
+chisq.test(t)</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(g) Logistic regression model</span>
+          <button class="copy-btn" data-target="file6-c7">Copy</button>
+        </div>
+        <pre class="console" id="file6-c7"><code>model &lt;- glm(ht ~ bmi + sleep + sex, data = HT, family = binomial)
+summary(model)</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(h) &amp; (i) Odds ratios with 95% CI</span>
+          <button class="copy-btn" data-target="file6-c8">Copy</button>
+        </div>
+        <pre class="console" id="file6-c8"><code>library(broom)
+tidy(model, exponentiate = TRUE, conf.int = TRUE)</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(j) Deviance and AIC</span>
+          <button class="copy-btn" data-target="file6-c9">Copy</button>
+        </div>
+        <pre class="console" id="file6-c9"><code>c(null_deviance = model$null.deviance,
+  residual_deviance = model$deviance,
+  AIC = AIC(model))</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(k) Classification performance (confusion matrix)</span>
+          <button class="copy-btn" data-target="file6-c10">Copy</button>
+        </div>
+        <pre class="console" id="file6-c10"><code>predicted_prob  &lt;- predict(model, type = "response")
+predicted_class &lt;- factor(ifelse(predicted_prob &gt; 0.5, "Yes", "No"), levels = c("No", "Yes"))
+
+library(caret)
+confusionMatrix(predicted_class, HT$ht, positive = "Yes")</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(l) Multicollinearity (VIF)</span>
+          <button class="copy-btn" data-target="file6-c11">Copy</button>
+        </div>
+        <pre class="console" id="file6-c11"><code>library(car)
+vif(model)</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(m) Hosmer-Lemeshow goodness-of-fit test</span>
+          <button class="copy-btn" data-target="file6-c12">Copy</button>
+        </div>
+        <pre class="console" id="file6-c12"><code>library(ResourceSelection)
+hoslem.test(HT$hypert, fitted(model), g = 10)</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(n) McFadden's pseudo-R-squared</span>
+          <button class="copy-btn" data-target="file6-c13">Copy</button>
+        </div>
+        <pre class="console" id="file6-c13"><code>1 - model$deviance / model$null.deviance</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(o) &amp; (p) ROC curve and AUC</span>
+          <button class="copy-btn" data-target="file6-c14">Copy</button>
+        </div>
+        <pre class="console" id="file6-c14"><code>library(pROC)
+roc_obj &lt;- roc(response = HT$ht, predictor = fitted(model), levels = c("No", "Yes"))
+plot(roc_obj)
+auc(roc_obj)</code></pre>
+      </div>
+      <div class="chunk">
+        <div class="chunk-head">
+          <span class="chunk-title">(q) Average marginal effects</span>
+          <button class="copy-btn" data-target="file6-c15">Copy</button>
+        </div>
+        <pre class="console" id="file6-c15"><code>library(marginaleffects)
+avg_slopes(model)</code></pre>
+      </div>
+    </section>
+  <footer>Generated for quick reference and copy-paste into R / RStudio.</footer>
+</main>
+<script>
+  function showCopied(btn) {
+    var original = btn.textContent;
+    btn.textContent = "Copied!";
+    btn.classList.add("copied");
+    setTimeout(function () {
+      btn.textContent = original;
+      btn.classList.remove("copied");
+    }, 1400);
+  }
+
+  function fallbackCopy(text, btn) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try { document.execCommand("copy"); } catch (e) {}
+    document.body.removeChild(ta);
+    showCopied(btn);
+  }
+
+  function copyText(text, btn) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () {
+        showCopied(btn);
+      }).catch(function () {
+        fallbackCopy(text, btn);
+      });
+    } else {
+      fallbackCopy(text, btn);
+    }
+  }
+
+  document.querySelectorAll(".copy-btn[data-target]").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var pre = document.getElementById(btn.getAttribute("data-target"));
+      copyText(pre.textContent, btn);
+    });
+  });
+
+  document.querySelectorAll(".copy-file-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var section = document.getElementById(btn.getAttribute("data-file"));
+      var pres = section.querySelectorAll("pre.console");
+      var parts = [];
+      pres.forEach(function (p) { parts.push(p.textContent); });
+      copyText(parts.join("\n\n"), btn);
+    });
+  });
+
+  document.getElementById("copy-all").addEventListener("click", function () {
+    var pres = document.querySelectorAll("pre.console");
+    var parts = [];
+    pres.forEach(function (p) { parts.push(p.textContent); });
+    copyText(parts.join("\n\n"), this);
+  });
+</script>
+</body>
+</html>
