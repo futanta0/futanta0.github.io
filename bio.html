@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>R Questions and Code Reference</title>
+<title>Statistical Simulation Lab Report</title>
 <style>
   :root {
     --bg: #1e1e2e;
@@ -26,7 +25,7 @@
     min-height: 100vh;
   }
   nav {
-    width: 300px;
+    width: 320px;
     flex-shrink: 0;
     background: var(--panel);
     padding: 24px 16px;
@@ -63,7 +62,7 @@
   }
   nav summary::-webkit-details-marker { display: none; }
   nav summary::before {
-    content: "be";
+    content: "\25BE";
     display: inline-block;
     margin-right: 6px;
     transition: transform 0.15s ease;
@@ -120,6 +119,7 @@
   }
   .question th { background: #2a2a40; color: var(--accent); }
   .question .solution { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border); }
+  .interpretation { margin-top: 0; }
   .code-head {
     display: flex;
     align-items: center;
@@ -159,902 +159,737 @@
     nav { width: 100%; height: auto; position: relative; border-right: none; border-bottom: 1px solid var(--border); }
     main { padding: 24px 16px 60px; }
   }
+
 </style>
 </head>
 <body>
 <nav>
-  <h1>Contents</h1>
-<details class="nav-group" open>
-  <summary>Biostatistics</summary>
-  <ul><li><a href="#sec0">Example 1: Exponential Distribution</a></li><li><a href="#sec1">Example 2: Weibull Distribution</a></li><li><a href="#sec2">Example 3: Schizophrenia Survival Analysis</a></li><li><a href="#sec3">Example 8: Hypertension Screening (Hypertension_Lab.csv)</a></li><li><a href="#sec4">Question 2023 – Q4: ART Dataset (HIV Treatment)</a></li><li><a href="#sec5">Question 2023 – Q5: HYPERT Dataset (Isolated Systolic Hypertension)</a></li><li><a href="#sec6">Bonus Question: Leukemia Remission Times (Two-Sample KM)</a></li></ul>
-</details>
-<details class="nav-group" open>
-  <summary>Operations Research</summary>
-  <ul><li><a href="#sec7">Problem 1 — Shirts (Graphical LPP)</a></li><li><a href="#sec8">Problem 2 — Feed Mix (Minimize Cost)</a></li><li><a href="#sec9">Problem 3 — Three Products (Maximize Profit)</a></li><li><a href="#sec10">Problem 4 — Simplex Method</a></li><li><a href="#sec11">Problem 5 — Dual Simplex Method</a></li><li><a href="#sec12">Problem 6 — Big-M Method</a></li><li><a href="#sec13">Problem 7 — Two-Phase Method</a></li><li><a href="#sec14">Problem 8 — Gomory Cutting Plane (Integer Solution)</a></li><li><a href="#sec15">Problem 9 — Transportation Problem (NWCR &amp; VAM)</a></li></ul>
-</details>
+  <h1>Statistical Simulation Lab</h1>
+  <details class="nav-group" open>
+    <summary>Part A: Design of Experiments</summary>
+    <ul>
+      <li><a href="#a1">Experiment 1: CRD - Chicken Diet Weights</a></li>
+      <li><a href="#a2">Experiment 2: RBD - Sugar-Beet Variety Yield</a></li>
+      <li><a href="#a3">Experiment 3: Crossover Design - Cow Milk Yield by Diet</a></li>
+    </ul>
+  </details>
+  <details class="nav-group" open>
+    <summary>Part B: Monte Carlo Simulation</summary>
+    <ul>
+      <li><a href="#b1">1. Monte Carlo Integration with a Control Variate</a></li>
+      <li><a href="#b2">2. Comparing Two Different Control Variates</a></li>
+      <li><a href="#b3">3. Control Variate via Regression Approach</a></li>
+      <li><a href="#b4">4. Hit-or-Miss Method for Monte Carlo Integration</a></li>
+      <li><a href="#b5">5. Mid-Square Method for Random Number Generation</a></li>
+      <li><a href="#b6">6. Linear Congruential Generator (LCG)</a></li>
+      <li><a href="#b7">7. Combined Linear Congruential Generator</a></li>
+      <li><a href="#b8a">8(a). Uniform(a=2, b=3)</a></li>
+      <li><a href="#b8b">8(b). Exponential(rate = 2)</a></li>
+      <li><a href="#b8c">8(c). Gamma(shape = 3, rate = 2)</a></li>
+      <li><a href="#b8d">8(d). Normal(mean = 5, sd = 2) via Box-Muller</a></li>
+      <li><a href="#b8e">8(e). Chi-square(df = 10)</a></li>
+      <li><a href="#b8f">8(f). Binomial(n = 7, p = 0.6)</a></li>
+      <li><a href="#b8g">8(g). Poisson(lambda = 2)</a></li>
+      <li><a href="#b8h">8(h). Geometric(p = 0.25)</a></li>
+      <li><a href="#b8i">8(i). Normal(mean = 3, sd = 4) via Marsaglia&#x27;s Polar Algorithm</a></li>
+    </ul>
+  </details>
 </nav>
 <main>
-<!--   <header class="page-head">
-    <h1>R Questions and Code Reference</h1>
-    <p>Each section shows the full question first, followed by the R code used to answer it. Use "Copy code" on any section, or "Copy all code" to grab every snippet at once.</p>
+  <header class="page-head">
+    <h1>Statistical Simulation</h1>
+    <p>Question, R code, and interpretation for all five lab exercise types: Design of Experiments, Monte Carlo Integration, Random Number Generation, and Discrete/Continuous Distribution Sampling.</p>
     <button class="copy-all-btn" id="copy-all">Copy all code</button>
-  </header> -->
-
-    <section class="qa-section" id="sec0">
-      <h2>Example 1: Exponential Distribution</h2>
+  </header>
+    <section class="qa-section" id="a1">
+      <h2>Experiment 1: CRD - Chicken Diet Weights</h2>
       <div class="question">
-<p>If a product failure time (in hours) is assumed to follow an exponential distribution with failure rate λ = 0.00025, answer the following:</p>
-<ol type="i">
-<li>Probability the product survives 10,000 hours.</li>
-<li>Probability the product survives the next 20,000 hours.</li>
-<li>Mean time to failure (MTTF).</li>
-<li>Median time to failure.</li>
-<li>Time by which 30% of products are expected to fail.</li>
-<li>Time by which 63.21% will fail.</li>
-</ol>
+<p>Six different diets were given to 40 white leghorn chickens at age 2 weeks and their weight (grams) recorded.</p>
+ <ol>
+   <li>Analyze the data and test the significance of the difference.</li>
+   <li>Test whether the mean weights for Diet 3 and Diet 5 are equivalent.</li>
+   <li>Test whether there is a significant difference between Diet 3 and Diet 6.</li>
+   <li>Test the difference between all pairs.</li>
+ </ol>
+ <table>
+   <tr><th>Diet 1</th><th>Diet 2</th><th>Diet 3</th><th>Diet 4</th><th>Diet 5</th><th>Diet 6</th></tr>
+   <tr><td>179</td><td>169</td><td>182</td><td>202</td><td>210</td><td>155</td></tr>
+   <tr><td>186</td><td>188</td><td>191</td><td>220</td><td>214</td><td>176</td></tr>
+   <tr><td>200</td><td>179</td><td>243</td><td>226</td><td>220</td><td>159</td></tr>
+   <tr><td>182</td><td>189</td><td>214</td><td>245</td><td>192</td><td>161</td></tr>
+   <tr><td>187</td><td>186</td><td>213</td><td>241</td><td>188</td><td>165</td></tr>
+   <tr><td>197</td><td>168</td><td>202</td><td>225</td><td>189</td><td></td></tr>
+   <tr><td></td><td>182</td><td>180</td><td></td><td>190</td><td></td></tr>
+   <tr><td></td><td></td><td>214</td><td></td><td>224</td><td></td></tr>
+ </table>
+ <div class="solution">
+   <p><strong>Hypotheses:</strong></p>
+   <p>Overall: H0: μ1 = μ2 = μ3 = μ4 = μ5 = μ6 &nbsp; vs &nbsp; H1: at least one diet mean differs.<br>
+   Diet3 vs Diet5: H0: μ3 = μ5 &nbsp; vs &nbsp; H1: μ3 ≠ μ5.<br>
+   Diet3 vs Diet6: H0: μ3 = μ6 &nbsp; vs &nbsp; H1: μ3 ≠ μ6.<br>
+   All pairs: H0: μi = μj for each pair &nbsp; vs &nbsp; H1: μi ≠ μj for each pair.</p>
+ </div>
       </div>
       <div class="code-head">
         <span class="code-label">R Code</span>
-        <button class="copy-btn" data-target="sec0-code">Copy code</button>
+        <button class="copy-btn" data-target="a1-code">Copy code</button>
       </div>
-      <pre class="console" id="sec0-code"><code>lambda &lt;- 0.00025
+      <pre class="console" id="a1-code"><code>f1 &lt;- c(179,186,200,182,187,197)
+f2 &lt;- c(169,188,179,189,186,168,182)
+f3 &lt;- c(182,191,243,214,213,202,180,214)
+f4 &lt;- c(202,220,226,245,241,225)
+f5 &lt;- c(210,214,220,192,188,189,190,224)
+f6 &lt;- c(155,176,159,161,165)
 
-## (i) Probability of surviving 10,000 hours
-S.10000 &lt;- exp(-lambda*10000)
-S.10000
+score &lt;- c(f1,f2,f3,f4,f5,f6)
+treatment &lt;- factor(rep(paste0(&quot;Diet&quot;,1:6), c(6,7,8,6,8,5)))
+data1 &lt;- data.frame(score, treatment)
 
-## (ii) Probability of surviving the next 20,000 hours
-S.20000 &lt;- exp(-lambda*20000)
-S.20000
+# (a) One-way ANOVA
+mod1 &lt;- aov(score ~ treatment, data = data1)
+summary(mod1)
 
-## (iii) Mean time to failure (MTTF)
-MTTF &lt;- 1/lambda
-MTTF
+# (b) Diet3 vs Diet5, (c) Diet3 vs Diet6 -- contrasts
+library(gmodels)
+con &lt;- matrix(c(0,0,1,0,-1,0,
+                0,0,1,0,0,-1), nrow = 2, byrow = TRUE)
+rownames(con) &lt;- c(&quot;Diet3 vs Diet5&quot;, &quot;Diet3 vs Diet6&quot;)
+fit.contrast(mod1, &quot;treatment&quot;, con)
 
-## (iv) Median time to failure
-t_0.5 &lt;- (1/lambda)*log(2)
-t_0.5
-
-## (v) Time by which 30% of products fail
-t_0.3 &lt;- (-1/lambda)*log(1-0.3)
-t_0.3
-
-## (vi) Time by which 63.21% fail
-t_0.6321 &lt;- -log(1-0.6321)/lambda
-t_0.6321</code></pre>
+# (d) All pairwise comparisons (Fisher&#x27;s LSD)
+library(agricolae)
+lsd1 &lt;- LSD.test(mod1, &quot;treatment&quot;)
+lsd1$groups</code></pre>
+      <div class="question interpretation" style="margin-top:16px;">
+        <p><strong>Interpretation:</strong></p>
+<p>The ANOVA p-value is far below 0.05, so we reject H0 and conclude at least one diet gives a different mean weight. In the contrast output, if a row's p-value is below 0.05, that pair of diets differs significantly (check the Diet3 vs Diet5 and Diet3 vs Diet6 rows). In the LSD grouping table, diets that share the same letter are not significantly different from each other, while diets with different letters are.</p>
+      </div>
     </section>
-    <section class="qa-section" id="sec1">
-      <h2>Example 2: Weibull Distribution</h2>
+    <section class="qa-section" id="a2">
+      <h2>Experiment 2: RBD - Sugar-Beet Variety Yield</h2>
       <div class="question">
-<p>If a product failure time (in hours) is assumed to follow a Weibull distribution with scale parameter η = 4000 and shape parameter β = 1.50, find:</p>
-<ol type="i">
-<li>Mean and variance of time to failure.</li>
-<li>Probability the product operates for 5000 h.</li>
-<li>Probability the product operates for another 2000 h after already operating for 5000 h.</li>
-</ol>
+<p>Six sugar-beet varieties (A-F) were compared across 5 blocks in a field experiment (yield in tons/acre).</p>
+ <ol>
+   <li>Test whether the treatments differ.</li>
+   <li>Test whether D and E differ.</li>
+   <li>Test whether A and B differ, and give a 95% CI for the difference.</li>
+   <li>Compare every pair of means using Duncan's test and Fisher's LSD test.</li>
+   <li>Test whether the blocks differ.</li>
+   <li>Comment on whether blocking was necessary.</li>
+ </ol>
+ <table>
+   <tr><th>Block 1</th><th>Block 2</th><th>Block 3</th><th>Block 4</th><th>Block 5</th></tr>
+   <tr><td>B 38.9</td><td>C 39.6</td><td>B 37.0</td><td>C 38.3</td><td>F 39.4</td></tr>
+   <tr><td>D 41.9</td><td>A 33.0</td><td>F 40.7</td><td>E 39.2</td><td>E 38.8</td></tr>
+   <tr><td>C 40.9</td><td>D 40.4</td><td>A 32.0</td><td>F 39.8</td><td>B 34.8</td></tr>
+   <tr><td>E 41.9</td><td>B 37.8</td><td>C 39.0</td><td>B 36.0</td><td>D 38.7</td></tr>
+   <tr><td>A 33.5</td><td>E 40.5</td><td>D 39.9</td><td>A 30.0</td><td>A 28.5</td></tr>
+   <tr><td>F 42.8</td><td>F 41.9</td><td>E 39.8</td><td>D 39.5</td><td>C 37.5</td></tr>
+ </table>
+ <div class="solution">
+   <p><strong>Hypotheses:</strong></p>
+   <p>Treatment: H0: μA=μB=μC=μD=μE=μF vs H1: at least one differs.<br>
+   D vs E: H0: μD=μE vs H1: μD≠μE.<br>
+   A vs B: H0: μA=μB vs H1: μA≠μB.<br>
+   All pairs: H0: μi=μj for each pair vs H1: μi≠μj for each pair.<br>
+   Block: H0: no difference among block means vs H1: at least one block mean differs.</p>
+ </div>
       </div>
       <div class="code-head">
         <span class="code-label">R Code</span>
-        <button class="copy-btn" data-target="sec1-code">Copy code</button>
+        <button class="copy-btn" data-target="a2-code">Copy code</button>
       </div>
-      <pre class="console" id="sec1-code"><code>eta &lt;- 4000
-beta &lt;- 1.50
+      <pre class="console" id="a2-code"><code>t1 &lt;- c(33.5, 33.0, 32.0, 30.0, 28.5)   # A
+t2 &lt;- c(38.9, 37.8, 37.0, 36.0, 34.8)   # B
+t3 &lt;- c(40.9, 39.6, 39.0, 38.3, 37.5)   # C
+t4 &lt;- c(41.9, 40.4, 39.9, 39.5, 38.7)   # D
+t5 &lt;- c(41.9, 40.5, 39.8, 39.2, 38.8)   # E
+t6 &lt;- c(42.8, 41.9, 40.7, 39.8, 39.4)   # F
 
-## (i) Mean and variance of time to failure
-mean.T &lt;- eta*gamma(1+1/beta)
-mean.T
-var.T &lt;- eta^2 * (gamma(1+2/beta) - (gamma(1+1/beta))^2)
-var.T
+y &lt;- c(t1,t2,t3,t4,t5,t6)
+treatment &lt;- factor(rep(LETTERS[1:6], each = 5))
+block &lt;- factor(rep(1:5, 6))
+data2 &lt;- data.frame(y, treatment, block)
 
-## (ii) Probability of operating for 5000 hours
-S.5000 &lt;- exp(-(5000/eta)^beta)
-S.5000
+# (i) &amp; (v) Two-way ANOVA: treatment + block
+mod2 &lt;- aov(y ~ treatment + block, data = data2)
+summary(mod2)
 
-## (iii) Probability of operating another 2000 h after 5000 h
-S.7000 &lt;- exp(-(7000/eta)^beta)
-S.2000_5000 &lt;- S.7000/S.5000
-S.2000_5000</code></pre>
+# (ii) D vs E, (iii) A vs B -- contrasts
+library(gmodels)
+con2 &lt;- matrix(c(0,0,0,1,-1,0,
+                 1,-1,0,0,0,0), nrow = 2, byrow = TRUE)
+rownames(con2) &lt;- c(&quot;D vs E&quot;, &quot;A vs B&quot;)
+fit.contrast(mod2, &quot;treatment&quot;, con2)
+
+# (iii) 95% CI for A - B
+t.test(t1, t2)
+
+# (iv) Duncan&#x27;s test and Fisher&#x27;s LSD test, all pairs
+library(agricolae)
+duncan.test(data2$y, data2$treatment, 20, 0.05)$groups
+LSD.test(mod2, &quot;treatment&quot;)$groups</code></pre>
+      <div class="question interpretation" style="margin-top:16px;">
+        <p><strong>Interpretation:</strong></p>
+<p>The "treatment" row p-value tells us whether the six varieties differ in yield (if p &lt; 0.05, they do). The D vs E and A vs B contrast rows each give a p-value and, from t.test, a 95% confidence interval for A - B -- if that interval excludes 0, the difference is significant. Duncan's and LSD's grouping letters show which varieties can be treated as statistically the same (same letter) versus different (different letters). Finally, check the "block" row: if its p-value is below 0.05, blocking successfully removed real field variation and was worth including; if not, blocking added little value here.</p>
+      </div>
     </section>
-    <section class="qa-section" id="sec2">
-      <h2>Example 3: Schizophrenia Survival Analysis</h2>
+    <section class="qa-section" id="a3">
+      <h2>Experiment 3: Crossover Design - Cow Milk Yield by Diet</h2>
       <div class="question">
-<p>In the dataset (schizophrenia.csv), you can find survival time (<code>Time</code>, time in days) for 280 cases of schizophrenia identified and followed for 5 years (1997-2001) in Ethiopia, together with the censoring indicator (<code>Censor</code>: 0 = censor, 1 = death), their marital status (<code>Marital</code>: 1 = single, 2 = married, 3 = Alone Again), gender (<code>Gender</code>: 1 = Male, 2 = Female), schooling (in years), their age and their age at onset of schizophrenia.</p>
-<ol type="i">
-<li>Give the number of censored observations and events for all patients, but also by marital status and by gender.</li>
-<li>Plot the Kaplan-Meier estimate of the survival curve for these patients.</li>
-<li>Give the median survival time together with a 95% CI, and give also the survival time at 6 months, 18 months, and 36 months together with a 95% CI (specify which CI you provide).</li>
-<li>Plot the Kaplan-Meier estimate of the survival curve by marital status, and give the median survival time (with 95% CI) by marital status. What can you conclude from these results?</li>
-<li>Plot on the same graph the Kaplan-Meier survival function for patients with a certain gender. Shortly (1 sentence), interpret this plot.</li>
-</ol>
+<p>Four diets (1 = roughage, 2 = restricted grain, 3 = medium grain, 4 = full grain) were fed to 4 cows across 4 periods in a crossover design, so that cow, period, and diet effects can all be separated. Each cell shows the diet number fed in that period, with the resulting milk yield (litres) in parentheses.</p>
+ <ol type="a">
+   <li>Perform ANOVA and test the significance of diet effects.</li>
+   <li>Which diet would you prefer?</li>
+ </ol>
+ <table>
+   <tr><th>Cow</th><th>Period 1</th><th>Period 2</th><th>Period 3</th><th>Period 4</th></tr>
+   <tr><td>1</td><td>1 (192)</td><td>2 (190)</td><td>3 (214)</td><td>4 (221)</td></tr>
+   <tr><td>2</td><td>2 (195)</td><td>4 (203)</td><td>1 (139)</td><td>3 (152)</td></tr>
+   <tr><td>3</td><td>3 (292)</td><td>1 (218)</td><td>4 (245)</td><td>2 (204)</td></tr>
+   <tr><td>4</td><td>4 (249)</td><td>3 (210)</td><td>2 (163)</td><td>1 (134)</td></tr>
+ </table>
+ <div class="solution">
+   <p><strong>Hypotheses:</strong></p>
+   <p>H0: μ1=μ2=μ3=μ4 vs H1: at least one diet mean differs, where μi is the average milk yield for diet i.</p>
+ </div>
       </div>
       <div class="code-head">
         <span class="code-label">R Code</span>
-        <button class="copy-btn" data-target="sec2-code">Copy code</button>
+        <button class="copy-btn" data-target="a3-code">Copy code</button>
       </div>
-      <pre class="console" id="sec2-code"><code>library(survival)
-library(survminer)
+      <pre class="console" id="a3-code"><code>cow    &lt;- factor(rep(1:4, each = 4))
+period &lt;- factor(rep(1:4, times = 4))
+diet   &lt;- factor(c(1,2,3,4,
+                    2,4,1,3,
+                    3,1,4,2,
+                    4,3,2,1))
+milk &lt;- c(192,190,214,221,
+          195,203,139,152,
+          292,218,245,204,
+          249,210,163,134)
 
-schizo &lt;- read.csv("C:\\Users\\futan\\Desktop\\New folder\\Schizophrenia.csv")
+data3 &lt;- data.frame(milk, cow, period, diet)
 
-schizo &lt;- within(schizo, {
-  sex     &lt;- factor(Gender, labels = c("Male", "Female"))
-  censor  &lt;- factor(Censor, labels = c("Censor", "Death"))
-  marital &lt;- factor(Marital, labels = c("Single", "Married", "Alone again"))
-  Time    &lt;- as.numeric(Time)
-})
-str(schizo)
+# (a) ANOVA removing cow and period effects, testing diet
+mod3 &lt;- aov(milk ~ cow + period + diet, data = data3)
+summary(mod3)
 
-#---------------a
-table(schizo$censor)
-table(schizo$censor, schizo$marital)
-table(schizo$censor, schizo$sex)
-
-#----------------b
-km &lt;- survfit(Surv(Time, Censor) ~ 1, data = schizo, conf.type = "log-log")
-summary(km)
-km
-
-ggsurvplot(km,
-           data = schizo,
-           conf.int = T,
-           risk.table = T,
-           surv.median.line = "hv",
-           xlab = "Time in days",
-           ylab = "Survival probability",
-           title = "Overall Kaplan-Meier Survival Curve")
-
-#--------------c
-summary(km, times = c(6*30, 18*30, 36*30))
-
-#--------------d
-km_marital &lt;- survfit(Surv(Time, Censor) ~ marital, data = schizo, conf.type = "log-log")
-km_marital
-
-ggsurvplot(km_marital,
-           data = schizo,
-           pval = T,
-           risk.table = T,
-           surv.median.line = "hv",
-           xlab = "Time in days",
-           ylab = "Survival probability",
-           title = "Kaplan-Meier Curve by Marital Status")
-
-#----------------e
-km_gender &lt;- survfit(Surv(Time, Censor) ~ sex, data = schizo, conf.type = "log-log")
-km_gender
-
-ggsurvplot(km_gender,
-           data = schizo,
-           pval = T,
-           risk.table = T,
-           surv.median.line = "hv",
-           xlab = "Time in days",
-           ylab = "Survival probability",
-           title = "Kaplan-Meier Curve by Gender")
-
-# Bonus: Kaplan-Meier vs. Nelson-Aalen comparison
-time_points &lt;- c(90, 180, 270, 365)
-na &lt;- survfit(Surv(Time, Censor) ~ 1, data = schizo, type = "fh", conf.type = "log-log")
-km_sum &lt;- summary(km, times = time_points)
-na_sum &lt;- summary(na, times = time_points)
-
-comparison &lt;- data.frame(
-  Time   = time_points,
-  KM     = round(km_sum$surv, 4),
-  KM_LCL = round(km_sum$lower, 4),
-  KM_UCL = round(km_sum$upper, 4),
-  NA_S   = round(na_sum$surv, 4),
-  NA_LCL = round(na_sum$lower, 4),
-  NA_UCL = round(na_sum$upper, 4)
-)
-comparison</code></pre>
+# (b) Which diet gives the highest average yield?
+sort(tapply(milk, diet, mean), decreasing = TRUE)</code></pre>
+      <div class="question interpretation" style="margin-top:16px;">
+        <p><strong>Interpretation:</strong></p>
+<p>Look at the "diet" row p-value in the ANOVA table -- if it is below 0.05, the diets produce significantly different milk yields even after accounting for which cow and which period it was fed in. The diet with the highest average yield in the final table is the one to prefer (full grain, diet 4, has the highest average in this data).</p>
+      </div>
     </section>
-    <section class="qa-section" id="sec3">
-      <h2>Example 8: Hypertension Screening (Hypertension_Lab.csv)</h2>
+    <section class="qa-section" id="b1">
+      <h2>1. Monte Carlo Integration with a Control Variate</h2>
       <div class="question">
-<p>The dataset <strong>Hypertension</strong>. The data are derived from a hypertension screening study. Of the 727 participants of this study who were examined, the following data are included in the file <code>Hypertension_Lab.csv</code>:</p>
-<table>
-<tr><th>Variable</th><th>Label</th><th>Category</th></tr>
-<tr><td>ID</td><td>Patient's number</td><td>ID Number</td></tr>
-<tr><td>bmi</td><td>Patient's body mass index</td><td>Continuous scale</td></tr>
-<tr><td>sleep</td><td>Patient's sleeping hours</td><td>Continuous scale</td></tr>
-<tr><td>hypert</td><td>Patient's hypertension status</td><td>0=No, 1=Yes</td></tr>
-<tr><td>Gender</td><td>Sex of patient</td><td>0=Male, 1=Female</td></tr>
-</table>
-<p>Using R or RStudio, answer the following:</p>
-<ol type="a">
-<li>Are there any missing observations? If yes, how many of them?</li>
-<li>Recode/categorize BMI into <code>bmi_cat</code> (Normal: bmi less than 25; Overweight: 25 up to 30; Obese: bmi 30 or more).</li>
-<li>Factorize all required variables in question (g).</li>
-<li>Find the proportion table of gender.</li>
-<li>What is the risk of hypertension for male? Give also the 95% CI for the risk.</li>
-<li>Is there any association between hypertension and <code>bmi_cat</code>? Which category has the highest probability of hypertension? Is the variable <code>bmi_cat</code> significant?</li>
-<li>Fit a logistic regression model to predict hypertension, using bmi, sleep, gender as main effects.</li>
-<li>Find the odds ratios and interpret the significant factors.</li>
-<li>Calculate 95% confidence intervals of all factors.</li>
-<li>Find the deviance and AIC.</li>
-<li>Calculate the sensitivity, recall, specificity, PPV, precision, NPV, F1 score and accuracy of the model, and interpret.</li>
-<li>Calculate multicollinearity using the variance inflation factor (VIF) and interpret.</li>
-<li>Test the model's goodness of fit using the Hosmer-Lemeshow test.</li>
-<li>Find McFadden's pseudo-R².</li>
-<li>Draw the ROC curve.</li>
-<li>Calculate the area under the curve (AUC) and interpret it.</li>
-<li>Calculate the average marginal effect and interpret.</li>
-</ol>
+<p>Approximate the integral of e<sup>-x</sup>/(1+x&sup2;) from 0 to 1 using Monte Carlo integration with a control variate, and compare the result to simple Monte Carlo integration.</p>
+ <div class="solution"><p><strong>Note:</strong> No formal hypothesis test is required here. The aim is to estimate the integral and compare the variance of simple Monte Carlo with the control variate method.</p></div>
       </div>
       <div class="code-head">
         <span class="code-label">R Code</span>
-        <button class="copy-btn" data-target="sec3-code">Copy code</button>
+        <button class="copy-btn" data-target="b1-code">Copy code</button>
       </div>
-      <pre class="console" id="sec3-code"><code>HT &lt;- read.csv("Hypertension_Lab.csv")
+      <pre class="console" id="b1-code"><code>set.seed(1)
+m &lt;- 10000
+u &lt;- runif(m)
+g &lt;- exp(-u)/(1+u^2)              # function we want to integrate
 
-# (a) Missing observations
-sum(is.na(HT))
+# Simple Monte Carlo
+theta_simple &lt;- mean(g)
+var_simple   &lt;- var(g)/m
 
-# (b) Recode BMI into bmi_cat
-HT$bmi_cat &lt;- cut(HT$bmi,
-                   breaks = c(-Inf, 25, 30, Inf),
-                   labels = c("Normal", "Overweight", "Obese"),
-                   right = FALSE)
-table(HT$bmi_cat)
+# Control variate: f(x) = 1/(1+x^2); true integral of f over [0,1] is pi/4
+f &lt;- 1/(1+u^2)
+mu_f &lt;- pi/4
+b &lt;- -cov(g,f)/var(f)
+g_cv &lt;- g + b*(f - mu_f)
+theta_cv &lt;- mean(g_cv)
+var_cv   &lt;- var(g_cv)/m
 
-# (c) Factorize required variables
-HT$sex &lt;- factor(HT$Gender, labels = c("Male", "Female"))
-HT$ht  &lt;- factor(HT$hypert, labels = c("No", "Yes"))
-
-# (d) Proportion table of gender
-prop.table(table(HT$sex))
-
-# (e) Risk of hypertension for males, with 95% CI
-male &lt;- subset(HT, sex == "Male")
-p  &lt;- mean(male$hypert)
-n  &lt;- nrow(male)
-se &lt;- sqrt(p * (1 - p) / n)
-c(p = p, n = n, se = se, lower = p - 1.96 * se, upper = p + 1.96 * se)
-
-# (f) Association between hypertension and bmi_cat
-t &lt;- table(HT$bmi_cat, HT$ht)
-t
-prop.table(t, margin = 1)
-chisq.test(t)
-
-# (g) Logistic regression model
-model &lt;- glm(ht ~ bmi + sleep + sex, data = HT, family = binomial)
-summary(model)
-
-# (h) &amp; (i) Odds ratios with 95% CI
-library(broom)
-tidy(model, exponentiate = TRUE, conf.int = TRUE)
-
-# (j) Deviance and AIC
-c(null_deviance = model$null.deviance,
-  residual_deviance = model$deviance,
-  AIC = AIC(model))
-
-# (k) Classification performance
-predicted_prob  &lt;- predict(model, type = "response")
-predicted_class &lt;- factor(ifelse(predicted_prob &gt; 0.5, "Yes", "No"), levels = c("No", "Yes"))
-library(caret)
-confusionMatrix(predicted_class, HT$ht, positive = "Yes")
-
-# (l) Multicollinearity (VIF)
-library(car)
-vif(model)
-
-# (m) Hosmer-Lemeshow goodness-of-fit test
-library(ResourceSelection)
-hoslem.test(HT$hypert, fitted(model), g = 10)
-
-# (n) McFadden's pseudo-R^2
-1 - model$deviance / model$null.deviance
-
-# (o) &amp; (p) ROC curve and AUC
-library(pROC)
-roc_obj &lt;- roc(response = HT$ht, predictor = fitted(model), levels = c("No", "Yes"))
-plot(roc_obj)
-auc(roc_obj)
-
-# (q) Average marginal effects
-library(marginaleffects)
-avg_slopes(model)</code></pre>
+data.frame(Method = c(&quot;Simple MC&quot;,&quot;Control Variate&quot;),
+           Estimate = c(theta_simple, theta_cv),
+           Variance = c(var_simple, var_cv))</code></pre>
+      <div class="question interpretation" style="margin-top:16px;">
+        <p><strong>Interpretation:</strong></p>
+<p>Both estimates should be close to the true value of about 0.5225. The control-variate estimate has a noticeably smaller variance than the simple Monte Carlo estimate, because f(x) tracks g(x) closely and removes some of the random noise.</p>
+      </div>
     </section>
-    <section class="qa-section" id="sec4">
-      <h2>Question 2023 – Q4: ART Dataset (HIV Treatment)</h2>
+    <section class="qa-section" id="b2">
+      <h2>2. Comparing Two Different Control Variates</h2>
       <div class="question">
-<p>You can find the dataset <code>ART.csv</code> from <code>[STA42061.zip; Password: StA42061]</code> on your Desktop. Please provide all codes, outputs, and interpretations in your exam paper. Also, roughly draw the plot by hand on the exam paper. This dataset contains the following information:</p>
-<table>
-<tr><th>Variable Name</th><th>Description</th></tr>
-<tr><td>Patid</td><td>Patient Identification number (1-100)</td></tr>
-<tr><td>Time</td><td>Time (in months) to censoring or death</td></tr>
-<tr><td>Censor</td><td>Censoring status (0=censored, 1=death)</td></tr>
-<tr><td>Gender</td><td>Gender (1=male, 2=female)</td></tr>
-<tr><td>Weight</td><td>The weight (in kg)</td></tr>
-<tr><td>Function</td><td>The functional status (0=bedridden, 1=ambulatory, 2=working)</td></tr>
-<tr><td>Clinstage</td><td>The WHO clinical stage</td></tr>
-<tr><td>CD4</td><td>The CD4 count</td></tr>
-<tr><td>ART</td><td>The ART therapy (1=D4T(30)-3TC-NVP, 2=D4T(40)-3TC-NVP, 3=AZT-3TC-NVP)</td></tr>
-</table>
-<ul>
-<li>Import data <code>ART.csv</code> using the name <code>ART</code> (write down the code in your exam paper).</li>
-<li>Randomly select 82 patients from the ART dataset using your ID number as the seed number. Use this code: <code>set.seed(ID Number)</code>; <code>ART2 &lt;- ART[sample(nrow(ART), size=82, replace = FALSE),]</code></li>
-</ul>
-<p>Use the randomly selected dataset of Antiretroviral Therapy (ART) for HIV treatment of 82 patients. Answer the following questions:</p>
-<ol type="a">
-<li>Provide the number and proportion of censored observations and events for all patients and by functional status and gender.</li>
-<li>Plot the Kaplan-Meier estimated survival curve for all patients with a 95% confidence interval and interpret this plot. Specify the survival at 15, 25, and 35 (with 95% CIs). What can you say about the median survival time?</li>
-<li>Plot the Kaplan-Meier estimated survival curve by the ART therapy given to HIV patients and provide the ART therapy's median survival time (with 95% CI). What can you conclude from these results?</li>
-</ol>
+<p>Use the method of control variates to estimate &theta; = &int;<sub>0</sub><sup>1</sup> g(x)dx with g(x) = e<sup>-x</sup>/(1+x&sup2;), using (a) control variate f1(x) = 1/(1+x&sup2;), (b) control variate f2(x) = x/(1+x&sup2;). (c) Compare both to simple Monte Carlo -- which achieves greater variance reduction?</p>
+ <div class="solution"><p><strong>Note:</strong> No formal hypothesis test is required here. We compare the estimates and choose the method with the smaller variance.</p></div>
       </div>
       <div class="code-head">
         <span class="code-label">R Code</span>
-        <button class="copy-btn" data-target="sec4-code">Copy code</button>
+        <button class="copy-btn" data-target="b2-code">Copy code</button>
       </div>
-      <pre class="console" id="sec4-code"><code>ART &lt;- read.csv("ART.csv", header = T)
-str(ART)
+      <pre class="console" id="b2-code"><code># (a) control variate f1
+f1   &lt;- 1/(1+u^2)
+mu_f1 &lt;- pi/4
+b1   &lt;- -cov(g,f1)/var(f1)
+cv1  &lt;- g + b1*(f1 - mu_f1)
 
-set.seed(200304080)
-ART2 &lt;- ART[sample(nrow(ART), size = 82, replace = FALSE), ]
+# (b) control variate f2
+f2    &lt;- u/(1+u^2)
+mu_f2 &lt;- 0.5*log(2)     # true integral of x/(1+x^2) over [0,1]
+b2    &lt;- -cov(g,f2)/var(f2)
+cv2   &lt;- g + b2*(f2 - mu_f2)
 
-# Variable preparation
-library(survival)
-library(survminer)
-
-ART2 &lt;- within(ART2, {
-  sex      &lt;- factor(Gender, labels = c("Male", "Female"))
-  status   &lt;- factor(Censor, labels = c("Censor", "Death"))
-  func     &lt;- factor(Function, labels = c("Bedridden", "Ambulatory", "Working"))
-  art_grp  &lt;- factor(ART, labels = c("D4T(30)-3TC-NVP", "D4T(40)-3TC-NVP", "AZT-3TC-NVP"))
-  Time     &lt;- as.numeric(Time)
-})
-str(ART2)
-
-# (a) Number and proportion of censored observations and events
-# Overall
-table(ART2$status)
-prop.table(table(ART2$status))
-
-# By functional status
-table(ART2$status, ART2$func)
-prop.table(table(ART2$status, ART2$func), margin = 2)
-
-# By gender
-table(ART2$status, ART2$sex)
-prop.table(table(ART2$status, ART2$sex), margin = 2)
-
-# (b) Overall Kaplan-Meier survival curve
-km_all &lt;- survfit(Surv(Time, Censor) ~ 1, data = ART2, conf.type = "log-log")
-km_all
-summary(km_all)
-
-ggsurvplot(km_all,
-           data = ART2,
-           conf.int = TRUE,
-           risk.table = TRUE,
-           surv.median.line = "hv",
-           xlab = "Time (months)",
-           ylab = "Survival probability",
-           title = "Overall Kaplan-Meier Survival Curve (ART patients)")
-
-# Survival at specific time points with 95% CI
-summary(km_all, times = c(15, 25, 35))
-
-# (c) Kaplan-Meier curve by ART therapy
-km_art &lt;- survfit(Surv(Time, Censor) ~ art_grp, data = ART2, conf.type = "log-log")
-km_art
-
-ggsurvplot(km_art,
-           data = ART2,
-           pval = TRUE,
-           conf.int = TRUE,
-           risk.table = TRUE,
-           surv.median.line = "hv",
-           xlab = "Time (months)",
-           ylab = "Survival probability",
-           legend.title = "ART therapy",
-           title = "Kaplan-Meier Curve by ART Therapy")</code></pre>
+# (c) compare
+data.frame(Method   = c(&quot;Simple MC&quot;, &quot;Control f1&quot;, &quot;Control f2&quot;),
+           Estimate = c(mean(g), mean(cv1), mean(cv2)),
+           Variance = c(var(g)/m, var(cv1)/m, var(cv2)/m))</code></pre>
+      <div class="question interpretation" style="margin-top:16px;">
+        <p><strong>Interpretation:</strong></p>
+<p>All three estimates should be close to the true value. Whichever control variate produces the smallest variance in the table gives the greatest variance reduction -- typically f1(x) works better here because its shape is closer to g(x) than f2(x) is.</p>
+      </div>
     </section>
-    <section class="qa-section" id="sec5">
-      <h2>Question 2023 – Q5: HYPERT Dataset (Isolated Systolic Hypertension)</h2>
+    <section class="qa-section" id="b3">
+      <h2>3. Control Variate via Regression Approach</h2>
       <div class="question">
-<p>The dataset <code>[STA4206L.zip; Password: StA42061]</code>. The data are derived from a hypertension screening study of the elderly people. Of the 1596 participants of this study who were examined in 1993 as well as in 1995, the following data are included in the file <code>HYPERT.csv</code>:</p>
-<table>
-<tr><th>Variable</th><th>Description</th><th>Codes/Values</th></tr>
-<tr><td>Idnr</td><td>Identification number</td><td>1-1596</td></tr>
-<tr><td>sex</td><td>Gender</td><td>0=male, 1=female</td></tr>
-<tr><td>age</td><td>Age in 1993</td><td>Years</td></tr>
-<tr><td>height</td><td>Height in 1993</td><td>cm</td></tr>
-<tr><td>weight</td><td>Weight in 1993</td><td>kg</td></tr>
-<tr><td>smoke93</td><td>Smoking in 1993</td><td>0=no, 1=yes</td></tr>
-<tr><td>sbp93</td><td>Systolic Blood Pressure in 1993</td><td>mmHg</td></tr>
-<tr><td>sbp95</td><td>Systolic Blood Pressure in 1995</td><td>mmHg</td></tr>
-<tr><td>ISH</td><td>Isolated Systolic Hypertension in 1993</td><td>0=no, 1=yes</td></tr>
-</table>
-<p><strong>R Instruction</strong></p>
-<ul>
-<li>Import data <code>HYPERT.csv</code> using the name <code>HYPERT</code> (write down the code in your exam paper).</li>
-<li>Randomly select 650 cases from the <code>HYPERT</code> dataset using your ID number as the seed number: <code>set.seed(ID Number)</code>; <code>HYPERT2 &lt;- HYPERT[sample(nrow(HYPERT), size = 650, replace = FALSE), ]</code>.</li>
-<li>Export the data into an SPSS file (<code>.sav</code>) using the <code>haven</code> package: <code>write_sav(HYPERT2, "HYPERT.sav")</code>.</li>
-</ul>
-<p>Work on the randomly selected data file and answer the following questions.</p>
-<ol type="a">
-<li>Are there any missing observations? If yes, how many of them?</li>
-<li>Calculate BMI in the <code>HYPERT2</code> dataset and then recode/categorize BMI into <code>BMICLASS</code> (1: BMI less than 20; 2: 20 up to 25; 3: 25 up to 30; 4: BMI 30 or more).</li>
-<li>What is the risk of Isolated Systolic Hypertension in 1993 for women? Give also the 95% confidence interval for this risk (calculate by hand and report it in your exam script).</li>
-<li>Is there any association between Isolated Systolic Hypertension in 1993 and <code>BMICLASS</code>? Which <code>BMICLASS</code> has the highest probability of ISH? Is the variable <code>BMICLASS</code> significant?</li>
-<li>Run a logistic regression model using the response variable ISH and the explanatory variables <code>age</code>, <code>sex</code>, <code>smoke93</code>, and <code>BMICLASS</code>. Explain the output in terms of odds ratio.</li>
-</ol>
+<p>Approximate the integrals from Questions 1 and 2 using the control-variate-with-regression approach.</p>
+ <div class="solution"><p><strong>Note:</strong> No formal hypothesis test is required here. Regression is used to find the control variate coefficient and improve the Monte Carlo estimate.</p></div>
       </div>
       <div class="code-head">
         <span class="code-label">R Code</span>
-        <button class="copy-btn" data-target="sec5-code">Copy code</button>
+        <button class="copy-btn" data-target="b3-code">Copy code</button>
       </div>
-      <pre class="console" id="sec5-code"><code>HYPERT &lt;- read.csv("HYPERT.csv")
+      <pre class="console" id="b3-code"><code>fit1 &lt;- lm(g ~ f1)
+c1 &lt;- coef(fit1)[2]
+theta_reg1 &lt;- mean(g) - c1*(mean(f1) - mu_f1)
 
-set.seed(200304080)
-HYPERT2 &lt;- HYPERT[sample(nrow(HYPERT), size = 650, replace = FALSE), ]
-nrow(HYPERT2)
+fit2 &lt;- lm(g ~ f2)
+c2 &lt;- coef(fit2)[2]
+theta_reg2 &lt;- mean(g) - c2*(mean(f2) - mu_f2)
 
-library(haven)
-write_sav(HYPERT2, "HYPERT.sav")
-
-# (a) Missing observations
-sum(is.na(HYPERT2))
-colSums(is.na(HYPERT2))
-
-# (b) Calculate BMI and BMICLASS
-HYPERT2$BMI &lt;- HYPERT2$weight / (HYPERT2$height/100)^2
-HYPERT2$BMICLASS &lt;- cut(HYPERT2$BMI,
-                         breaks = c(-Inf, 20, 25, 30, Inf),
-                         labels = c("1", "2", "3", "4"),
-                         right = FALSE)
-table(HYPERT2$BMICLASS)
-summary(HYPERT2$BMI)
-
-# (c) Risk of ISH in 1993 for women, with 95% CI
-women &lt;- subset(HYPERT2, sex == 1)
-n &lt;- nrow(women)
-x &lt;- sum(women$ISH == 1)
-p_hat &lt;- x / n
-SE &lt;- sqrt(p_hat * (1 - p_hat) / n)
-lower &lt;- p_hat - 1.96 * SE
-upper &lt;- p_hat + 1.96 * SE
-n; x; p_hat; SE; lower; upper
-
-# (d) Association between ISH and BMICLASS
-tab &lt;- table(HYPERT2$BMICLASS, HYPERT2$ISH)
-tab
-prop.table(tab, margin = 1)
-chisq.test(tab)
-
-# (e) Logistic regression
-HYPERT2$sex      &lt;- factor(HYPERT2$sex, labels = c("Male", "Female"))
-HYPERT2$smoke93  &lt;- factor(HYPERT2$smoke93, labels = c("No", "Yes"))
-model &lt;- glm(ISH ~ age + sex + smoke93 + BMICLASS, data = HYPERT2, family = binomial(link = "logit"))
-summary(model)
-
-# Odds ratios and 95% CIs
-exp(coef(model))
-exp(confint(model))</code></pre>
+c(Regression_with_f1 = theta_reg1, Regression_with_f2 = theta_reg2)</code></pre>
+      <div class="question interpretation" style="margin-top:16px;">
+        <p><strong>Interpretation:</strong></p>
+<p>The regression approach automatically finds the best control-variate coefficient (the regression slope) instead of computing cov/var by hand, and gives essentially the same estimate as Question 2, confirming the manual calculation was correct.</p>
+      </div>
     </section>
-    <section class="qa-section" id="sec6">
-      <h2>Bonus Question: Leukemia Remission Times (Two-Sample KM)</h2>
+    <section class="qa-section" id="b4">
+      <h2>4. Hit-or-Miss Method for Monte Carlo Integration</h2>
       <div class="question">
-<p>Data for remission times in weeks for two groups of 42 leukemia patients are given below:</p>
-<p><strong>Group-1: Treatment group (21 patients)</strong><br>
-6, 6, 6, 6+, 7, 9+, 10, 10+, 11+, 13, 16, 17+, 19+, 20+, 22, 23, 25+, 32+, 32+, 34+, 35+</p>
-<p><strong>Group-2: Placebo group (21 patients)</strong><br>
-1, 1, 2, 2, 3, 4, 4, 5, 5, 8, 8, 8, 8, 11, 11, 12, 12, 15, 17, 22, 23</p>
-<ol type="a">
-<li>Compute product-limit estimates (KM estimate) for the two groups and plot in a graph.</li>
-<li>Estimate the variance of the survival function for both groups.</li>
-<li>Compute the 95% confidence interval for the survival probability at time 16 for group-1.</li>
-<li>Compute the 95% confidence interval for the median remission time for group-1.</li>
-<li>For group-1, at the 5% level of significance, test H<sub>0</sub>: S(t<sub>16</sub>) = 0.9 vs H<sub>1</sub>: S(t<sub>16</sub>) ≠ 0.9.</li>
-<li>Test the equality of the survival functions in the two groups.</li>
-</ol>
+<p>Using the hit-or-miss Monte Carlo method, estimate the integral of (sin(&pi;x))&sup2; from 0 to 1.</p>
+ <div class="solution"><p><strong>Note:</strong> No formal hypothesis test is required here. The aim is to estimate the integral using the hit-or-miss simulation technique.</p></div>
       </div>
       <div class="code-head">
         <span class="code-label">R Code</span>
-        <button class="copy-btn" data-target="sec6-code">Copy code</button>
+        <button class="copy-btn" data-target="b4-code">Copy code</button>
       </div>
-      <pre class="console" id="sec6-code"><code>library(survival)
+      <pre class="console" id="b4-code"><code>set.seed(125)
 
-mp      &lt;- data.frame(time  = c(6,6,6,7,10,13,16,22,23, 6,9,10,11,17,19,20,25,32,32,34,35),
-                       event = c(rep(1, 9), rep(0, 12)))
-placebo &lt;- data.frame(time  = c(1,1,2,2,3,4,4,5,5,8,8,8,8,11,11,12,12,15,17,22,23),
-                       event = rep(1, 21))
+hit_or_miss &lt;- function(a, b, g, n){
+  x &lt;- runif(n, a, b)          # random x values in [a, b]
+  k &lt;- g(x)                    # function value at each x
+  c &lt;- max(k)                  # upper bound (height of enclosing rectangle)
+  y &lt;- runif(n, 0, c)          # random y values in [0, c]
 
-# (a) KM estimates and plot
-km1 &lt;- survfit(Surv(time, event) ~ 1, data = mp)
-km2 &lt;- survfit(Surv(time, event) ~ 1, data = placebo)
-summary(km1)
-summary(km2)
+  hit &lt;- ifelse(y &lt;= k, 1, 0)  # 1 = point falls under the curve (&quot;hit&quot;)
+  n_hit &lt;- sum(hit)
 
-library(survminer)
-km_fit_gg &lt;- survfit(Surv(time, event) ~ group,
-                      data = rbind(transform(mp, group = "Treatment"),
-                                   transform(placebo, group = "Placebo")))
-ggsurvplot(km_fit_gg,
-           palette = c("blue", "red"),
-           conf.int = FALSE,
-           legend.title = "",
-           legend.labs = c("Placebo", "Treatment"),
-           xlab = "Time (weeks)", ylab = "Survival Probability",
-           title = "Kaplan-Meier Curves")
-
-# (b) Variance of the survival function
-var_km1 &lt;- summary(km1)$std.err^2
-var_km2 &lt;- summary(km2)$std.err^2
-var_km1
-var_km2
-
-# (c) 95% CI for survival probability at t = 16, group-1
-summary(km1, times = 16)
-
-# (d) 95% CI for the median remission time, group-1
-km1
-
-# (e) Test H0: S(t16) = 0.9 vs H1: S(t16) != 0.9
-km1S16 &lt;- summary(km1, times = 16)$surv
-SE16   &lt;- summary(km1, times = 16)$std.err
-Z      &lt;- (km1S16 - 0.9) / SE16
-p_val  &lt;- 2 * (1 - pnorm(abs(Z)))
-Z
-p_val
-
-# (f) Test equality of the survival functions (log-rank test)
-mp$group      &lt;- "mp"
-placebo$group &lt;- "placebo"
-leuk &lt;- rbind(mp, placebo)
-logrank &lt;- survdiff(Surv(time, event) ~ group, data = leuk)
-logrank</code></pre>
-    </section>
-    <section class="qa-section" id="sec7">
-      <h2>Problem 1 — Shirts (Graphical LPP)</h2>
-      <div class="question">
-<p>A garment manufacturer has a production line making two styles of shirts. Style I needs 100 g of cotton thread, 200 g of Dacron thread and 200 g of linen thread. Corresponding requirements of style II are 100 g, 300 g and 200 g. The net contributions are 100 Taka for style I and 120 Taka for style II. The available inventory of cotton thread, Dacron thread and linen thread are, respectively, 34 kg, 36 kg and 32 kg. The manufacturer wants to determine the number of each style to be produced with the given inventory. Formulate the LPP model and solve it by graphical method using R code.</p>
-<div class="solution">
-<p><strong>Solution:</strong> Let x₁ = number of Style I shirts, x₂ = number of Style II shirts.</p>
-<p>Maximize Z = 100x₁ + 120x₂</p>
-<p>Subject to:</p>
-<ul>
-<li>100x₁ + 100x₂ ≤ 34,000 (Cotton)</li>
-<li>200x₁ + 300x₂ ≤ 36,000 (Dacron)</li>
-<li>200x₁ + 200x₂ ≤ 32,000 (Linen)</li>
-<li>x₁, x₂ ≥ 0</li>
-</ul>
-<p>The binding constraints (Linen and Dacron) intersect at <strong>x₁ = 120, x₂ = 40</strong>, giving a <strong>maximum profit Z = 16,800 Taka</strong>.</p>
-</div>
-      </div>
-      <div class="code-head">
-        <span class="code-label">R Code</span>
-        <button class="copy-btn" data-target="sec7-code">Copy code</button>
-      </div>
-      <pre class="console" id="sec7-code"><code>library(ggplot2)
-
-x &lt;- seq(0,200,1)
-cotton &lt;- (34000 - 100*x) / 100
-dacron &lt;- (36000 - 200*x) / 300
-linen  &lt;- (32000 - 200*x) / 200
-
-ggplot() +
-  geom_line(aes(x, cotton), col="blue") +
-  geom_line(aes(x, dacron), col="green") +
-  geom_line(aes(x, linen), col="red") +
-  xlim(0,200) + ylim(0,200)
-
-x1 &lt;- c(0,0,160,100,40)
-x2 &lt;- c(160,120,0,40,120)
-Z  &lt;- 100*x1 + 120*x2
-i  &lt;- which.max(Z)
-
-cat("Optimal =", x1[i], x2[i], "\n")
-cat("Maximum Profit =", Z[i])</code></pre>
-    </section>
-    <section class="qa-section" id="sec8">
-      <h2>Problem 2 — Feed Mix (Minimize Cost)</h2>
-      <div class="question">
-<p>An animal feed company must produce 200 kg of a mixture consisting of ingredients A and B daily. A costs Rs. 3 per kg and B costs Rs. 8 per kg. Not more than 80 kg of A can be used and at least 60 kg of B must be used. The company wants to know how much of each ingredient should be used to minimize cost. Formulate the LPP.</p>
-<div class="solution">
-<p><strong>Solution:</strong> Let x₁ = kg of ingredient A, x₂ = kg of ingredient B.</p>
-<p>Minimize Z = 3x₁ + 8x₂</p>
-<p>Subject to:</p>
-<ul>
-<li>x₁ + x₂ = 200</li>
-<li>x₁ ≤ 80</li>
-<li>x₂ ≥ 60</li>
-<li>x₁, x₂ ≥ 0</li>
-</ul>
-<p>Since B costs more per kg, cost is minimized by using as much A as allowed: <strong>x₁ = 80, x₂ = 120</strong>, giving <strong>minimum cost Z = 1,200</strong>.</p>
-</div>
-      </div>
-      <div class="code-head">
-        <span class="code-label">R Code</span>
-        <button class="copy-btn" data-target="sec8-code">Copy code</button>
-      </div>
-      <pre class="console" id="sec8-code"><code>library(lpSolve)
-
-obj &lt;- c(3,8)
-con &lt;- matrix(c(1,1,
-                1,0,
-                0,1), nrow=3, byrow=TRUE)
-dir &lt;- c("=","&lt;=","&gt;=")
-rhs &lt;- c(200,80,60)
-
-sol &lt;- lp("min", obj, con, dir, rhs)
-sol$solution
-sol$objval</code></pre>
-    </section>
-    <section class="qa-section" id="sec9">
-      <h2>Problem 3 — Three Products (Maximize Profit)</h2>
-      <div class="question">
-<p>A factory manufactures three products A, B and C which involve lathe work, grinding and assembling. The cutting, grinding and assembling times required for one unit of A are 2, 1 and 1 hour respectively. Similarly they were 3, 1 and 3 hours for one unit of B and 1, 3 and 1 hours for one unit of C. The profits on A, B and C are Tk. 2, Tk. 2 and Tk. 4 per unit respectively. There are available 300 hours of lathe time, 300 hours of grinder time and 240 hours of assembly time. How many units of each product should be produced to maximize profit? Formulate the problem mathematically and solve using R code.</p>
-<div class="solution">
-<p><strong>Solution:</strong> Let x₁, x₂, x₃ = units of products A, B, C.</p>
-<p>Maximize Z = 2x₁ + 2x₂ + 4x₃</p>
-<p>Subject to:</p>
-<ul>
-<li>Lathe: 2x₁ + 3x₂ + x₃ ≤ 300</li>
-<li>Grinding: x₁ + x₂ + 3x₃ ≤ 300</li>
-<li>Assembly: x₁ + 3x₂ + x₃ ≤ 240</li>
-<li>x₁, x₂, x₃ ≥ 0</li>
-</ul>
-<p>Product A dominates B (same profit per unit but uses fewer resources everywhere), so B drops out (x₂ = 0). Solving the reduced two-variable LP gives the optimum at <strong>x₁ = 120, x₂ = 0, x₃ = 60</strong>, for a <strong>maximum profit Z = 480</strong>.</p>
-</div>
-      </div>
-      <div class="code-head">
-        <span class="code-label">R Code</span>
-        <button class="copy-btn" data-target="sec9-code">Copy code</button>
-      </div>
-      <pre class="console" id="sec9-code"><code>library(lpSolve)
-
-obj &lt;- c(2,2,4)
-con &lt;- matrix(c(2,3,1,
-                1,1,3,
-                1,3,1), nrow=3, byrow=TRUE)
-rhs &lt;- c(300,300,240)
-dir &lt;- rep("&lt;=",3)
-
-sol &lt;- lp("max", obj, con, dir, rhs)
-sol$solution
-sol$objval</code></pre>
-    </section>
-    <section class="qa-section" id="sec10">
-      <h2>Problem 4 — Simplex Method</h2>
-      <div class="question">
-<p>Solve the following LPP using R code by Simplex method:</p>
-<p>Minimize Z = x₁ + x₂ − 4x₃</p>
-<p>Subject to:</p>
-<ul>
-<li>x₁ + x₂ + 2x₃ ≤ 8</li>
-<li>x₁ + x₂ − x₃ ≤ 2</li>
-<li>−x₁ + x₂ + x₃ ≤ 4</li>
-<li>x₁, x₂, x₃ ≥ 0</li>
-</ul>
-<div class="solution">
-<p><strong>Solution:</strong> This is already in standard LP form. Since x₃ carries a negative objective coefficient (−4), the simplex method pushes x₃ as high as possible while keeping x₁ = x₂ = 0. That gives <strong>x₁ = 0, x₂ = 0, x₃ = 4</strong>, for a <strong>minimum Z = −16</strong>.</p>
-</div>
-      </div>
-      <div class="code-head">
-        <span class="code-label">R Code</span>
-        <button class="copy-btn" data-target="sec10-code">Copy code</button>
-      </div>
-      <pre class="console" id="sec10-code"><code>library(lpSolve)
-
-obj &lt;- c(1,1,-4)
-con &lt;- matrix(c(1,1,2,
-                1,1,-1,
-                -1,1,1), nrow=3, byrow=TRUE)
-
-sol &lt;- lp("min", obj, con, rep("&lt;=",3), c(8,2,4))
-sol$solution
-sol$objval</code></pre>
-    </section>
-    <section class="qa-section" id="sec11">
-      <h2>Problem 5 — Dual Simplex Method</h2>
-      <div class="question">
-<p>Solve the following LPP by dual simplex method using R code:</p>
-<p>Minimize Z = 5x₁ + 6x₂</p>
-<p>Subject to:</p>
-<ul>
-<li>x₁ + x₂ ≥ 2</li>
-<li>4x₁ + x₂ ≥ 4</li>
-<li>x₁, x₂ ≥ 0</li>
-</ul>
-<div class="solution">
-<p><strong>Solution:</strong> Minimizing with positive cost coefficients, the optimum lies at the vertex closest to the origin. Comparing the vertices (0, 4), (2/3, 4/3), and (2, 0), the lowest cost is at <strong>x₁ = 2, x₂ = 0</strong>, giving <strong>minimum Z = 10</strong>.</p>
-</div>
-      </div>
-      <div class="code-head">
-        <span class="code-label">R Code</span>
-        <button class="copy-btn" data-target="sec11-code">Copy code</button>
-      </div>
-      <pre class="console" id="sec11-code"><code>library(lpSolve)
-
-obj &lt;- c(5,6)
-con &lt;- matrix(c(-1,-1,
-                -4,-1), 2, byrow=TRUE)
-
-sol &lt;- lp("min", obj, con, rep("&lt;=",2), c(-2,-4))
-sol$solution
-sol$objval</code></pre>
-    </section>
-    <section class="qa-section" id="sec12">
-      <h2>Problem 6 — Big-M Method</h2>
-      <div class="question">
-<p>Solve the following LPP by Big-M method using R code:</p>
-<p>Minimize Z = 3x₁ + 2x₂</p>
-<p>Subject to:</p>
-<ul>
-<li>2x₁ + x₂ ≥ 10</li>
-<li>−3x₁ + 2x₂ ≤ 6</li>
-<li>x₁ + x₂ ≥ 6</li>
-<li>x₁, x₂ ≥ 0</li>
-</ul>
-<div class="solution">
-<p><strong>Solution:</strong> The binding constraints 2x₁ + x₂ = 10 and x₁ + x₂ = 6 intersect at <strong>x₁ = 4, x₂ = 2</strong>, giving <strong>minimum Z = 16</strong>.</p>
-</div>
-      </div>
-      <div class="code-head">
-        <span class="code-label">R Code</span>
-        <button class="copy-btn" data-target="sec12-code">Copy code</button>
-      </div>
-      <pre class="console" id="sec12-code"><code>library(lpSolve)
-
-M &lt;- 1e6
-obj &lt;- c(3,2,0,0,0,M,M)
-con &lt;- matrix(c(2,1,-1,0,0,1,0,
-                -3,2,0,1,0,0,0,
-                1,1,0,0,-1,0,1),
-              3, byrow=TRUE)
-
-sol &lt;- lp("min", obj, con, rep("=",3), c(10,6,6))
-sol$solution[1:2]
-sol$objval</code></pre>
-    </section>
-    <section class="qa-section" id="sec13">
-      <h2>Problem 7 — Two-Phase Method</h2>
-      <div class="question">
-<p>Solve the following LPP by two-phase method using R code:</p>
-<p>Minimize Z = 2x₁ + 3x₂</p>
-<p>Subject to:</p>
-<ul>
-<li>2x₁ + x₂ ≤ 16</li>
-<li>x₁ + 3x₂ ≥ 36</li>
-<li>x₁ + x₂ = 10</li>
-<li>x₁, x₂ ≥ 0</li>
-</ul>
-<div class="solution">
-<p><strong>Solution:</strong> Substituting x₂ = 10 − x₁ from the equality constraint into x₁ + 3x₂ ≥ 36 requires x₁ ≤ −3, which is impossible alongside x₁ ≥ 0. In fact, the largest possible value of x₁ + 3x₂ given x₁ + x₂ = 10 and x₁, x₂ ≥ 0 is only 30 (at x₁ = 0, x₂ = 10), which never reaches 36. <strong>The problem has no feasible solution.</strong></p>
-</div>
-      </div>
-      <div class="code-head">
-        <span class="code-label">R Code</span>
-        <button class="copy-btn" data-target="sec13-code">Copy code</button>
-      </div>
-      <pre class="console" id="sec13-code"><code>library(lpSolve)
-
-# Phase 1
-con &lt;- matrix(c(
-  2,1,1,0,0,0,
-  1,3,0,-1,1,0,
-  1,1,0,0,0,1
-), 3, byrow=TRUE)
-rhs &lt;- c(16,36,10)
-dir &lt;- rep("=",3)
-
-p1 &lt;- lp("min", c(0,0,0,0,1,1), con, dir, rhs)
-
-# Phase 2
-if (p1$objval == 0) {
-  p2 &lt;- lp("min", c(2,3,0,0,0,0), con, dir, rhs)
-  p2$solution[1:2]
-  p2$objval
-} else {
-  cat("Infeasible")
-}</code></pre>
-    </section>
-    <section class="qa-section" id="sec14">
-      <h2>Problem 8 — Gomory Cutting Plane (Integer Solution)</h2>
-      <div class="question">
-<p>Find the optimum integer solution to the following LPP by Gomory cutting plane method using R code:</p>
-<p>Maximize Z = x₁ + x₂</p>
-<p>Subject to:</p>
-<ul>
-<li>3x₁ + 2x₂ ≤ 5</li>
-<li>x₂ ≤ 2</li>
-<li>x₁, x₂ ≥ 0 and integers</li>
-</ul>
-<div class="solution">
-<p><strong>Solution:</strong> The LP relaxation optimum is at (x₁, x₂) = (1/3, 2). Rounding to the nearest integer feasible points, the best integer solutions are <strong>(x₁, x₂) = (1, 1)</strong> or <strong>(0, 2)</strong>, both giving the <strong>maximum integer Z = 2</strong>.</p>
-</div>
-      </div>
-      <div class="code-head">
-        <span class="code-label">R Code</span>
-        <button class="copy-btn" data-target="sec14-code">Copy code</button>
-      </div>
-      <pre class="console" id="sec14-code"><code>library(lpSolve)
-
-obj &lt;- c(1,1)
-con &lt;- matrix(c(3,2,
-                0,1), 2, byrow=TRUE)
-
-sol &lt;- lp("max", obj, con, rep("&lt;=",2), c(5,2), all.int=TRUE)
-sol$solution
-sol$objval</code></pre>
-    </section>
-    <section class="qa-section" id="sec15">
-      <h2>Problem 9 — Transportation Problem (NWCR &amp; VAM)</h2>
-      <div class="question">
-<p>Find the initial basic feasible solution for the following transportation problem using the North-West Corner Rule (NWCR) and Vogel's Approximation Method (VAM) using R code.</p>
-<table>
-<tr><th>Source</th><th>D1</th><th>D2</th><th>D3</th><th>Supply</th></tr>
-<tr><td>S1</td><td>4</td><td>8</td><td>8</td><td>76</td></tr>
-<tr><td>S2</td><td>16</td><td>24</td><td>16</td><td>82</td></tr>
-<tr><td>S3</td><td>8</td><td>16</td><td>24</td><td>77</td></tr>
-<tr><td><strong>Demand</strong></td><td>72</td><td>102</td><td>41</td><td></td></tr>
-</table>
-<div class="solution">
-<p><strong>Solution:</strong></p>
-<p><strong>NWCR allocation:</strong> S1→D1 = 72, S1→D2 = 4, S2→D2 = 82, S3→D2 = 16, S3→D3 = 41.<br>
-<strong>Total cost = 4(72) + 8(4) + 24(82) + 16(16) + 24(41) = 3,528.</strong></p>
-<p><strong>VAM allocation:</strong> S3→D1 = 72, S3→D2 = 5, S2→D2 = 41, S2→D3 = 41, S1→D2 = 56.<br>
-<strong>Total cost = 8(72) + 16(5) + 24(41) + 16(41) + 8(56) = 2,744</strong> — lower than NWCR, since VAM gives a better starting allocation.</p>
-</div>
-      </div>
-      <div class="code-head">
-        <span class="code-label">R Code</span>
-        <button class="copy-btn" data-target="sec15-code">Copy code</button>
-      </div>
-      <pre class="console" id="sec15-code"><code>costs  &lt;- matrix(c(4,8,8, 16,24,16, 8,16,24), nrow=3, byrow=TRUE)
-supply &lt;- c(76,82,77)
-demand &lt;- c(72,102,41)
-
-# North-West Corner Rule
-nwcr &lt;- function(supply, demand) {
-  m &lt;- length(supply); n &lt;- length(demand)
-  alloc &lt;- matrix(0, m, n)
-  i &lt;- j &lt;- 1
-  while (i &lt;= m &amp;&amp; j &lt;= n) {
-    a &lt;- min(supply[i], demand[j])
-    alloc[i,j] &lt;- a
-    supply[i] &lt;- supply[i] - a
-    demand[j] &lt;- demand[j] - a
-    if (supply[i] == 0) i &lt;- i + 1 else j &lt;- j + 1
-  }
-  alloc
+  area &lt;- c * (b - a) * n_hit / n
+  area
 }
 
-# Vogel's Approximation Method
-vam &lt;- function(cost, supply, demand) {
-  m &lt;- nrow(cost); n &lt;- ncol(cost)
-  alloc &lt;- matrix(0, m, n)
-  while (any(supply &gt; 0) &amp;&amp; any(demand &gt; 0)) {
-    pen &lt;- rep(-Inf, m + n)
-    for (i in which(supply &gt; 0)) {
-      row &lt;- sort(cost[i, demand &gt; 0])
-      pen[i] &lt;- if (length(row) &gt; 1) row[2] - row[1] else row[1]
-    }
-    for (j in which(demand &gt; 0)) {
-      col &lt;- sort(cost[supply &gt; 0, j])
-      pen[m + j] &lt;- if (length(col) &gt; 1) col[2] - col[1] else col[1]
-    }
-    k &lt;- which.max(pen)
-    if (k &lt;= m) {
-      i &lt;- k; j &lt;- which(demand &gt; 0)[which.min(cost[i, demand &gt; 0])]
-    } else {
-      j &lt;- k - m; i &lt;- which(supply &gt; 0)[which.min(cost[supply &gt; 0, j])]
-    }
-    a &lt;- min(supply[i], demand[j])
-    alloc[i,j] &lt;- a
-    supply[i] &lt;- supply[i] - a
-    demand[j] &lt;- demand[j] - a
+g &lt;- function(x) (sin(pi * x))^2
+
+hit_or_miss(0, 1, g, 10000)</code></pre>
+      <div class="question interpretation" style="margin-top:16px;">
+        <p><strong>Interpretation:</strong></p>
+<p>The hit-or-miss method encloses the curve g(x) in a rectangle of height c = max(g(x)) and width (b-a), then estimates the area under the curve as (fraction of random points that fall below the curve) &times; (rectangle area). The estimate should come out close to the true value of this integral, which is 0.5.</p>
+      </div>
+    </section>
+    <section class="qa-section" id="b5">
+      <h2>5. Mid-Square Method for Random Number Generation</h2>
+      <div class="question">
+<p>Using the mid-square method with seed = 9876, generate the first 5 random numbers.</p>
+ <div class="solution"><p><strong>Note:</strong> No formal hypothesis test is required here. This question only asks for the generated sequence of pseudo-random numbers.</p></div>
+      </div>
+      <div class="code-head">
+        <span class="code-label">R Code</span>
+        <button class="copy-btn" data-target="b5-code">Copy code</button>
+      </div>
+      <pre class="console" id="b5-code"><code>midsquare &lt;- function(seed, n){
+  k &lt;- nchar(as.integer(seed))     # number of digits in the seed
+  r &lt;- k/2                         # half the digit count (middle digits to keep)
+  z &lt;- rep(0, n)
+  temp &lt;- seed
+
+  for(i in 1:n){
+    temp &lt;- temp^2                     # square the number
+    temp &lt;- temp %% 10^(2*k - r)       # drop excess digits from the left
+    temp &lt;- floor(temp / 10^r)         # keep the middle digits
+    z[i] &lt;- temp
   }
-  alloc
+
+  R &lt;- z/10^k                          # scale to [0,1]
+  data.frame(z, R)
 }
 
-cat("NWCR Allocation:\n"); print(nwcr(supply, demand))
-cat("\nVAM Allocation:\n");  print(vam(costs, supply, demand))</code></pre>
+midsquare(9876, 5)</code></pre>
+      <div class="question interpretation" style="margin-top:16px;">
+        <p><strong>Interpretation:</strong></p>
+<p>Each new number is generated by squaring the previous number and keeping only the middle digits. Dividing by 10^k (where k is the digit count of the seed) rescales each result to a value between 0 and 1, usable as a pseudo-random uniform number. The mid-square method is simple to compute by hand but can degenerate into short repeating cycles or zeros, which is why LCG-type methods are usually preferred in practice.</p>
+      </div>
+    </section>
+    <section class="qa-section" id="b6">
+      <h2>6. Linear Congruential Generator (LCG)</h2>
+      <div class="question">
+<p>Using the linear congruential method, generate the first 3 random numbers with seed = 2985, a = 32, c = 3, m = 5821. Report numbers to 5 decimal places.</p>
+      </div>
+      <div class="code-head">
+        <span class="code-label">R Code</span>
+        <button class="copy-btn" data-target="b6-code">Copy code</button>
+      </div>
+      <pre class="console" id="b6-code"><code>lcg &lt;- function(seed, a, c, m, n){
+  x &lt;- numeric(n)
+  x[1] &lt;- (a*seed + c) %% m
+  for (i in 2:n) x[i] &lt;- (a*x[i-1] + c) %% m
+  round(x/m, 5)
+}
+lcg(seed = 2985, a = 32, c = 3, m = 5821, n = 3)</code></pre>
+      <div class="question interpretation" style="margin-top:16px;">
+        <p><strong>Interpretation:</strong></p>
+<p>Each output is x_i/m, scaled to lie between 0 and 1, so it can be used directly as a pseudo-random uniform number. The sequence is fully determined by the seed and parameters, so re-running with the same seed reproduces the same numbers.</p>
+      </div>
+    </section>
+    <section class="qa-section" id="b7">
+      <h2>7. Combined Linear Congruential Generator</h2>
+      <div class="question">
+<p>For 32-bit computers, combine k=2 generators with a1=40014, m1=2147483563 and a2=40692, m2=2147483399, using seed = 73. Generate 10 random numbers.</p>
+      </div>
+      <div class="code-head">
+        <span class="code-label">R Code</span>
+        <button class="copy-btn" data-target="b7-code">Copy code</button>
+      </div>
+      <pre class="console" id="b7-code"><code>combined_lcg &lt;- function(seed, a1, m1, a2, m2, n){
+  x &lt;- seed; y &lt;- seed
+  u &lt;- numeric(n)
+  for (i in 1:n) {
+    x &lt;- (a1*x) %% m1
+    y &lt;- (a2*y) %% m2
+    z &lt;- (x - y) %% (m1 - 1)
+    u[i] &lt;- if (z &gt; 0) z/m1 else (m1-1)/m1
+  }
+  u
+}
+combined_lcg(seed = 73, a1 = 40014, m1 = 2147483563, a2 = 40692, m2 = 2147483399, n = 10)</code></pre>
+      <div class="question interpretation" style="margin-top:16px;">
+        <p><strong>Interpretation:</strong></p>
+<p>Combining two generators cancels out some of the patterns that a single LCG can have, giving a longer effective cycle and better-looking randomness than either generator alone.</p>
+      </div>
+    </section>
+    <section class="qa-section" id="b8a">
+      <h2>8(a). Uniform(a=2, b=3)</h2>
+      <div class="question">
+<p>Generate a random sample of size 1000 from Uniform(2, 3). Draw a histogram with a density curve. Check that the sample mean/variance agree with the theoretical mean/variance.</p>
+ <div class="solution"><p><strong>Note:</strong> No formal hypothesis test is required; every value in the interval is equally likely, so we only check agreement between sample and theoretical mean/variance. Theoretical mean = 2.5, theoretical variance &asymp; 0.083.</p></div>
+      </div>
+      <div class="code-head">
+        <span class="code-label">R Code</span>
+        <button class="copy-btn" data-target="b8a-code">Copy code</button>
+      </div>
+      <pre class="console" id="b8a-code"><code>runif_custom &lt;- function(size, a, b){
+  x &lt;- rep(0, size)
+  for(i in 1:size){
+    x[i] &lt;- a + (b - a)*runif(1)
+  }
+  x
+}
+
+set.seed(100)
+x &lt;- runif_custom(1000, 2, 3)
+
+hist(x, freq = FALSE, main = &quot;Uniform(2, 3) sample&quot;)
+lines(density(x), col = &quot;blue&quot;, lwd = 2)
+
+mean(x)
+var(x)</code></pre>
+      <div class="question interpretation" style="margin-top:16px;">
+        <p><strong>Interpretation:</strong></p>
+<p>The theoretical mean of Uniform(a,b) is (a+b)/2 = 2.5, and the theoretical variance is (b-a)&sup2;/12 &asymp; 0.083. The sample mean/variance should be close to these values, confirming the generator works correctly.</p>
+      </div>
+    </section>
+    <section class="qa-section" id="b8b">
+      <h2>8(b). Exponential(rate = 2)</h2>
+      <div class="question">
+<p>Generate a random sample from Exponential(rate = 2), draw a histogram with a density curve, check agreement with theoretical mean/variance, and test a hypothesis about the mean.</p>
+ <div class="solution"><p><strong>Hypotheses:</strong> H0: &lambda; = 2 (equivalently &mu; = 0.5) &nbsp; vs &nbsp; H1: &lambda; ≠ 2 (equivalently &mu; ≠ 0.5).</p></div>
+      </div>
+      <div class="code-head">
+        <span class="code-label">R Code</span>
+        <button class="copy-btn" data-target="b8b-code">Copy code</button>
+      </div>
+      <pre class="console" id="b8b-code"><code>rexpon &lt;- function(size, lambda) -log(runif(size))/lambda
+
+set.seed(100)
+x &lt;- rexpon(1000, 2)
+
+c(sample_mean = mean(x), theoretical_mean = 1/2)
+c(sample_var  = var(x),  theoretical_var  = 1/4)
+
+hist(x, freq = FALSE, main = &quot;Exponential(rate=2) sample&quot;)
+lines(density(x), col = &quot;blue&quot;, lwd = 2)
+
+# H0: true mean = 0.5 (equivalent to H0: lambda = 2)
+z &lt;- (mean(x) - 0.5)/(sd(x)/sqrt(length(x)))
+c(z = z, p_value = 2*(1-pnorm(abs(z))))</code></pre>
+      <div class="question interpretation" style="margin-top:16px;">
+        <p><strong>Interpretation:</strong></p>
+<p>The sample mean and variance should be close to 0.5 and 0.25, confirming the generator works. If the p-value is above 0.05, the data is consistent with rate = 2; if below 0.05, it isn't.</p>
+      </div>
+    </section>
+    <section class="qa-section" id="b8c">
+      <h2>8(c). Gamma(shape = 3, rate = 2)</h2>
+      <div class="question">
+<p>Generate a random sample from Gamma(shape = 3, rate = 2), draw a histogram with a density curve, check agreement with theoretical mean/variance, and test a hypothesis about the mean.</p>
+ <div class="solution"><p><strong>Hypotheses:</strong> H0: &mu; = 1.5 &nbsp; vs &nbsp; H1: &mu; ≠ 1.5, since &mu; = &alpha;/&lambda; = 3/2 = 1.5.</p></div>
+      </div>
+      <div class="code-head">
+        <span class="code-label">R Code</span>
+        <button class="copy-btn" data-target="b8c-code">Copy code</button>
+      </div>
+      <pre class="console" id="b8c-code"><code>rgam &lt;- function(size, shape, rate){
+  x &lt;- numeric(size)
+  for (i in 1:size) x[i] &lt;- -sum(log(runif(shape)))/rate
+  x
+}
+
+set.seed(100)
+x &lt;- rgam(1000, 3, 2)
+
+c(sample_mean = mean(x), theoretical_mean = 3/2)
+c(sample_var  = var(x),  theoretical_var  = 3/4)
+
+hist(x, freq = FALSE, main = &quot;Gamma(3,2) sample&quot;)
+lines(density(x), col = &quot;blue&quot;, lwd = 2)
+
+z &lt;- (mean(x) - 1.5)/(sd(x)/sqrt(length(x)))
+c(z = z, p_value = 2*(1-pnorm(abs(z))))</code></pre>
+      <div class="question interpretation" style="margin-top:16px;">
+        <p><strong>Interpretation:</strong></p>
+<p>A Gamma(shape, rate) variate can be built as the sum of `shape` independent Exponential(rate) variates. The sample mean/variance should be close to 1.5 and 0.75; the p-value tells us whether the data still looks consistent with rate = 2.</p>
+      </div>
+    </section>
+    <section class="qa-section" id="b8d">
+      <h2>8(d). Normal(mean = 5, sd = 2) via Box-Muller</h2>
+      <div class="question">
+<p>Generate a random sample from Normal(mean = 5, sd = 2) using the Box-Muller transform, draw a histogram with a density curve, check agreement with theoretical mean/variance, and test a hypothesis about the mean.</p>
+ <div class="solution"><p><strong>Hypotheses:</strong> H0: &mu; = 5 &nbsp; vs &nbsp; H1: &mu; ≠ 5.</p></div>
+      </div>
+      <div class="code-head">
+        <span class="code-label">R Code</span>
+        <button class="copy-btn" data-target="b8d-code">Copy code</button>
+      </div>
+      <pre class="console" id="b8d-code"><code>rnormal_bm &lt;- function(size, mean, sd){
+  n2 &lt;- ceiling(size/2)
+  x &lt;- numeric(2*n2)
+  for (i in 1:n2) {
+    u1 &lt;- runif(1); u2 &lt;- runif(1)
+    x[2*i-1] &lt;- mean + sd*sqrt(-2*log(u1))*cos(2*pi*u2)
+    x[2*i]   &lt;- mean + sd*sqrt(-2*log(u1))*sin(2*pi*u2)
+  }
+  x[1:size]
+}
+
+set.seed(100)
+x &lt;- rnormal_bm(1000, 5, 2)
+
+c(sample_mean = mean(x), theoretical_mean = 5)
+c(sample_var  = var(x),  theoretical_var  = 4)
+
+hist(x, freq = FALSE, main = &quot;Normal(5,2) via Box-Muller&quot;)
+lines(density(x), col = &quot;blue&quot;, lwd = 2)
+
+t.test(x, mu = 5)</code></pre>
+      <div class="question interpretation" style="margin-top:16px;">
+        <p><strong>Interpretation:</strong></p>
+<p>The Box-Muller algorithm turns two uniform numbers into two independent standard normal numbers, then rescales them to mean 5 and sd 2. If the t-test p-value is above 0.05, the sample mean is consistent with 5.</p>
+      </div>
+    </section>
+    <section class="qa-section" id="b8e">
+      <h2>8(e). Chi-square(df = 10)</h2>
+      <div class="question">
+<p>Generate a random sample from Chi-square(df = 10), draw a histogram with a density curve, check agreement with theoretical mean/variance, and test a hypothesis about the mean.</p>
+ <div class="solution"><p><strong>Hypotheses:</strong> H0: &mu; = 10 &nbsp; vs &nbsp; H1: &mu; ≠ 10. For a chi-square distribution, the theoretical mean equals the degrees of freedom.</p></div>
+      </div>
+      <div class="code-head">
+        <span class="code-label">R Code</span>
+        <button class="copy-btn" data-target="b8e-code">Copy code</button>
+      </div>
+      <pre class="console" id="b8e-code"><code>chi &lt;- function(size, df){
+  x &lt;- numeric(size)
+  for (i in 1:size) x[i] &lt;- -2*sum(log(runif(df/2)))
+  x
+}
+
+set.seed(100)
+x &lt;- chi(1000, 10)
+
+c(sample_mean = mean(x), theoretical_mean = 10)
+c(sample_var  = var(x),  theoretical_var  = 20)
+
+hist(x, freq = FALSE, main = &quot;Chi-square(10) sample&quot;)
+lines(density(x), col = &quot;blue&quot;, lwd = 2)
+
+z &lt;- (mean(x) - 10)/(sd(x)/sqrt(length(x)))
+c(z = z, p_value = 2*(1-pnorm(abs(z))))</code></pre>
+      <div class="question interpretation" style="margin-top:16px;">
+        <p><strong>Interpretation:</strong></p>
+<p>A Chi-square(df) variate is generated as -2&times;&sum;ln(U_i) over df/2 uniform numbers. The sample mean/variance should be near 10 and 20; the p-value checks whether the mean is still consistent with df = 10.</p>
+      </div>
+    </section>
+    <section class="qa-section" id="b8f">
+      <h2>8(f). Binomial(n = 7, p = 0.6)</h2>
+      <div class="question">
+<p>Generate a random sample from Binomial(n = 7, p = 0.6), draw a bar plot, check agreement with theoretical mean/variance, and test a hypothesis about p.</p>
+ <div class="solution"><p><strong>Hypotheses:</strong> H0: p = 0.6 &nbsp; vs &nbsp; H1: p ≠ 0.6. Equivalently, H0: &mu; = np = 7(0.6) = 4.2.</p></div>
+      </div>
+      <div class="code-head">
+        <span class="code-label">R Code</span>
+        <button class="copy-btn" data-target="b8f-code">Copy code</button>
+      </div>
+      <pre class="console" id="b8f-code"><code>rbino &lt;- function(size, n, p){
+  X &lt;- numeric(size)
+  for (i in 1:size) {
+    u &lt;- runif(1); k &lt;- 0
+    prob &lt;- (1-p)^n; cdf &lt;- prob
+    while (u &gt; cdf) {
+      k &lt;- k + 1
+      prob &lt;- prob*(n-k+1)/k*p/(1-p)
+      cdf &lt;- cdf + prob
+    }
+    X[i] &lt;- k
+  }
+  X
+}
+
+set.seed(100)
+x &lt;- rbino(1000, 7, 0.6)
+
+barplot(table(x), main = &quot;Binomial(7, 0.6) sample&quot;)
+
+c(sample_mean = mean(x), theoretical_mean = 7*0.6)
+c(sample_var  = var(x),  theoretical_var  = 7*0.6*0.4)
+
+phat &lt;- mean(x)/7
+z &lt;- (phat - 0.6)/sqrt(0.6*0.4/(7*1000))
+c(z = z, p_value = 2*(1-pnorm(abs(z))))</code></pre>
+      <div class="question interpretation" style="margin-top:16px;">
+        <p><strong>Interpretation:</strong></p>
+<p>The generator inverts the binomial CDF: it draws one uniform number and finds the smallest k whose cumulative probability exceeds it. The bar plot should look bell-shaped and centered near 4.2; the p-value checks whether p = 0.6 is still plausible.</p>
+      </div>
+    </section>
+    <section class="qa-section" id="b8g">
+      <h2>8(g). Poisson(lambda = 2)</h2>
+      <div class="question">
+<p>Generate a random sample from Poisson(&lambda; = 2), draw a bar plot, check agreement with theoretical mean/variance, and test a hypothesis about &lambda;.</p>
+ <div class="solution"><p><strong>Hypotheses:</strong> H0: &lambda; = 2 &nbsp; vs &nbsp; H1: &lambda; ≠ 2. For a Poisson distribution, mean and variance are both &lambda;.</p></div>
+      </div>
+      <div class="code-head">
+        <span class="code-label">R Code</span>
+        <button class="copy-btn" data-target="b8g-code">Copy code</button>
+      </div>
+      <pre class="console" id="b8g-code"><code>Pois &lt;- function(size, lambda){
+  y &lt;- numeric(size)
+  for (i in 1:size) {
+    u &lt;- runif(1); k &lt;- 0
+    prob &lt;- exp(-lambda); cdf &lt;- prob
+    while (u &gt; cdf) {
+      k &lt;- k + 1
+      prob &lt;- prob*lambda/k
+      cdf &lt;- cdf + prob
+    }
+    y[i] &lt;- k
+  }
+  y
+}
+
+set.seed(100)
+x &lt;- Pois(1000, 2)
+
+barplot(table(x), main = &quot;Poisson(2) sample&quot;)
+
+c(sample_mean = mean(x), theoretical_mean = 2)
+c(sample_var  = var(x),  theoretical_var  = 2)
+
+z &lt;- (mean(x) - 2)/sqrt(2/length(x))
+c(z = z, p_value = 2*(1-pnorm(abs(z))))</code></pre>
+      <div class="question interpretation" style="margin-top:16px;">
+        <p><strong>Interpretation:</strong></p>
+<p>Poisson variates are generated the same inverse-CDF way as Binomial. For a true Poisson(2), the mean and variance are both 2; if the p-value is above 0.05, lambda = 2 is still a reasonable assumption.</p>
+      </div>
+    </section>
+    <section class="qa-section" id="b8h">
+      <h2>8(h). Geometric(p = 0.25)</h2>
+      <div class="question">
+<p>Generate a random sample from Geometric(p = 0.25), draw a bar plot, and check that the sample mean/variance agree with the theoretical mean/variance.</p>
+ <div class="solution"><p><strong>Note:</strong> No formal hypothesis test is required in this question. Theoretical mean = (1-p)/p = 3, theoretical variance = (1-p)/p&sup2; = 12.</p></div>
+      </div>
+      <div class="code-head">
+        <span class="code-label">R Code</span>
+        <button class="copy-btn" data-target="b8h-code">Copy code</button>
+      </div>
+      <pre class="console" id="b8h-code"><code>geom &lt;- function(size, prob) floor(log(runif(size))/log(1-prob))
+
+set.seed(100)
+x &lt;- geom(1000, 0.25)
+
+barplot(table(x), main = &quot;Geometric(0.25) sample&quot;)
+
+c(sample_mean = mean(x), theoretical_mean = (1-0.25)/0.25)
+c(sample_var  = var(x),  theoretical_var  = (1-0.25)/0.25^2)</code></pre>
+      <div class="question interpretation" style="margin-top:16px;">
+        <p><strong>Interpretation:</strong></p>
+<p>This uses the closed-form inverse-CDF formula for the geometric distribution, so no loop is even needed. The sample mean/variance should be close to 3 and 12.</p>
+      </div>
+    </section>
+    <section class="qa-section" id="b8i">
+      <h2>8(i). Normal(mean = 3, sd = 4) via Marsaglia&#x27;s Polar Algorithm</h2>
+      <div class="question">
+<p>Generate a random sample from Normal(mean = 3, sd = 4) using Marsaglia's polar algorithm, draw a histogram with a density curve, check agreement with theoretical mean/variance, and test a hypothesis about the mean.</p>
+ <div class="solution"><p><strong>Hypotheses:</strong> H0: &mu; = 3 &nbsp; vs &nbsp; H1: &mu; ≠ 3.</p></div>
+      </div>
+      <div class="code-head">
+        <span class="code-label">R Code</span>
+        <button class="copy-btn" data-target="b8i-code">Copy code</button>
+      </div>
+      <pre class="console" id="b8i-code"><code>mars &lt;- function(size, mean, sd){
+  x &lt;- numeric(size)
+  i &lt;- 1
+  while (i &lt;= size) {
+    u1 &lt;- runif(1, -1, 1); u2 &lt;- runif(1, -1, 1)
+    w &lt;- u1^2 + u2^2
+    if (w &lt; 1) {
+      c0 &lt;- sqrt(-2*log(w)/w)
+      x[i] &lt;- mean + sd*u1*c0
+      if (i+1 &lt;= size) x[i+1] &lt;- mean + sd*u2*c0
+      i &lt;- i + 2
+    }
+  }
+  x
+}
+
+set.seed(100)
+x &lt;- mars(1000, 3, 4)
+
+c(sample_mean = mean(x), theoretical_mean = 3)
+c(sample_var  = var(x),  theoretical_var  = 16)
+
+hist(x, freq = FALSE, main = &quot;Normal(3,4) via Marsaglia&#x27;s Polar Method&quot;)
+lines(density(x), col = &quot;blue&quot;, lwd = 2)
+
+t.test(x, mu = 3)</code></pre>
+      <div class="question interpretation" style="margin-top:16px;">
+        <p><strong>Interpretation:</strong></p>
+<p>Marsaglia's polar method avoids the sine/cosine calls used in Box-Muller by rejecting points outside the unit circle, which makes it slightly faster. The sample mean/variance should be close to 3 and 16, and the t-test tells us whether the sample mean is still consistent with 3.</p>
+      </div>
     </section>
   <footer>Generated for quick reference and copy-paste into R / RStudio.</footer>
 </main>
@@ -1107,6 +942,7 @@ cat("\nVAM Allocation:\n");  print(vam(costs, supply, demand))</code></pre>
     pres.forEach(function (p) { parts.push(p.textContent); });
     copyText(parts.join("\n\n"), this);
   });
+
 </script>
 </body>
 </html>
