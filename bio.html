@@ -160,11 +160,187 @@
     main { padding: 24px 16px 60px; }
   }
 
+
+  .chat-widget {
+    background: var(--qbg);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 16px;
+  }
+  .chat-row { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 14px; }
+  .chat-id-box, .chat-connect-box {
+    flex: 1;
+    min-width: 240px;
+    background: #1c1c2e;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+  }
+  .chat-id-display {
+    font-family: "SFMono-Regular", Consolas, Menlo, monospace;
+    font-size: 14px;
+    color: var(--accent2);
+    background: var(--console-bg);
+    padding: 6px 10px;
+    border-radius: 6px;
+    margin: 8px 0;
+    word-break: break-all;
+  }
+  .chat-id-box input, .chat-connect-box input, .chat-input-row input {
+    background: var(--console-bg);
+    color: var(--console-text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 10px;
+    width: 100%;
+    font-size: 13px;
+    margin: 8px 0;
+  }
+  .chat-connect-box input:focus, .chat-input-row input:focus, .chat-id-box input:focus { outline: 1px solid var(--accent); }
+  .chat-status { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+  .chat-messages {
+    background: var(--console-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    height: 320px;
+    overflow-y: auto;
+    margin-bottom: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .chat-bubble {
+    max-width: 70%;
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-size: 14px;
+    line-height: 1.4;
+    word-break: break-word;
+  }
+  .chat-bubble.me { align-self: flex-end; background: var(--accent); color: #11111b; }
+  .chat-bubble.them { align-self: flex-start; background: #313244; color: #cdd6f4; }
+  .chat-bubble.system { align-self: center; background: transparent; color: var(--muted); font-size: 12px; font-style: italic; }
+  .chat-bubble .meta { font-size: 10px; opacity: 0.7; display: block; margin-top: 3px; }
+  .chat-input-row { display: flex; gap: 10px; align-items: center; }
+  .chat-input-row input { margin: 0; }
+  .chat-input-row button { flex-shrink: 0; }
+  #join-btn { margin-top: 4px; }
+
+  .chat-fab {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent);
+    color: #11111b;
+    padding: 12px 20px;
+    border-radius: 999px;
+    cursor: pointer;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+    font-weight: 700;
+    font-size: 14px;
+    user-select: none;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .chat-fab:hover { transform: scale(1.06); box-shadow: 0 10px 26px rgba(0,0,0,0.5); }
+  .chat-fab-icon { font-size: 18px; line-height: 1; }
+  .chat-fab-badge {
+    background: #f38ba8;
+    color: #11111b;
+    border-radius: 999px;
+    font-size: 11px;
+    min-width: 20px;
+    height: 20px;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5px;
+    font-weight: 800;
+  }
+  .chat-fab-badge.show { display: flex; }
+
+  .chat-float-window {
+    position: fixed;
+    bottom: 92px;
+    right: 24px;
+    width: 350px;
+    max-width: calc(100vw - 32px);
+    max-height: 72vh;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.5);
+    z-index: 9999;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .chat-float-window.open { display: flex; }
+  .chat-float-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    background: var(--console-bg);
+    border-bottom: 1px solid var(--border);
+    font-weight: 700;
+    color: var(--accent2);
+    flex-shrink: 0;
+  }
+  .chat-float-close {
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 22px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 4px;
+  }
+  .chat-float-close:hover { color: var(--accent); }
+  .chat-float-window .chat-widget {
+    margin-bottom: 0;
+    border: none;
+    border-radius: 0;
+    padding: 14px;
+    overflow-y: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+  .chat-float-window .chat-messages { flex: 1; height: auto; min-height: 160px; }
+  @media (max-width: 480px) {
+    .chat-fab-text { display: none; }
+    .chat-float-window { right: 16px; bottom: 84px; width: calc(100vw - 32px); }
+    .chat-fab { right: 16px; bottom: 16px; }
+  }
+
 </style>
 </head>
 <body>
 <nav>
   <h1>Statistical Simulation Lab</h1>
+  <details class="nav-group" open>
+    <summary>Live Chat</summary>
+    <ul>
+      <li><a href="#chat-section">Chat with a Friend</a></li>
+    </ul>
+  </details>
+  <details class="nav-group" open>
+    <summary>Lab Exercise Types (Overview)</summary>
+    <ul>
+      <li><a href="#ov1">Type 1: Design of Experiments (RBD / CRD)</a></li>
+      <li><a href="#ov2">Type 2: Monte Carlo Integration (Control Variates)</a></li>
+      <li><a href="#ov3">Type 3: Random Number Generation (LCG, Mid-Square, Hit-or-Miss)</a></li>
+      <li><a href="#ov4">Type 4: Discrete Distribution Sampling</a></li>
+      <li><a href="#ov5">Type 5: Continuous Distribution Sampling</a></li>
+    </ul>
+  </details>
   <details class="nav-group" open>
     <summary>Part A: Design of Experiments</summary>
     <ul>
@@ -197,10 +373,90 @@
 </nav>
 <main>
   <header class="page-head">
-    <h1>Statistical Simulation</h1>
+    <h1>Statistical Simulation Lab Report</h1>
     <p>Question, R code, and interpretation for all five lab exercise types: Design of Experiments, Monte Carlo Integration, Random Number Generation, and Discrete/Continuous Distribution Sampling.</p>
     <button class="copy-all-btn" id="copy-all">Copy all code</button>
   </header>
+    <section class="qa-section" id="chat-section">
+      <h2>Live Chat (Peer-to-Peer, No Server Needed)</h2>
+      <div class="question">
+        <p>This chat runs directly between browsers using WebRTC, so it works even though this page is hosted as a plain static file (e.g. on GitHub Pages) with no backend of its own. It only relies on a free public "introduction" service (PeerJS's cloud broker) to help browsers find each other; after that, messages travel directly between browsers and are never stored anywhere.</p>
+        <div class="solution">
+          <p><strong>How to use it:</strong> Look for the floating <strong>Chat</strong> button in the bottom-right corner of the page. Click it any time to open the chat window. No code or ID needs to be shared at all -- whoever opens this page first automatically becomes the "room", and whoever opens it next automatically joins that same room (this also works if a 3rd, 4th person joins). Each person just:</p>
+          <ol>
+            <li>Open this page (the same link).</li>
+            <li>Click the floating <strong>Chat</strong> button in the bottom-right corner.</li>
+            <li>Type a display name and click <strong>Join Chat</strong>.</li>
+            <li>Wait a few seconds for the status line to say "connected".</li>
+            <li>Type messages and press Enter or click Send.</li>
+          </ol>
+          <p>If the room's first person closes or refreshes their tab, the room resets -- everyone should reopen the chat window and click Join Chat again to reconnect.</p>
+        </div>
+      </div>
+    </section>
+    <section class="qa-section" id="ov1">
+      <h2>Type 1: Design of Experiments (RBD / CRD)</h2>
+      <div class="question">
+<p>Lab exercises of this type give you raw data from an experiment (e.g. diets fed to animals, or a randomized block layout) and ask you to test whether treatment means differ significantly.</p>
+ <ul>
+   <li>You are given a data table (treatments as columns/rows, replicates or blocks).</li>
+   <li>You state H0 (all treatment means are equal) and H1 (at least one differs).</li>
+   <li>You run a one-way or two-way ANOVA in R and read the F-value and p-value.</li>
+   <li>You compare the p-value to alpha = 0.05 and write a conclusion.</li>
+ </ul>
+ <p><em>Where solved:</em> Experiment 1 (CRD) and Experiment 2 (RBD) in Part A below.</p>
+      </div>
+    </section>
+    <section class="qa-section" id="ov2">
+      <h2>Type 2: Monte Carlo Integration (Control Variates)</h2>
+      <div class="question">
+<p>These exercises ask you to estimate a definite integral using random sampling instead of calculus, and to reduce the variance of the estimate using a control variate.</p>
+ <ul>
+   <li>You are given an integral such as the area under a curve on [0,1].</li>
+   <li>You generate random uniform numbers, evaluate the function, and average the results to estimate the integral.</li>
+   <li>You then use a control variate (a related function whose exact mean is known) to reduce variance.</li>
+   <li>You report the estimate, the true/reference value, and the variance reduction achieved.</li>
+ </ul>
+ <p><em>Where solved:</em> Part B, sections 1-3 (Control Variate methods).</p>
+      </div>
+    </section>
+    <section class="qa-section" id="ov3">
+      <h2>Type 3: Random Number Generation (LCG, Mid-Square, Hit-or-Miss)</h2>
+      <div class="question">
+<p>These exercises ask you to build your own pseudo-random number generator from scratch, rather than using R's built-in random functions.</p>
+ <ul>
+   <li>You are given a seed and, for LCG methods, multiplier/increment/modulus constants.</li>
+   <li>You write the recurrence relation by hand in R (a loop, not a built-in function).</li>
+   <li>You generate a short sequence of numbers and show they lie between 0 and 1.</li>
+   <li>Hit-or-miss exercises use this generator to estimate an integral by counting points under a curve.</li>
+ </ul>
+ <p><em>Where solved:</em> Part B, sections 4-7 (Hit-or-Miss, Mid-Square, LCG, Combined LCG).</p>
+      </div>
+    </section>
+    <section class="qa-section" id="ov4">
+      <h2>Type 4: Discrete Distribution Sampling</h2>
+      <div class="question">
+<p>These exercises ask you to generate random values from a discrete probability distribution using the inverse-CDF (transformation) method.</p>
+ <ul>
+   <li>You are given a distribution (Binomial, Poisson, or Geometric) with fixed parameters.</li>
+   <li>You generate a uniform random number U and map it onto the distribution using cumulative probabilities.</li>
+   <li>You repeat this many times and summarize the generated sample (table/frequency/mean).</li>
+ </ul>
+ <p><em>Where solved:</em> Part B, section 8 (f), (g), (h) - Binomial, Poisson, Geometric.</p>
+      </div>
+    </section>
+    <section class="qa-section" id="ov5">
+      <h2>Type 5: Continuous Distribution Sampling</h2>
+      <div class="question">
+<p>These exercises ask you to generate random values from a continuous probability distribution using transformation methods (inverse-CDF, Box-Muller, Marsaglia polar method).</p>
+ <ul>
+   <li>You are given a distribution (Uniform, Exponential, Gamma, Normal, Chi-square) with fixed parameters.</li>
+   <li>You transform one or two uniform random numbers into a value from the target distribution using the relevant formula.</li>
+   <li>You generate a sample and summarize it (mean, spread, or a short printed vector).</li>
+ </ul>
+ <p><em>Where solved:</em> Part B, section 8 (a)-(e), (i) - Uniform, Exponential, Gamma, Normal (Box-Muller), Chi-square, Normal (Marsaglia).</p>
+      </div>
+    </section>
     <section class="qa-section" id="a1">
       <h2>Experiment 1: CRD - Chicken Diet Weights</h2>
       <div class="question">
@@ -427,7 +683,12 @@ data.frame(Method = c(&quot;Simple MC&quot;,&quot;Control Variate&quot;),
         <span class="code-label">R Code</span>
         <button class="copy-btn" data-target="b2-code">Copy code</button>
       </div>
-      <pre class="console" id="b2-code"><code># (a) control variate f1
+      <pre class="console" id="b2-code"><code>set.seed(1)
+m &lt;- 10000
+u &lt;- runif(m)
+g &lt;- exp(-u)/(1+u^2)              # function we want to integrate
+
+# (a) control variate f1
 f1   &lt;- 1/(1+u^2)
 mu_f1 &lt;- pi/4
 b1   &lt;- -cov(g,f1)/var(f1)
@@ -893,6 +1154,35 @@ t.test(x, mu = 3)</code></pre>
     </section>
   <footer>Generated for quick reference and copy-paste into R / RStudio.</footer>
 </main>
+
+<div class="chat-fab" id="chat-fab">
+  <span class="chat-fab-icon">&#128172;</span>
+  <span class="chat-fab-text">Chat</span>
+  <span class="chat-fab-badge" id="chat-fab-badge">0</span>
+</div>
+<div class="chat-float-window" id="chat-float-window">
+  <div class="chat-float-header">
+    <span>Live Chat</span>
+    <button class="chat-float-close" id="chat-float-close" aria-label="Close chat">&times;</button>
+  </div>
+  <div class="chat-widget">
+    <div class="chat-row" id="chat-setup-row">
+      <div class="chat-id-box" style="flex:1;">
+        <span class="code-label">Your name</span>
+        <input type="text" id="username-input" placeholder="Enter your name" autocomplete="off" maxlength="24" />
+        <button class="copy-btn" id="join-btn">Join Chat</button>
+      </div>
+    </div>
+    <div class="chat-status" id="chat-status">Status: enter your name and click Join Chat</div>
+    <div class="chat-messages" id="chat-messages"></div>
+    <div class="chat-input-row">
+      <input type="text" id="chat-message-input" placeholder="Type a message and press Enter" autocomplete="off" disabled />
+      <button class="copy-all-btn" id="send-btn" disabled>Send</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <script>
   function showCopied(btn) {
     var original = btn.textContent;
@@ -939,9 +1229,192 @@ t.test(x, mu = 3)</code></pre>
   document.getElementById("copy-all").addEventListener("click", function () {
     var pres = document.querySelectorAll("pre.console");
     var parts = [];
-    pres.forEach(function (p) { parts.push(p.textContent); });
-    copyText(parts.join("\n\n"), this);
+    pres.forEach(function (p) {
+      var section = p.closest("section.qa-section");
+      var h2 = section ? section.querySelector("h2") : null;
+      var label = h2 ? h2.textContent.trim() : "";
+      var header = ["# ==============================", "# " + label, "# =============================="].join(String.fromCharCode(10));
+      parts.push(header + String.fromCharCode(10) + p.textContent);
+    });
+    copyText(parts.join(String.fromCharCode(10) + String.fromCharCode(10)), this);
   });
+
+
+(function () {
+  var ROOM_ID = "futanta-statsim-labroom-2026";
+
+  function el(id) { return document.getElementById(id); }
+  var statusEl = el("chat-status");
+  var messagesEl = el("chat-messages");
+  var msgInput = el("chat-message-input");
+  var sendBtn = el("send-btn");
+  var usernameInput = el("username-input");
+  var joinBtn = el("join-btn");
+
+  var myUsername = "";
+  var conns = [];
+  var amHost = false;
+
+  // ---- Floating button + window toggle ----
+  var fab = el("chat-fab");
+  var floatWindow = el("chat-float-window");
+  var closeBtn = el("chat-float-close");
+  var badge = el("chat-fab-badge");
+  var unread = 0;
+
+  function isWindowOpen() {
+    return floatWindow && floatWindow.classList.contains("open");
+  }
+  function openWindow() {
+    if (!floatWindow) return;
+    floatWindow.classList.add("open");
+    unread = 0;
+    badge.textContent = "0";
+    badge.classList.remove("show");
+  }
+  function closeWindow() {
+    if (!floatWindow) return;
+    floatWindow.classList.remove("open");
+  }
+  if (fab) {
+    fab.addEventListener("click", function () {
+      if (isWindowOpen()) { closeWindow(); } else { openWindow(); }
+    });
+  }
+  if (closeBtn) {
+    closeBtn.addEventListener("click", closeWindow);
+  }
+
+  function bumpUnread() {
+    if (isWindowOpen()) return;
+    unread++;
+    badge.textContent = String(unread);
+    badge.classList.add("show");
+  }
+
+  function addBubble(text, who) {
+    var bubble = document.createElement("div");
+    bubble.className = "chat-bubble " + who;
+    var t = document.createElement("div");
+    t.textContent = text;
+    bubble.appendChild(t);
+    if (who !== "system") {
+      var meta = document.createElement("span");
+      meta.className = "meta";
+      meta.textContent = new Date().toLocaleTimeString();
+      bubble.appendChild(meta);
+    }
+    messagesEl.appendChild(bubble);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    if (who === "them") bumpUnread();
+  }
+
+  function enableChat() {
+    msgInput.disabled = false;
+    sendBtn.disabled = false;
+    statusEl.textContent = "Status: connected";
+  }
+
+  function setupConnection(c) {
+    conns.push(c);
+    c.on("open", function () {
+      enableChat();
+      addBubble("Connected!", "system");
+    });
+    c.on("data", function (data) {
+      var parsed = null;
+      try { parsed = JSON.parse(data); } catch (e) {}
+      if (parsed && parsed.text) {
+        addBubble((parsed.user || "Friend") + ": " + parsed.text, "them");
+      } else {
+        addBubble(String(data), "them");
+      }
+      // If we are the room owner, relay this message to every other connected
+      // person so group chats with 3+ people all see each other's messages.
+      if (amHost) {
+        conns.forEach(function (other) {
+          if (other !== c && other.open) other.send(data);
+        });
+      }
+    });
+    c.on("close", function () {
+      conns = conns.filter(function (x) { return x !== c; });
+      addBubble("A participant disconnected.", "system");
+      if (conns.length === 0 && !amHost) {
+        msgInput.disabled = true;
+        sendBtn.disabled = true;
+        statusEl.textContent = "Status: disconnected - click Join Chat again to reconnect";
+      }
+    });
+    c.on("error", function () {
+      statusEl.textContent = "Status: connection error";
+    });
+  }
+
+  function startAsGuest() {
+    statusEl.textContent = "Status: connecting...";
+    var guestPeer = new Peer();
+    guestPeer.on("open", function () {
+      var c = guestPeer.connect(ROOM_ID, { reliable: true });
+      c.on("open", function () { setupConnection(c); });
+      c.on("error", function () {
+        statusEl.textContent = "Status: could not connect - try reloading the page";
+      });
+    });
+    guestPeer.on("error", function (err) {
+      statusEl.textContent = "Status: error (" + err.type + ") - try reloading the page";
+    });
+  }
+
+  function startChat() {
+    if (typeof Peer === "undefined") {
+      statusEl.textContent = "Status: could not load the chat library (check your internet connection and reload).";
+      return;
+    }
+    statusEl.textContent = "Status: connecting...";
+    var hostPeer = new Peer(ROOM_ID);
+    hostPeer.on("open", function () {
+      amHost = true;
+      enableChat();
+      statusEl.textContent = "Status: connected - waiting for others to join...";
+    });
+    hostPeer.on("connection", function (c) {
+      setupConnection(c);
+    });
+    hostPeer.on("error", function (err) {
+      if (err.type === "unavailable-id") {
+        startAsGuest();
+      } else {
+        statusEl.textContent = "Status: error (" + err.type + ") - try reloading the page";
+      }
+    });
+  }
+
+  joinBtn.addEventListener("click", function () {
+    myUsername = usernameInput.value.trim() || "Friend";
+    usernameInput.disabled = true;
+    joinBtn.disabled = true;
+    startChat();
+  });
+
+  usernameInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") joinBtn.click();
+  });
+
+  function sendMessage() {
+    var text = msgInput.value.trim();
+    if (!text || conns.length === 0) return;
+    var payload = JSON.stringify({ user: myUsername, text: text });
+    conns.forEach(function (c) { if (c.open) c.send(payload); });
+    addBubble("You: " + text, "me");
+    msgInput.value = "";
+  }
+
+  sendBtn.addEventListener("click", sendMessage);
+  msgInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") sendMessage();
+  });
+})();
 
 </script>
 </body>
